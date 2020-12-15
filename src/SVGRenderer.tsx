@@ -29,20 +29,18 @@ const SVGRenderer: React.FC<SVGRendererProps> = ({
 
   return (
     <Svg height={height} width={width}>
-      {paths.map(({ color, path, thickness, opacity }, i) => {
-        return (
-          <Path
-            key={i}
-            d={path}
-            fill="none"
-            stroke={color}
-            strokeWidth={thickness}
-            strokeLinecap="round"
-            opacity={opacity}
-            strokeLinejoin="round"
-          />
-        );
-      })}
+      {paths.map(({ color, path, thickness, opacity }, i) => (
+        <Path
+          key={i}
+          d={path}
+          fill="none"
+          stroke={color}
+          strokeWidth={thickness}
+          strokeLinecap="round"
+          opacity={opacity}
+          strokeLinejoin="round"
+        />
+      ))}
       <Path
         d={memoizedPath}
         fill="none"
