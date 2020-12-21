@@ -1,6 +1,10 @@
 # @benjeau/react-native-draw
 
+[![NPM badge](https://img.shields.io/npm/v/@benjeau/react-native-draw)](https://www.npmjs.com/package/@benjeau/react-native-draw) ![Platform badge](https://img.shields.io/badge/platform-android%20%7C%20ios%20%7C%20web-blue)
+
 Cross-platform React Native drawing component based on SVG
+
+> Note: This should technically work on Android, iOS and potentially the web, but I only tested it on Android
 
 ![Drawing Example](assets/drawingExample.gif)
 
@@ -14,7 +18,7 @@ npm install @benjeau/react-native-draw
 yarn add @benjeau/react-native-draw
 ```
 
-Also, you need to install [react-native-gesture-handler](https://github.com/software-mansion/react-native-gesture-handler), [@react-native-community/slider](https://github.com/callstack/react-native-slider) and [react-native-svg](https://github.com/react-native-svg/react-native-svg), and follow their installation instructions.
+> Also, you need to install [react-native-gesture-handler](https://github.com/software-mansion/react-native-gesture-handler), [@react-native-community/slider](https://github.com/callstack/react-native-slider) and [react-native-svg](https://github.com/react-native-svg/react-native-svg), and follow their installation instructions.
 
 ## Usage
 
