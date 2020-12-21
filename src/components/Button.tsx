@@ -32,7 +32,12 @@ const Button: React.FC<ButtonProps> = ({ children, onPress, color, style }) => {
 
   return (
     <View style={containerStyle}>
-      <RectButton onPress={onPress} style={buttonStyle}>
+      <RectButton
+        onPress={onPress}
+        style={buttonStyle}
+        activeOpacity={0.5}
+        rippleColor={color}
+      >
         {children}
       </RectButton>
     </View>

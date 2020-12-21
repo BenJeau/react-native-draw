@@ -53,7 +53,7 @@ interface DrawProps {
    * Paths to be already drawn
    * @default []
    */
-  initialPaths?: PathType[];
+  initialDrawing?: PathType[];
   /**
    * Override the style of the container of the canvas
    */
@@ -64,12 +64,12 @@ const Draw: React.FC<DrawProps> = ({
   colors = DEFAULT_COLORS,
   initialThickness = DEFAULT_THICKNESS,
   initialOpacity = DEFAULT_OPACITY,
-  initialPaths = [],
+  initialDrawing = [],
   canvasContainerStyle,
 }) => {
-  const [paths, setPaths] = useState<PathType[]>(initialPaths);
+  const [paths, setPaths] = useState<PathType[]>(initialDrawing);
   const [path, setPath] = useState<PathDataType>([]);
-  const [color, setColor] = useState(colors[0][0][0]);
+  const [color, setColor] = useState(colors[0][1][10]);
   const [thickness, setThickness] = useState(initialThickness);
   const [opacity, setOpacity] = useState(initialOpacity);
   const [colorPickerVisible, setColorPickerVisible] = useState(false);

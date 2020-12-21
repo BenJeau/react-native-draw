@@ -34,7 +34,9 @@
   "keywords": [
     "react-native",
     "ios",
-    "android"
+    "android",
+    "draw",
+    "svg"
   ],
   "repository": "https://github.com/BenJeau/react-native-draw",
   "author": "Benoit Jeaurond <benoit@jeaurond.dev> (https://github.com/BenJeau)",
