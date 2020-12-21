@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   Animated,
@@ -6,6 +6,7 @@ import {
   Easing,
   StyleSheet,
   View,
+  ViewStyle,
 } from 'react-native';
 import {
   PanGestureHandler,
@@ -15,27 +16,62 @@ import {
 } from 'react-native-gesture-handler';
 
 import { createSVGPath } from './utils';
-import ColorButtonGroup from './ColorButtonGroup';
-import type { PathDataType, PathType } from './@types';
-import SVGRenderer from './SVGRenderer';
-import colorPalette, { grayscale } from './colorPalette';
+import type { PathDataType, PathType } from './types';
 import { Brush, Delete, Palette, Undo } from './icons';
-import Svg, { Path } from 'react-native-svg';
-import Button from './Button';
-import Slider from '@react-native-community/slider';
+import {
+  Button,
+  SVGRenderer,
+  ColorPicker,
+  BrushProperties,
+  BrushPreview,
+} from './components';
+import {
+  DEFAULT_COLORS,
+  DEFAULT_THICKNESS,
+  DEFAULT_OPACITY,
+} from './constants';
 
 const { height, width } = Dimensions.get('window');
 
 interface DrawProps {
-  colorPickerIcon?: React.ReactNode;
+  /**
+   * Color palette colors, specifying the color palette sections each containing rows of colors
+   * @default DEFAULT_COLORS
+   */
+  colors?: string[][][];
+  /**
+   * Initial thickness of the brush strokes
+   * @default DEFAULT_THICKNESS
+   */
+  initialThickness?: number;
+  /**
+   * Initial opacity of the brush strokes
+   * @default DEFAULT_OPACITY
+   */
+  initialOpacity?: number;
+  /**
+   * Paths to be already drawn
+   * @default []
+   */
+  initialPaths?: PathType[];
+  /**
+   * Override the style of the container of the canvas
+   */
+  canvasContainerStyle?: ViewStyle;
 }
 
-const Draw: React.FC<DrawProps> = () => {
-  const [paths, setPaths] = useState<PathType[]>([]);
+const Draw: React.FC<DrawProps> = ({
+  colors = DEFAULT_COLORS,
+  initialThickness = DEFAULT_THICKNESS,
+  initialOpacity = DEFAULT_OPACITY,
+  initialPaths = [],
+  canvasContainerStyle,
+}) => {
+  const [paths, setPaths] = useState<PathType[]>(initialPaths);
   const [path, setPath] = useState<PathDataType>([]);
-  const [color, setColor] = useState(colorPalette[0][0]);
-  const [thickness, setThickness] = useState(3);
-  const [opacity, setOpacity] = useState(1);
+  const [color, setColor] = useState(colors[0][0][0]);
+  const [thickness, setThickness] = useState(initialThickness);
+  const [opacity, setOpacity] = useState(initialOpacity);
   const [colorPickerVisible, setColorPickerVisible] = useState(false);
 
   const onGestureEvent = ({
@@ -44,8 +80,18 @@ const Draw: React.FC<DrawProps> = () => {
     setPath((prev) => [...prev, [x, y]]);
   };
 
+  const focusCanvas = () => {
+    if (penOpen) {
+      handlePenOnPress();
+    } else if (colorPickerVisible) {
+      handleColorPicker();
+    }
+  };
+
   const handleThicknessOnChange = (t: number) => setThickness(t);
+
   const handleOpacityOnChange = (o: number) => setOpacity(o);
+
   const handleColorPicker = () => {
     if (!colorPickerVisible) {
       setColorPickerVisible(true);
@@ -63,33 +109,35 @@ const Draw: React.FC<DrawProps> = () => {
     });
   };
   const handleUndo = () => {
+    focusCanvas();
     setPaths((list) => list.filter((_i, key) => key !== list.length - 1));
   };
 
-  const colors = useMemo(() => [colorPalette, grayscale], []);
-
-  const reset = () =>
-    paths.length > 0 &&
-    Alert.alert(
-      'Delete drawing',
-      'Are you sure you want to delete your masterpiece?',
-      [
-        {
-          text: 'No',
-          style: 'cancel',
-        },
-        {
-          onPress() {
-            setPaths([]);
-            setPath([]);
+  const reset = () => {
+    focusCanvas();
+    if (paths.length > 0) {
+      Alert.alert(
+        'Delete drawing',
+        'Are you sure you want to delete your masterpiece?',
+        [
+          {
+            text: 'No',
+            style: 'cancel',
           },
-          text: 'Yes',
-        },
-      ],
-      {
-        cancelable: true,
-      }
-    );
+          {
+            onPress() {
+              setPaths([]);
+              setPath([]);
+            },
+            text: 'Yes',
+          },
+        ],
+        {
+          cancelable: true,
+        }
+      );
+    }
+  };
 
   const [animVal] = useState(new Animated.Value(0));
   const [penOpen, setPenOpen] = useState(false);
@@ -110,14 +158,11 @@ const Draw: React.FC<DrawProps> = () => {
       }
     });
   };
+
   const onHandlerStateChange = ({
     nativeEvent: { state },
   }: PanGestureHandlerStateChangeEvent) => {
-    if (penOpen) {
-      handlePenOnPress();
-    } else if (colorPickerVisible) {
-      handleColorPicker();
-    }
+    focusCanvas();
 
     if (state === State.END) {
       setPaths((prev) => [
@@ -140,18 +185,25 @@ const Draw: React.FC<DrawProps> = () => {
     extrapolate: 'clamp',
   });
 
+  const canvasContainerSyles = [
+    styles.canvasContainer,
+    {
+      translateY: animVal,
+    },
+    canvasContainerStyle,
+  ];
+
+  const canvasOverlayStyles = [
+    styles.canvasOverlay,
+    {
+      opacity: opacityOverlay,
+    },
+  ];
+
   return (
     <>
       <View style={styles.container}>
-        <Animated.View
-          style={{
-            height: height - 80,
-            elevation: 5,
-            width: '100%',
-            backgroundColor: 'white',
-            translateY: animVal,
-          }}
-        >
+        <Animated.View style={canvasContainerSyles}>
           <PanGestureHandler
             maxPointers={1}
             minDist={0}
@@ -169,99 +221,46 @@ const Draw: React.FC<DrawProps> = () => {
                 height={height - 80}
                 width={width}
               />
-              <Animated.View
-                style={{
-                  position: 'absolute',
-                  height: '100%',
-                  width: '100%',
-                  backgroundColor: '#000000',
-                  opacity: opacityOverlay,
-                }}
-              />
+              <Animated.View style={canvasOverlayStyles} />
             </View>
           </PanGestureHandler>
         </Animated.View>
-        {penOpen && (
-          <View style={{ position: 'absolute', bottom: 80, left: 0, right: 0 }}>
-            <Slider
-              minimumValue={5}
-              maximumValue={35}
-              step={1}
-              value={thickness}
-              onValueChange={handleThicknessOnChange}
-              thumbTintColor="black"
-              minimumTrackTintColor="black"
-            />
-            <Slider
-              minimumValue={0}
-              maximumValue={1}
-              step={0.1}
-              value={opacity}
-              onValueChange={handleOpacityOnChange}
-              thumbTintColor="black"
-              minimumTrackTintColor="black"
-            />
-          </View>
-        )}
 
-        {colorPickerVisible && (
-          <ColorButtonGroup
-            colors={colors}
-            selectedColor={color}
-            updateColor={setColor}
-          />
-        )}
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            height: 80,
-            justifyContent: 'space-between',
-            marginHorizontal: 15,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
+        <BrushProperties
+          visible={penOpen}
+          thickness={thickness}
+          thicknessOnChange={handleThicknessOnChange}
+          opacity={opacity}
+          opacityOnChange={handleOpacityOnChange}
+        />
+
+        <ColorPicker
+          selectedColor={color}
+          updateColor={setColor}
+          colors={colors}
+          visible={colorPickerVisible}
+        />
+
+        <View style={styles.bottomContent}>
+          <View style={styles.buttonsContainer}>
             <Button onPress={reset} color="#81090A">
               <Delete fill="#81090A" height={30} width={30} />
             </Button>
-            <Button
-              onPress={handleUndo}
-              color="#ddd"
-              style={{ marginLeft: 10 }}
-            >
+            <Button onPress={handleUndo} color="#ddd" style={styles.endButton}>
               <Undo fill="#ddd" height={30} width={30} />
             </Button>
           </View>
 
-          <Svg height={80} width={100}>
-            <Path
-              d="M 20 60 Q 30 20 50 40 Q 70 60 80 20 "
-              fill="none"
-              stroke={color}
-              strokeWidth={thickness}
-              opacity={opacity}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </Svg>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
+          <BrushPreview color={color} opacity={opacity} thickness={thickness} />
+
+          <View style={styles.buttonsContainer}>
             <Button onPress={handlePenOnPress} color="#ddd">
               <Brush fill="#ddd" height={30} width={30} />
             </Button>
             <Button
               onPress={handleColorPicker}
               color={color}
-              style={{ marginLeft: 10 }}
+              style={styles.endButton}
             >
               <Palette fill={color} height={30} width={30} />
             </Button>
@@ -280,6 +279,32 @@ const styles = StyleSheet.create({
   canvas: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  canvasContainer: {
+    height: height - 80,
+    elevation: 5,
+    width: '100%',
+    backgroundColor: 'white',
+  },
+  canvasOverlay: {
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    backgroundColor: '#000000',
+  },
+  bottomContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 80,
+    justifyContent: 'space-between',
+    marginHorizontal: 15,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  endButton: {
+    marginLeft: 10,
   },
 });
 

@@ -2,7 +2,7 @@
 import React, { memo } from 'react';
 import { TouchableOpacity, StyleSheet, Dimensions, View } from 'react-native';
 
-import { isBright } from './colorPalette';
+import { isBright } from '../../utils';
 
 const { width } = Dimensions.get('screen');
 const size = Math.round((width - 40) / 12);

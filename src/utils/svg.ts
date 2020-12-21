@@ -1,4 +1,4 @@
-import type { PathDataType } from './@types';
+import type { PathDataType } from '../types';
 
 export const createSVGPath = (path: PathDataType) => {
   return path.reduce((acc, point, index) => {
