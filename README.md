@@ -22,13 +22,26 @@ yarn add @benjeau/react-native-draw
 
 ## Usage
 
-```jsx
+```tsx
 import React from 'react';
-import Draw from "@benjeau/react-native-draw";
+import { Draw, DrawRef } from "@benjeau/react-native-draw";
 
 export default function App() {
+  const drawRef = useRef<DrawRef>(null);
+
+  const removeLastPath = () {
+    drawRef.current.?undo();
+  }
+
+  const clearDrawing = () {
+    drawRef.current.?clear();
+  }
+
+  // ... for more ref functions, look below
+
   return (
     <Draw
+      ref={drawRef}
       initialThickness={20}
       initialOpacity={0.5}
       initialDrawing ={[]}
@@ -44,11 +57,21 @@ export default function App() {
 
 | name | description  | type | default |
 | --- | --- | --- | --- |
-| `colors` | Color palette colors, specifying the color palette sections each containing rows of colors | `string[][][]` |  `[DEFAULT_COLORS](./src/constants.ts)` |
+| `colors` | Color palette colors, specifying the color palette sections each containing rows of colors | `string[][][]` |  [`DEFAULT_COLORS`](./src/constants.ts) |
 | `initialThickness` | Initial thickness of the brush strokes | `number` |  `3` |
 | `initialOpacity` | Initial opacity of the brush strokes | `number` |  `1` |
 | `initialDrawing` | Paths to be already drawn | `PathType[]` |  `[]` |
 | `canvasContainerStyle` | Override the style of the container of the canvas | `StyleProp` | |
+| `onPathsChange` | Callback function when paths change | (paths: [`PathType`](./src/types)[]) => any |  |
+
+## Ref
+
+| name | description | type |
+| --- | --- | --- |
+| `undo` | Undo last brush stroke | `() => void` |
+| `clear` | Removes all brush strokes | `() => void` |
+| `getPaths` | Get brush strokes data | `() => PathType[]` |
+| `addPath` | Append a path to the current drawing paths | `(path: PathType) => void` |
 
 ## Contributing
 

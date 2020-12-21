@@ -1,3 +1,1 @@
-import Draw from './Draw';
-
-export default Draw;
+export { default as Draw, DrawRef, DrawProps } from './Draw';
