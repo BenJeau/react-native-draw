@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useCallback, useMemo } from 'react';
+import React, { memo } from 'react';
 import { TouchableOpacity, StyleSheet, Dimensions, View } from 'react-native';
 
 import { isBright } from './colorPalette';
@@ -27,28 +27,20 @@ const ColorButton: React.FC<ColorButtonProps> = ({
   isBottomStart,
   isBottomEnd,
 }) => {
-  const handleOnPress = useCallback(() => updateColor(color), [
-    color,
-    updateColor,
-  ]);
-  const borderRadiusStyle = useMemo(
-    () => ({
-      borderTopStartRadius: isTopStart ? 8 : 0,
-      borderTopEndRadius: isTopEnd ? 8 : 0,
-      borderBottomStartRadius: isBottomStart ? 8 : 0,
-      borderBottomEndRadius: isBottomEnd ? 8 : 0,
-    }),
-    [isBottomEnd, isBottomStart, isTopEnd, isTopStart]
-  );
+  const handleOnPress = () => updateColor(color);
 
-  const style = useMemo(
-    () => ({
-      backgroundColor: color,
-      borderWidth: selectedColor === color ? 2 : 0,
-      borderColor: isBright(color) ? '#000000b0' : '#ffffffb0',
-    }),
-    [color, selectedColor]
-  );
+  const borderRadiusStyle = {
+    borderTopStartRadius: isTopStart ? 8 : 0,
+    borderTopEndRadius: isTopEnd ? 8 : 0,
+    borderBottomStartRadius: isBottomStart ? 8 : 0,
+    borderBottomEndRadius: isBottomEnd ? 8 : 0,
+  };
+
+  const style = {
+    backgroundColor: color,
+    borderWidth: selectedColor === color ? 2 : 0,
+    borderColor: isBright(color) ? '#000000b0' : '#ffffffb0',
+  };
 
   return (
     <View style={{ borderWidth: 1, ...borderRadiusStyle, borderColor: '#eee' }}>
@@ -70,4 +62,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ColorButton;
+export default memo(ColorButton);

@@ -1,5 +1,12 @@
 import React, { useMemo, useState } from 'react';
-import { Alert, Dimensions, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  Animated,
+  Dimensions,
+  Easing,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
@@ -31,28 +38,6 @@ const Draw: React.FC<DrawProps> = () => {
   const [opacity, setOpacity] = useState(1);
   const [colorPickerVisible, setColorPickerVisible] = useState(false);
 
-  const hideColorPicker = () =>
-    colorPickerVisible && setColorPickerVisible(false);
-
-  const onHandlerStateChange = ({
-    nativeEvent: { state },
-  }: PanGestureHandlerStateChangeEvent) => {
-    hideColorPicker();
-    if (state === State.END) {
-      setPaths((prev) => [
-        ...prev,
-        {
-          color,
-          path: createSVGPath(path),
-          data: path,
-          thickness,
-          opacity,
-        },
-      ]);
-      setPath([]);
-    }
-  };
-
   const onGestureEvent = ({
     nativeEvent: { x, y },
   }: PanGestureHandlerGestureEvent) => {
@@ -61,9 +46,23 @@ const Draw: React.FC<DrawProps> = () => {
 
   const handleThicknessOnChange = (t: number) => setThickness(t);
   const handleOpacityOnChange = (o: number) => setOpacity(o);
-  const handleColorPicker = () => setColorPickerVisible((prev) => !prev);
+  const handleColorPicker = () => {
+    if (!colorPickerVisible) {
+      setColorPickerVisible(true);
+      setPenOpen(false);
+    }
+    Animated.timing(animVal, {
+      useNativeDriver: true,
+      toValue: colorPickerVisible ? 0 : -180,
+      duration: 500,
+      easing: Easing.out(Easing.cubic),
+    }).start(() => {
+      if (colorPickerVisible) {
+        setColorPickerVisible(false);
+      }
+    });
+  };
   const handleUndo = () => {
-    hideColorPicker();
     setPaths((list) => list.filter((_i, key) => key !== list.length - 1));
   };
 
@@ -81,7 +80,6 @@ const Draw: React.FC<DrawProps> = () => {
         },
         {
           onPress() {
-            hideColorPicker();
             setPaths([]);
             setPath([]);
           },
@@ -93,15 +91,65 @@ const Draw: React.FC<DrawProps> = () => {
       }
     );
 
+  const [animVal] = useState(new Animated.Value(0));
+  const [penOpen, setPenOpen] = useState(false);
+
+  const handlePenOnPress = () => {
+    if (!penOpen) {
+      setPenOpen(true);
+      setColorPickerVisible(false);
+    }
+    Animated.timing(animVal, {
+      useNativeDriver: true,
+      toValue: penOpen ? 0 : -50,
+      duration: 300,
+      easing: Easing.out(Easing.cubic),
+    }).start(() => {
+      if (penOpen) {
+        setPenOpen(false);
+      }
+    });
+  };
+  const onHandlerStateChange = ({
+    nativeEvent: { state },
+  }: PanGestureHandlerStateChangeEvent) => {
+    if (penOpen) {
+      handlePenOnPress();
+    } else if (colorPickerVisible) {
+      handleColorPicker();
+    }
+
+    if (state === State.END) {
+      setPaths((prev) => [
+        ...prev,
+        {
+          color,
+          path: createSVGPath(path),
+          data: path,
+          thickness,
+          opacity,
+        },
+      ]);
+      setPath([]);
+    }
+  };
+
+  const opacityOverlay = animVal.interpolate({
+    inputRange: [penOpen ? -50 : -180, 0],
+    outputRange: [0.5, 0],
+    extrapolate: 'clamp',
+  });
+
   return (
     <>
       <View style={styles.container}>
-        <View
+        <Animated.View
           style={{
-            height: height - 140,
+            height: height - 80,
             elevation: 5,
             width: '100%',
             backgroundColor: 'white',
+            translateY: animVal,
           }}
         >
           <PanGestureHandler
@@ -118,34 +166,51 @@ const Draw: React.FC<DrawProps> = () => {
                 currentPath={path}
                 currentThickness={thickness}
                 paths={paths}
-                height={height - 130}
+                height={height - 80}
                 width={width}
+              />
+              <Animated.View
+                style={{
+                  position: 'absolute',
+                  height: '100%',
+                  width: '100%',
+                  backgroundColor: '#000000',
+                  opacity: opacityOverlay,
+                }}
               />
             </View>
           </PanGestureHandler>
-        </View>
-        <View style={{ marginTop: 15 }}>
-          <Slider
-            minimumValue={5}
-            maximumValue={35}
-            step={1}
-            value={thickness}
-            onValueChange={handleThicknessOnChange}
-            onTouchStart={hideColorPicker}
-            thumbTintColor="black"
-            minimumTrackTintColor="black"
+        </Animated.View>
+        {penOpen && (
+          <View style={{ position: 'absolute', bottom: 80, left: 0, right: 0 }}>
+            <Slider
+              minimumValue={5}
+              maximumValue={35}
+              step={1}
+              value={thickness}
+              onValueChange={handleThicknessOnChange}
+              thumbTintColor="black"
+              minimumTrackTintColor="black"
+            />
+            <Slider
+              minimumValue={0}
+              maximumValue={1}
+              step={0.1}
+              value={opacity}
+              onValueChange={handleOpacityOnChange}
+              thumbTintColor="black"
+              minimumTrackTintColor="black"
+            />
+          </View>
+        )}
+
+        {colorPickerVisible && (
+          <ColorButtonGroup
+            colors={colors}
+            selectedColor={color}
+            updateColor={setColor}
           />
-          <Slider
-            minimumValue={0}
-            maximumValue={1}
-            step={0.1}
-            value={opacity}
-            onValueChange={handleOpacityOnChange}
-            onTouchStart={hideColorPicker}
-            thumbTintColor="black"
-            minimumTrackTintColor="black"
-          />
-        </View>
+        )}
         <View
           style={{
             flexDirection: 'row',
@@ -190,7 +255,7 @@ const Draw: React.FC<DrawProps> = () => {
               justifyContent: 'space-between',
             }}
           >
-            <Button onPress={handleColorPicker} color="#ddd">
+            <Button onPress={handlePenOnPress} color="#ddd">
               <Brush fill="#ddd" height={30} width={30} />
             </Button>
             <Button
@@ -203,13 +268,6 @@ const Draw: React.FC<DrawProps> = () => {
           </View>
         </View>
       </View>
-
-      <ColorButtonGroup
-        colors={colors}
-        selectedColor={color}
-        updateColor={setColor}
-        visible={colorPickerVisible}
-      />
     </>
   );
 };
