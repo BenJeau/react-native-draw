@@ -3,28 +3,22 @@
   "description": "Example app for @benjeau/react-native-draw",
   "version": "0.0.1",
   "private": true,
-  "main": "index",
   "scripts": {
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "start": "expo start",
-    "test": "jest"
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start"
   },
   "dependencies": {
-    "expo": "^38.0.0",
-    "expo-splash-screen": "^0.3.1",
-    "react": "16.11.0",
-    "react-dom": "16.11.0",
-    "react-native": "0.62.2",
-    "react-native-unimodules": "~0.10.1",
-    "react-native-web": "^0.12.3"
+    "@react-native-community/slider": "^3.0.3",
+    "react": "16.13.1",
+    "react-native": "0.63.4",
+    "react-native-gesture-handler": "^1.9.0",
+    "react-native-svg": "^12.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.6",
-    "@babel/runtime": "^7.9.6",
+    "@babel/core": "^7.12.10",
+    "@babel/runtime": "^7.12.5",
     "babel-plugin-module-resolver": "^4.0.0",
-    "babel-preset-expo": "^8.2.3",
-    "expo-cli": "^3.21.12"
+    "metro-react-native-babel-preset": "^0.64.0"
   }
 }

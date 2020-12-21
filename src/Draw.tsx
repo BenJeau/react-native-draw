@@ -24,7 +24,7 @@ import Svg, { Path } from 'react-native-svg';
 import Button from './Button';
 import Slider from '@react-native-community/slider';
 
-const { height, width } = Dimensions.get('screen');
+const { height, width } = Dimensions.get('window');
 
 interface DrawProps {
   colorPickerIcon?: React.ReactNode;
