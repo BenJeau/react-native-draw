@@ -63,8 +63,9 @@ export default function App() {
 | `initialThickness` | Initial thickness of the brush strokes | `number` |  `3` |
 | `initialOpacity` | Initial opacity of the brush strokes | `number` |  `1` |
 | `initialDrawing` | Paths to be already drawn | `PathType[]` |  `[]` |
-| `canvasContainerStyle` | Override the style of the container of the canvas | `StyleProp` | |
-| `onPathsChange` | Callback function when paths change | (paths: [`PathType`](./src/types)[]) => any |  |
+| `brushPreview` | Change brush preview preset or remove it | `'stroke' | 'dot' | 'none'` | `stroke` |
+| `canvasContainerStyle` | Override the style of the container of the canvas | `StyleProp` | - |
+| `onPathsChange` | Callback function when paths change | (paths: [`PathType`](./src/types)[]) => any | - |
 
 ## Ref
 

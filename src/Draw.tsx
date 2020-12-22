@@ -35,6 +35,7 @@ import {
   DEFAULT_THICKNESS,
   DEFAULT_OPACITY,
 } from './constants';
+import type { BrushType } from './components/renderer/BrushPreview';
 
 const dimen = Dimensions.get('window');
 
@@ -75,6 +76,10 @@ export interface DrawProps {
    * Width of the canvas
    */
   width?: number;
+  /**
+   * Change brush preview preset or remove it
+   */
+  brushPreview?: BrushType;
 }
 
 export interface DrawRef {
@@ -107,6 +112,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       onPathsChange,
       height = dimen.height - 80,
       width = dimen.width,
+      brushPreview = 'stroke',
     },
     ref
   ) => {
@@ -319,6 +325,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
                 color={color}
                 opacity={opacity}
                 thickness={thickness}
+                type={brushPreview}
               />
 
               <View style={styles.buttonsContainer}>
