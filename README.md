@@ -51,7 +51,7 @@ export default function App() {
         paths: []
       }}
       brushPreview="none"
-      canvasContainerStyle={{ elevation: 0, backgroundColor: "red" }}
+      canvasStyle={{ elevation: 0, backgroundColor: "red" }}
     />
   )
 }
@@ -68,7 +68,8 @@ All of the props are optional
 | `width` | Width of the canvas | `number` | width of the window |
 | `initialValues` | Initial values for color the brush and paths | [`DrawInitialValues`](./src/Draw.tsx) | see [below](#DrawInitialValues) |
 | `brushPreview` | Change brush preview preset or remove it | `'stroke' | 'dot' | 'none'` | `stroke` |
-| `canvasContainerStyle` | Override the style of the container of the canvas | `StyleProp` | - |
+| `canvasStyle` | Override the style of the container of the canvas | `StyleProp` | - |
+| `buttonStyle` | Override the style of the buttons | `StyleProp` | - |
 | `onPathsChange` | Callback function when paths change | (paths: [`PathType`](./src/types.ts)[]) => any | - |
 
 ### DrawInitialValues

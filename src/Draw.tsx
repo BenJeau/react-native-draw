@@ -9,6 +9,7 @@ import {
   Animated,
   Dimensions,
   Easing,
+  StyleProp,
   StyleSheet,
   View,
   ViewStyle,
@@ -79,7 +80,12 @@ export interface DrawProps {
   /**
    * Override the style of the container of the canvas
    */
-  canvasContainerStyle?: ViewStyle;
+  canvasStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * Override the style of the buttons
+   */
+  buttonStyle?: StyleProp<ViewStyle>;
 
   /**
    * Callback function when paths change
@@ -129,7 +135,8 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     {
       colors = DEFAULT_COLORS,
       initialValues = {},
-      canvasContainerStyle,
+      canvasStyle,
+      buttonStyle,
       onPathsChange,
       height = dimen.height - 80,
       width = dimen.width,
@@ -272,13 +279,13 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     });
 
     const canvasContainerSyles = [
-      styles.canvasContainer,
+      styles.canvas,
       {
         translateY: animVal,
         height,
         width,
       },
-      canvasContainerStyle,
+      canvasStyle,
     ];
 
     const canvasOverlayStyles = [
@@ -320,7 +327,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
               }}
               shouldCancelWhenOutside
             >
-              <View style={styles.canvas}>
+              <View style={styles.canvasContent}>
                 <SVGRenderer
                   currentColor={color}
                   currentOpacity={opacity}
@@ -338,16 +345,14 @@ const Draw = forwardRef<DrawRef, DrawProps>(
           <View style={styles.bottomContainer}>
             <View style={styles.bottomContent}>
               <View style={styles.buttonsContainer}>
-                <Button onPress={reset} color="#81090A">
+                <Button onPress={reset} color="#81090A" style={buttonStyle}>
                   <Delete fill="#81090A" height={30} width={30} />
                 </Button>
-                <Button
-                  onPress={handleUndo}
-                  color="#ddd"
-                  style={styles.endButton}
-                >
+                <View style={styles.endButton}>
+                  <Button onPress={handleUndo} color="#ddd" style={buttonStyle}>
                   <Undo fill="#ddd" height={30} width={30} />
                 </Button>
+              </View>
               </View>
 
               <BrushPreview
@@ -358,17 +363,23 @@ const Draw = forwardRef<DrawRef, DrawProps>(
               />
 
               <View style={styles.buttonsContainer}>
-                <Button onPress={handlePenOnPress} color="#ddd">
+                <Button
+                  onPress={handlePenOnPress}
+                  color="#ddd"
+                  style={buttonStyle}
+                >
                   <Brush fill="#ddd" height={30} width={30} />
                 </Button>
+                <View style={styles.endButton}>
                 <Button
                   onPress={handleColorPicker}
                   color={color}
-                  style={styles.endButton}
+                    style={buttonStyle}
                 >
                   <Palette fill={color} height={30} width={30} />
                 </Button>
               </View>
+            </View>
             </View>
             <BrushProperties
               visible={penOpen}
@@ -400,12 +411,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   canvas: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  canvasContainer: {
     elevation: 5,
     backgroundColor: 'white',
+    zIndex: 10,
+  },
+  canvasContent: {
+    flex: 1,
   },
   canvasOverlay: {
     position: 'absolute',
