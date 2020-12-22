@@ -60,6 +60,7 @@ export default function App() {
 | `colors` | Color palette colors, specifying the color palette sections each containing rows of colors | `string[][][]` |  [`DEFAULT_COLORS`](./src/constants.ts) |
 | `height` | Height of the canvas | `number` | height of the window - 80 |
 | `width` | Width of the canvas | `number` | width of the window |
+| `initialColor` | Initial brush color, from the colors provided | `string` | the first color of the first row in the first section from `colors` |
 | `initialThickness` | Initial thickness of the brush strokes | `number` |  `3` |
 | `initialOpacity` | Initial opacity of the brush strokes | `number` |  `1` |
 | `initialDrawing` | Paths to be already drawn | `PathType[]` |  `[]` |

@@ -6,7 +6,7 @@ export default () => {
   return (
     <>
       <StatusBar translucent backgroundColor="#00000050" animated />
-      <Draw width={300} height={500} />
+      <Draw width={300} height={500} initialColor="#AB88F2" />
     </>
   );
 };

@@ -46,6 +46,10 @@ export interface DrawProps {
    */
   colors?: string[][][];
   /**
+   * Initial brush color, from the colors provided
+   */
+  initialColor?: string;
+  /**
    * Initial thickness of the brush strokes
    * @default DEFAULT_THICKNESS
    */
@@ -105,6 +109,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
   (
     {
       colors = DEFAULT_COLORS,
+      initialColor = colors[0][0][0],
       initialThickness = DEFAULT_THICKNESS,
       initialOpacity = DEFAULT_OPACITY,
       initialDrawing = [],
@@ -118,7 +123,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
   ) => {
     const [paths, setPaths] = useState<PathType[]>(initialDrawing);
     const [path, setPath] = useState<PathDataType>([]);
-    const [color, setColor] = useState(colors[0][1][10]);
+    const [color, setColor] = useState(initialColor);
     const [thickness, setThickness] = useState(initialThickness);
     const [opacity, setOpacity] = useState(initialOpacity);
     const [colorPickerVisible, setColorPickerVisible] = useState(false);
