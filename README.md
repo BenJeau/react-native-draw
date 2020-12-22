@@ -4,7 +4,7 @@
 
 Cross-platform React Native drawing component based on SVG
 
-> Note: This should technically work on Android, iOS and potentially the web, but I only tested it on Android
+> Note: This should technically work on Android, iOS and potentially the web, but I only tested it on Android. Performance may not be great, this is not my main focus right now, but will be tackled via resolving this [issue](https://github.com/BenJeau/react-native-draw/issues/4)
 
 ![Drawing Example](assets/drawingExample.gif)
 
