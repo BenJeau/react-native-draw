@@ -13,6 +13,8 @@ export default () => {
         canvasStyle={{
           borderRadius: 10,
         }}
+        brushPreview="none"
+        hideBottom={{ brushProperties: true, clear: true, undo: true }}
       />
     </>
   );

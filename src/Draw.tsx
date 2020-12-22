@@ -65,6 +65,18 @@ export interface DrawInitialValues {
   paths?: PathType[];
 }
 
+export interface HideBottomBrushProperties {
+  opacity?: boolean;
+  size?: boolean;
+}
+
+export interface HideBottom {
+  undo?: boolean;
+  clear?: boolean;
+  colorPicker?: boolean;
+  brushProperties?: boolean | HideBottomBrushProperties;
+}
+
 export interface DrawProps {
   /**
    * Color palette colors, specifying the color palette sections each containing rows of colors
@@ -106,6 +118,11 @@ export interface DrawProps {
    * Change brush preview preset or remove it
    */
   brushPreview?: BrushType;
+
+  /**
+   * Hide all of the bottom section, below the canvas, or only certain functionalities
+   */
+  hideBottom?: boolean | HideBottom;
 }
 
 export interface DrawRef {
@@ -130,6 +147,48 @@ export interface DrawRef {
   addPath: (path: PathType) => void;
 }
 
+interface Visibility {
+  undo: boolean;
+  clear: boolean;
+  colorPicker: boolean;
+  brushProperties: {
+    opacity: boolean;
+    size: boolean;
+  };
+}
+
+const getVisibility = (hideBottom: boolean | HideBottom): Visibility => {
+  if (typeof hideBottom === 'boolean') {
+    return {
+      clear: hideBottom,
+      colorPicker: hideBottom,
+      undo: hideBottom,
+      brushProperties: {
+        opacity: hideBottom,
+        size: hideBottom,
+      },
+    };
+  } else {
+    return {
+      clear: false,
+      colorPicker: false,
+      undo: false,
+      ...hideBottom,
+      brushProperties: {
+        opacity: false,
+        size: false,
+        ...(hideBottom.brushProperties &&
+          (typeof hideBottom.brushProperties === 'object'
+            ? hideBottom.brushProperties
+            : {
+                opacity: true,
+                size: true,
+              })),
+      },
+    };
+  }
+};
+
 const Draw = forwardRef<DrawRef, DrawProps>(
   (
     {
@@ -141,6 +200,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       height = dimen.height - 80,
       width = dimen.width,
       brushPreview = 'stroke',
+      hideBottom = false,
     } = {},
     ref
   ) => {
@@ -151,6 +211,8 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       paths: [],
       ...initialValues,
     };
+
+    const viewVisibility = getVisibility(hideBottom);
 
     const [paths, setPaths] = useState<PathType[]>(initialValues.paths!);
     const [path, setPath] = useState<PathDataType>([]);
@@ -342,61 +404,82 @@ const Draw = forwardRef<DrawRef, DrawProps>(
             </PanGestureHandler>
           </Animated.View>
 
-          <View style={styles.bottomContainer}>
-            <View style={styles.bottomContent}>
-              <View style={styles.buttonsContainer}>
-                <Button onPress={reset} color="#81090A" style={buttonStyle}>
-                  <Delete fill="#81090A" height={30} width={30} />
-                </Button>
-                <View style={styles.endButton}>
-                  <Button onPress={handleUndo} color="#ddd" style={buttonStyle}>
-                  <Undo fill="#ddd" height={30} width={30} />
-                </Button>
-              </View>
-              </View>
+          {hideBottom !== true && (
+            <View style={styles.bottomContainer}>
+              <View style={styles.bottomContent}>
+                <View style={styles.buttonsContainer}>
+                  {!viewVisibility.clear && (
+                    <Button onPress={reset} color="#81090A" style={buttonStyle}>
+                      <Delete fill="#81090A" height={30} width={30} />
+                    </Button>
+                  )}
+                  {!viewVisibility.undo && (
+                    <View style={!viewVisibility.clear && styles.endButton}>
+                      <Button
+                        onPress={handleUndo}
+                        color="#ddd"
+                        style={buttonStyle}
+                      >
+                        <Undo fill="#ddd" height={30} width={30} />
+                      </Button>
+                    </View>
+                  )}
+                </View>
 
-              <BrushPreview
-                color={color}
-                opacity={opacity}
-                thickness={thickness}
-                type={brushPreview}
-              />
-
-              <View style={styles.buttonsContainer}>
-                <Button
-                  onPress={handlePenOnPress}
-                  color="#ddd"
-                  style={buttonStyle}
-                >
-                  <Brush fill="#ddd" height={30} width={30} />
-                </Button>
-                <View style={styles.endButton}>
-                <Button
-                  onPress={handleColorPicker}
+                <BrushPreview
                   color={color}
-                    style={buttonStyle}
-                >
-                  <Palette fill={color} height={30} width={30} />
-                </Button>
+                  opacity={opacity}
+                  thickness={thickness}
+                  type={brushPreview}
+                />
+
+                <View style={styles.buttonsContainer}>
+                  {(!viewVisibility.brushProperties.opacity ||
+                    !viewVisibility.brushProperties.size) && (
+                    <Button
+                      onPress={handlePenOnPress}
+                      color="#ddd"
+                      style={buttonStyle}
+                    >
+                      <Brush fill="#ddd" height={30} width={30} />
+                    </Button>
+                  )}
+                  {!viewVisibility.colorPicker && (
+                    <View
+                      style={
+                        (!viewVisibility.brushProperties.opacity ||
+                          !viewVisibility.brushProperties.size) &&
+                        styles.endButton
+                      }
+                    >
+                      <Button
+                        onPress={handleColorPicker}
+                        color={color}
+                        style={buttonStyle}
+                      >
+                        <Palette fill={color} height={30} width={30} />
+                      </Button>
+                    </View>
+                  )}
+                </View>
               </View>
+              <BrushProperties
+                visible={penOpen}
+                thickness={thickness}
+                thicknessOnChange={handleThicknessOnChange}
+                opacity={opacity}
+                opacityOnChange={handleOpacityOnChange}
+                viewOpacity={viewOpacity}
+              />
+              <ColorPicker
+                selectedColor={color}
+                updateColor={setColor}
+                colors={colors}
+                visible={colorPickerVisible}
+                viewOpacity={viewOpacity}
+              />
             </View>
-            </View>
-            <BrushProperties
-              visible={penOpen}
-              thickness={thickness}
-              thicknessOnChange={handleThicknessOnChange}
-              opacity={opacity}
-              opacityOnChange={handleOpacityOnChange}
-              viewOpacity={viewOpacity}
-            />
-            <ColorPicker
-              selectedColor={color}
-              updateColor={setColor}
-              colors={colors}
-              visible={colorPickerVisible}
-              viewOpacity={viewOpacity}
-            />
-          </View>
+          )}
         </View>
       </>
     );

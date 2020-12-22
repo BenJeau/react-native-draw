@@ -67,6 +67,7 @@ All of the props are optional
 | `height` | Height of the canvas | `number` | height of the window - 80 |
 | `width` | Width of the canvas | `number` | width of the window |
 | `initialValues` | Initial values for color the brush and paths | [`DrawInitialValues`](./src/Draw.tsx) | see [below](#DrawInitialValues) |
+| `hideBottom` | Hide all of the bottom section, below the canvas, or only certain functionalities | `boolean | HideBottom` | false |
 | `brushPreview` | Change brush preview preset or remove it | `'stroke' | 'dot' | 'none'` | `stroke` |
 | `canvasStyle` | Override the style of the container of the canvas | `StyleProp` | - |
 | `buttonStyle` | Override the style of the buttons | `StyleProp` | - |
