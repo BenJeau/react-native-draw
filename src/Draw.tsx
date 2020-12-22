@@ -39,47 +39,63 @@ import type { BrushType } from './components/renderer/BrushPreview';
 
 const dimen = Dimensions.get('window');
 
+export interface DrawInitialValues {
+  /**
+   * Initial brush color, from the colors provided
+   */
+  color?: string;
+
+  /**
+   * Initial thickness of the brush strokes
+   * @default DEFAULT_THICKNESS
+   */
+  thickness?: number;
+
+  /**
+   * Initial opacity of the brush strokes
+   * @default DEFAULT_OPACITY
+   */
+  opacity?: number;
+
+  /**
+   * Paths to be already drawn
+   * @default []
+   */
+  paths?: PathType[];
+}
+
 export interface DrawProps {
   /**
    * Color palette colors, specifying the color palette sections each containing rows of colors
    * @default DEFAULT_COLORS
    */
   colors?: string[][][];
+
   /**
-   * Initial brush color, from the colors provided
+   * Initial values for color the brush and paths
    */
-  initialColor?: string;
-  /**
-   * Initial thickness of the brush strokes
-   * @default DEFAULT_THICKNESS
-   */
-  initialThickness?: number;
-  /**
-   * Initial opacity of the brush strokes
-   * @default DEFAULT_OPACITY
-   */
-  initialOpacity?: number;
-  /**
-   * Paths to be already drawn
-   * @default []
-   */
-  initialDrawing?: PathType[];
+  initialValues?: DrawInitialValues;
+
   /**
    * Override the style of the container of the canvas
    */
   canvasContainerStyle?: ViewStyle;
+
   /**
    * Callback function when paths change
    */
   onPathsChange?: (paths: PathType[]) => any;
+
   /**
    * Height of the canvas
    */
   height?: number;
+
   /**
    * Width of the canvas
    */
   width?: number;
+
   /**
    * Change brush preview preset or remove it
    */
@@ -91,14 +107,17 @@ export interface DrawRef {
    * Undo last brush stroke
    */
   undo: () => void;
+
   /**
    * Removes all brush strokes
    */
   clear: () => void;
+
   /**
    * Get brush strokes data
    */
   getPaths: () => PathType[];
+
   /**
    * Append a path to the current drawing paths
    */
@@ -109,23 +128,28 @@ const Draw = forwardRef<DrawRef, DrawProps>(
   (
     {
       colors = DEFAULT_COLORS,
-      initialColor = colors[0][0][0],
-      initialThickness = DEFAULT_THICKNESS,
-      initialOpacity = DEFAULT_OPACITY,
-      initialDrawing = [],
+      initialValues = {},
       canvasContainerStyle,
       onPathsChange,
       height = dimen.height - 80,
       width = dimen.width,
       brushPreview = 'stroke',
-    },
+    } = {},
     ref
   ) => {
-    const [paths, setPaths] = useState<PathType[]>(initialDrawing);
+    initialValues = {
+      color: colors[0][0][0],
+      thickness: DEFAULT_THICKNESS,
+      opacity: DEFAULT_OPACITY,
+      paths: [],
+      ...initialValues,
+    };
+
+    const [paths, setPaths] = useState<PathType[]>(initialValues.paths!);
     const [path, setPath] = useState<PathDataType>([]);
-    const [color, setColor] = useState(initialColor);
-    const [thickness, setThickness] = useState(initialThickness);
-    const [opacity, setOpacity] = useState(initialOpacity);
+    const [color, setColor] = useState(initialValues.color!);
+    const [thickness, setThickness] = useState(initialValues.thickness!);
+    const [opacity, setOpacity] = useState(initialValues.opacity!);
     const [colorPickerVisible, setColorPickerVisible] = useState(false);
 
     const onGestureEvent = ({
@@ -392,6 +416,7 @@ const styles = StyleSheet.create({
   bottomContainer: {
     height: 80,
     width: '100%',
+    justifyContent: 'center',
   },
   bottomContent: {
     flexDirection: 'row',

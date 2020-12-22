@@ -42,9 +42,15 @@ export default function App() {
   return (
     <Draw
       ref={drawRef}
-      initialThickness={20}
-      initialOpacity={0.5}
-      initialDrawing ={[]}
+      height={400}
+      width={300}
+      initialValues={{
+        color: "#B644D0",
+        thickness: 10,
+        opacity: 0.5,
+        paths: []
+      }}
+      brushPreview="none"
       canvasContainerStyle={{ elevation: 0, backgroundColor: "red" }}
     />
   )
@@ -53,22 +59,28 @@ export default function App() {
 
 ## Props
 
-**None** of the following props are required
+All of the props are optional
 
 | name | description  | type | default |
 | --- | --- | --- | --- |
 | `colors` | Color palette colors, specifying the color palette sections each containing rows of colors | `string[][][]` |  [`DEFAULT_COLORS`](./src/constants.ts) |
 | `height` | Height of the canvas | `number` | height of the window - 80 |
 | `width` | Width of the canvas | `number` | width of the window |
-| `initialColor` | Initial brush color, from the colors provided | `string` | the first color of the first row in the first section from `colors` |
-| `initialThickness` | Initial thickness of the brush strokes | `number` |  `3` |
-| `initialOpacity` | Initial opacity of the brush strokes | `number` |  `1` |
-| `initialDrawing` | Paths to be already drawn | `PathType[]` |  `[]` |
+| `initialValues` | Initial values for color the brush and paths | [`DrawInitialValues`](./src/Draw.tsx) | see [below](#DrawInitialValues) |
 | `brushPreview` | Change brush preview preset or remove it | `'stroke' | 'dot' | 'none'` | `stroke` |
 | `canvasContainerStyle` | Override the style of the container of the canvas | `StyleProp` | - |
-| `onPathsChange` | Callback function when paths change | (paths: [`PathType`](./src/types)[]) => any | - |
+| `onPathsChange` | Callback function when paths change | (paths: [`PathType`](./src/types.ts)[]) => any | - |
 
-## Ref
+### DrawInitialValues
+
+| name | description  | type | default |
+| --- | --- | --- | --- |
+| `color` | Initial brush color, from the colors provided | `string` | the first color of the first row in the first section from `colors` |
+| `thickness` | Initial thickness of the brush strokes | `number` |  `3` |
+| `opacity` | Initial opacity of the brush strokes | `number` |  `1` |
+| `paths` | Paths to be already drawn | `PathType[]` |  `[]` |
+
+## Ref functions
 
 | name | description | type |
 | --- | --- | --- |
