@@ -1,6 +1,6 @@
 import Slider from '@react-native-community/slider';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet } from 'react-native';
 
 interface BrushPropertiesProps {
   visible: boolean;
@@ -8,6 +8,7 @@ interface BrushPropertiesProps {
   thicknessOnChange: (value: number) => void;
   opacity: number;
   opacityOnChange: (value: number) => void;
+  viewOpacity?: Animated.AnimatedInterpolation;
 }
 
 const BrushProperties: React.FC<BrushPropertiesProps> = ({
@@ -16,9 +17,10 @@ const BrushProperties: React.FC<BrushPropertiesProps> = ({
   thicknessOnChange,
   opacity,
   opacityOnChange,
+  viewOpacity,
 }) =>
   visible ? (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { opacity: viewOpacity }]}>
       <Slider
         minimumValue={5}
         maximumValue={35}
@@ -37,7 +39,7 @@ const BrushProperties: React.FC<BrushPropertiesProps> = ({
         thumbTintColor="black"
         minimumTrackTintColor="black"
       />
-    </View>
+    </Animated.View>
   ) : null;
 
 const styles = StyleSheet.create({

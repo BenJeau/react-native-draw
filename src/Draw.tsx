@@ -36,7 +36,7 @@ import {
   DEFAULT_OPACITY,
 } from './constants';
 
-const { height, width } = Dimensions.get('window');
+const dimen = Dimensions.get('window');
 
 export interface DrawProps {
   /**
@@ -67,6 +67,14 @@ export interface DrawProps {
    * Callback function when paths change
    */
   onPathsChange?: (paths: PathType[]) => any;
+  /**
+   * Height of the canvas
+   */
+  height?: number;
+  /**
+   * Width of the canvas
+   */
+  width?: number;
 }
 
 export interface DrawRef {
@@ -97,6 +105,8 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       initialDrawing = [],
       canvasContainerStyle,
       onPathsChange,
+      height = dimen.height - 80,
+      width = dimen.width,
     },
     ref
   ) => {
@@ -199,7 +209,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     }: PanGestureHandlerStateChangeEvent) => {
       focusCanvas();
 
-      if (state === State.END) {
+      if (state === State.END || state === State.CANCELLED) {
         setPaths((prev) => [
           ...prev,
           {
@@ -215,8 +225,14 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     };
 
     const opacityOverlay = animVal.interpolate({
-      inputRange: [penOpen ? -50 : -180, 0],
+      inputRange: [-50, 0],
       outputRange: [0.5, 0],
+      extrapolate: 'clamp',
+    });
+
+    const viewOpacity = animVal.interpolate({
+      inputRange: [penOpen ? -50 : -180, 0],
+      outputRange: [1, 0],
       extrapolate: 'clamp',
     });
 
@@ -224,6 +240,8 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       styles.canvasContainer,
       {
         translateY: animVal,
+        height,
+        width,
       },
       canvasContainerStyle,
     ];
@@ -259,6 +277,13 @@ const Draw = forwardRef<DrawRef, DrawProps>(
               avgTouches={false}
               onHandlerStateChange={onHandlerStateChange}
               onGestureEvent={onGestureEvent}
+              hitSlop={{
+                height,
+                width,
+                top: 0,
+                left: 0,
+              }}
+              shouldCancelWhenOutside
             >
               <View style={styles.canvas}>
                 <SVGRenderer
@@ -267,7 +292,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
                   currentPath={path}
                   currentThickness={thickness}
                   paths={paths}
-                  height={height - 80}
+                  height={height}
                   width={width}
                 />
                 <Animated.View style={canvasOverlayStyles} />
@@ -275,53 +300,55 @@ const Draw = forwardRef<DrawRef, DrawProps>(
             </PanGestureHandler>
           </Animated.View>
 
-          <BrushProperties
-            visible={penOpen}
-            thickness={thickness}
-            thicknessOnChange={handleThicknessOnChange}
-            opacity={opacity}
-            opacityOnChange={handleOpacityOnChange}
-          />
+          <View style={styles.bottomContainer}>
+            <View style={styles.bottomContent}>
+              <View style={styles.buttonsContainer}>
+                <Button onPress={reset} color="#81090A">
+                  <Delete fill="#81090A" height={30} width={30} />
+                </Button>
+                <Button
+                  onPress={handleUndo}
+                  color="#ddd"
+                  style={styles.endButton}
+                >
+                  <Undo fill="#ddd" height={30} width={30} />
+                </Button>
+              </View>
 
-          <ColorPicker
-            selectedColor={color}
-            updateColor={setColor}
-            colors={colors}
-            visible={colorPickerVisible}
-          />
-
-          <View style={styles.bottomContent}>
-            <View style={styles.buttonsContainer}>
-              <Button onPress={reset} color="#81090A">
-                <Delete fill="#81090A" height={30} width={30} />
-              </Button>
-              <Button
-                onPress={handleUndo}
-                color="#ddd"
-                style={styles.endButton}
-              >
-                <Undo fill="#ddd" height={30} width={30} />
-              </Button>
-            </View>
-
-            <BrushPreview
-              color={color}
-              opacity={opacity}
-              thickness={thickness}
-            />
-
-            <View style={styles.buttonsContainer}>
-              <Button onPress={handlePenOnPress} color="#ddd">
-                <Brush fill="#ddd" height={30} width={30} />
-              </Button>
-              <Button
-                onPress={handleColorPicker}
+              <BrushPreview
                 color={color}
-                style={styles.endButton}
-              >
-                <Palette fill={color} height={30} width={30} />
-              </Button>
+                opacity={opacity}
+                thickness={thickness}
+              />
+
+              <View style={styles.buttonsContainer}>
+                <Button onPress={handlePenOnPress} color="#ddd">
+                  <Brush fill="#ddd" height={30} width={30} />
+                </Button>
+                <Button
+                  onPress={handleColorPicker}
+                  color={color}
+                  style={styles.endButton}
+                >
+                  <Palette fill={color} height={30} width={30} />
+                </Button>
+              </View>
             </View>
+            <BrushProperties
+              visible={penOpen}
+              thickness={thickness}
+              thicknessOnChange={handleThicknessOnChange}
+              opacity={opacity}
+              opacityOnChange={handleOpacityOnChange}
+              viewOpacity={viewOpacity}
+            />
+            <ColorPicker
+              selectedColor={color}
+              updateColor={setColor}
+              colors={colors}
+              visible={colorPickerVisible}
+              viewOpacity={viewOpacity}
+            />
           </View>
         </View>
       </>
@@ -333,15 +360,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#eee',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   canvas: {
     flex: 1,
     backgroundColor: 'white',
   },
   canvasContainer: {
-    height: height - 80,
     elevation: 5,
-    width: '100%',
     backgroundColor: 'white',
   },
   canvasOverlay: {
@@ -350,10 +377,13 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#000000',
   },
+  bottomContainer: {
+    height: 80,
+    width: '100%',
+  },
   bottomContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 80,
     justifyContent: 'space-between',
     marginHorizontal: 15,
   },
