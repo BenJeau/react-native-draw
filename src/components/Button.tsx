@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 
 import { isBright } from '../utils';
@@ -7,7 +7,7 @@ import { isBright } from '../utils';
 interface ButtonProps {
   onPress: () => void;
   color?: string;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }
 
 const Button: React.FC<ButtonProps> = ({ children, onPress, color, style }) => {
@@ -28,6 +28,7 @@ const Button: React.FC<ButtonProps> = ({ children, onPress, color, style }) => {
           : '#ffffffb0'
         : '',
     },
+    style,
   ];
 
   return (

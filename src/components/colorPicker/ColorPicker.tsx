@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 
 import ColorButton from './ColorButton';
 
@@ -8,6 +8,7 @@ interface ColorPickerProps {
   updateColor: (color: string) => void;
   colors: string[][][];
   visible: boolean;
+  viewOpacity?: Animated.AnimatedInterpolation;
 }
 
 const ColorPicker: React.FC<ColorPickerProps> = ({
@@ -15,9 +16,10 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
   updateColor,
   colors,
   visible,
+  viewOpacity,
 }) =>
   visible ? (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { opacity: viewOpacity }]}>
       <View style={styles.content}>
         {colors.map((group, gKey) => (
           <View
@@ -46,7 +48,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
           </View>
         ))}
       </View>
-    </View>
+    </Animated.View>
   ) : null;
 
 const styles = StyleSheet.create({

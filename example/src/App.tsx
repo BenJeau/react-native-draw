@@ -6,7 +6,16 @@ export default () => {
   return (
     <>
       <StatusBar translucent backgroundColor="#00000050" animated />
-      <Draw />
+      <Draw
+        width={300}
+        height={500}
+        initialValues={{ color: '#AB88F2' }}
+        canvasStyle={{
+          borderRadius: 10,
+        }}
+        brushPreview="none"
+        hideBottom={{ brushProperties: true, clear: true, undo: true }}
+      />
     </>
   );
 };

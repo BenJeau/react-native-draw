@@ -9,6 +9,7 @@ import {
   Animated,
   Dimensions,
   Easing,
+  StyleProp,
   StyleSheet,
   View,
   ViewStyle,
@@ -35,8 +36,46 @@ import {
   DEFAULT_THICKNESS,
   DEFAULT_OPACITY,
 } from './constants';
+import type { BrushType } from './components/renderer/BrushPreview';
 
-const { height, width } = Dimensions.get('window');
+const dimen = Dimensions.get('window');
+
+export interface DrawInitialValues {
+  /**
+   * Initial brush color, from the colors provided
+   */
+  color?: string;
+
+  /**
+   * Initial thickness of the brush strokes
+   * @default DEFAULT_THICKNESS
+   */
+  thickness?: number;
+
+  /**
+   * Initial opacity of the brush strokes
+   * @default DEFAULT_OPACITY
+   */
+  opacity?: number;
+
+  /**
+   * Paths to be already drawn
+   * @default []
+   */
+  paths?: PathType[];
+}
+
+export interface HideBottomBrushProperties {
+  opacity?: boolean;
+  size?: boolean;
+}
+
+export interface HideBottom {
+  undo?: boolean;
+  clear?: boolean;
+  colorPicker?: boolean;
+  brushProperties?: boolean | HideBottomBrushProperties;
+}
 
 export interface DrawProps {
   /**
@@ -44,29 +83,46 @@ export interface DrawProps {
    * @default DEFAULT_COLORS
    */
   colors?: string[][][];
+
   /**
-   * Initial thickness of the brush strokes
-   * @default DEFAULT_THICKNESS
+   * Initial values for color the brush and paths
    */
-  initialThickness?: number;
-  /**
-   * Initial opacity of the brush strokes
-   * @default DEFAULT_OPACITY
-   */
-  initialOpacity?: number;
-  /**
-   * Paths to be already drawn
-   * @default []
-   */
-  initialDrawing?: PathType[];
+  initialValues?: DrawInitialValues;
+
   /**
    * Override the style of the container of the canvas
    */
-  canvasContainerStyle?: ViewStyle;
+  canvasStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * Override the style of the buttons
+   */
+  buttonStyle?: StyleProp<ViewStyle>;
+
   /**
    * Callback function when paths change
    */
   onPathsChange?: (paths: PathType[]) => any;
+
+  /**
+   * Height of the canvas
+   */
+  height?: number;
+
+  /**
+   * Width of the canvas
+   */
+  width?: number;
+
+  /**
+   * Change brush preview preset or remove it
+   */
+  brushPreview?: BrushType;
+
+  /**
+   * Hide all of the bottom section, below the canvas, or only certain functionalities
+   */
+  hideBottom?: boolean | HideBottom;
 }
 
 export interface DrawRef {
@@ -74,37 +130,95 @@ export interface DrawRef {
    * Undo last brush stroke
    */
   undo: () => void;
+
   /**
    * Removes all brush strokes
    */
   clear: () => void;
+
   /**
    * Get brush strokes data
    */
   getPaths: () => PathType[];
+
   /**
    * Append a path to the current drawing paths
    */
   addPath: (path: PathType) => void;
 }
 
+interface Visibility {
+  undo: boolean;
+  clear: boolean;
+  colorPicker: boolean;
+  brushProperties: {
+    opacity: boolean;
+    size: boolean;
+  };
+}
+
+const getVisibility = (hideBottom: boolean | HideBottom): Visibility => {
+  if (typeof hideBottom === 'boolean') {
+    return {
+      clear: hideBottom,
+      colorPicker: hideBottom,
+      undo: hideBottom,
+      brushProperties: {
+        opacity: hideBottom,
+        size: hideBottom,
+      },
+    };
+  } else {
+    return {
+      clear: false,
+      colorPicker: false,
+      undo: false,
+      ...hideBottom,
+      brushProperties: {
+        opacity: false,
+        size: false,
+        ...(hideBottom.brushProperties &&
+          (typeof hideBottom.brushProperties === 'object'
+            ? hideBottom.brushProperties
+            : {
+                opacity: true,
+                size: true,
+              })),
+      },
+    };
+  }
+};
+
 const Draw = forwardRef<DrawRef, DrawProps>(
   (
     {
       colors = DEFAULT_COLORS,
-      initialThickness = DEFAULT_THICKNESS,
-      initialOpacity = DEFAULT_OPACITY,
-      initialDrawing = [],
-      canvasContainerStyle,
+      initialValues = {},
+      canvasStyle,
+      buttonStyle,
       onPathsChange,
-    },
+      height = dimen.height - 80,
+      width = dimen.width,
+      brushPreview = 'stroke',
+      hideBottom = false,
+    } = {},
     ref
   ) => {
-    const [paths, setPaths] = useState<PathType[]>(initialDrawing);
+    initialValues = {
+      color: colors[0][0][0],
+      thickness: DEFAULT_THICKNESS,
+      opacity: DEFAULT_OPACITY,
+      paths: [],
+      ...initialValues,
+    };
+
+    const viewVisibility = getVisibility(hideBottom);
+
+    const [paths, setPaths] = useState<PathType[]>(initialValues.paths!);
     const [path, setPath] = useState<PathDataType>([]);
-    const [color, setColor] = useState(colors[0][1][10]);
-    const [thickness, setThickness] = useState(initialThickness);
-    const [opacity, setOpacity] = useState(initialOpacity);
+    const [color, setColor] = useState(initialValues.color!);
+    const [thickness, setThickness] = useState(initialValues.thickness!);
+    const [opacity, setOpacity] = useState(initialValues.opacity!);
     const [colorPickerVisible, setColorPickerVisible] = useState(false);
 
     const onGestureEvent = ({
@@ -199,7 +313,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     }: PanGestureHandlerStateChangeEvent) => {
       focusCanvas();
 
-      if (state === State.END) {
+      if (state === State.END || state === State.CANCELLED) {
         setPaths((prev) => [
           ...prev,
           {
@@ -215,17 +329,25 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     };
 
     const opacityOverlay = animVal.interpolate({
-      inputRange: [penOpen ? -50 : -180, 0],
+      inputRange: [-50, 0],
       outputRange: [0.5, 0],
       extrapolate: 'clamp',
     });
 
+    const viewOpacity = animVal.interpolate({
+      inputRange: [penOpen ? -50 : -180, 0],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    });
+
     const canvasContainerSyles = [
-      styles.canvasContainer,
+      styles.canvas,
       {
         translateY: animVal,
+        height,
+        width,
       },
-      canvasContainerStyle,
+      canvasStyle,
     ];
 
     const canvasOverlayStyles = [
@@ -259,15 +381,22 @@ const Draw = forwardRef<DrawRef, DrawProps>(
               avgTouches={false}
               onHandlerStateChange={onHandlerStateChange}
               onGestureEvent={onGestureEvent}
+              hitSlop={{
+                height,
+                width,
+                top: 0,
+                left: 0,
+              }}
+              shouldCancelWhenOutside
             >
-              <View style={styles.canvas}>
+              <View style={styles.canvasContent}>
                 <SVGRenderer
                   currentColor={color}
                   currentOpacity={opacity}
                   currentPath={path}
                   currentThickness={thickness}
                   paths={paths}
-                  height={height - 80}
+                  height={height}
                   width={width}
                 />
                 <Animated.View style={canvasOverlayStyles} />
@@ -275,54 +404,82 @@ const Draw = forwardRef<DrawRef, DrawProps>(
             </PanGestureHandler>
           </Animated.View>
 
-          <BrushProperties
-            visible={penOpen}
-            thickness={thickness}
-            thicknessOnChange={handleThicknessOnChange}
-            opacity={opacity}
-            opacityOnChange={handleOpacityOnChange}
-          />
+          {hideBottom !== true && (
+            <View style={styles.bottomContainer}>
+              <View style={styles.bottomContent}>
+                <View style={styles.buttonsContainer}>
+                  {!viewVisibility.clear && (
+                    <Button onPress={reset} color="#81090A" style={buttonStyle}>
+                      <Delete fill="#81090A" height={30} width={30} />
+                    </Button>
+                  )}
+                  {!viewVisibility.undo && (
+                    <View style={!viewVisibility.clear && styles.endButton}>
+                      <Button
+                        onPress={handleUndo}
+                        color="#ddd"
+                        style={buttonStyle}
+                      >
+                        <Undo fill="#ddd" height={30} width={30} />
+                      </Button>
+                    </View>
+                  )}
+                </View>
 
-          <ColorPicker
-            selectedColor={color}
-            updateColor={setColor}
-            colors={colors}
-            visible={colorPickerVisible}
-          />
+                <BrushPreview
+                  color={color}
+                  opacity={opacity}
+                  thickness={thickness}
+                  type={brushPreview}
+                />
 
-          <View style={styles.bottomContent}>
-            <View style={styles.buttonsContainer}>
-              <Button onPress={reset} color="#81090A">
-                <Delete fill="#81090A" height={30} width={30} />
-              </Button>
-              <Button
-                onPress={handleUndo}
-                color="#ddd"
-                style={styles.endButton}
-              >
-                <Undo fill="#ddd" height={30} width={30} />
-              </Button>
+                <View style={styles.buttonsContainer}>
+                  {(!viewVisibility.brushProperties.opacity ||
+                    !viewVisibility.brushProperties.size) && (
+                    <Button
+                      onPress={handlePenOnPress}
+                      color="#ddd"
+                      style={buttonStyle}
+                    >
+                      <Brush fill="#ddd" height={30} width={30} />
+                    </Button>
+                  )}
+                  {!viewVisibility.colorPicker && (
+                    <View
+                      style={
+                        (!viewVisibility.brushProperties.opacity ||
+                          !viewVisibility.brushProperties.size) &&
+                        styles.endButton
+                      }
+                    >
+                      <Button
+                        onPress={handleColorPicker}
+                        color={color}
+                        style={buttonStyle}
+                      >
+                        <Palette fill={color} height={30} width={30} />
+                      </Button>
+                    </View>
+                  )}
+                </View>
+              </View>
+              <BrushProperties
+                visible={penOpen}
+                thickness={thickness}
+                thicknessOnChange={handleThicknessOnChange}
+                opacity={opacity}
+                opacityOnChange={handleOpacityOnChange}
+                viewOpacity={viewOpacity}
+              />
+              <ColorPicker
+                selectedColor={color}
+                updateColor={setColor}
+                colors={colors}
+                visible={colorPickerVisible}
+                viewOpacity={viewOpacity}
+              />
             </View>
-
-            <BrushPreview
-              color={color}
-              opacity={opacity}
-              thickness={thickness}
-            />
-
-            <View style={styles.buttonsContainer}>
-              <Button onPress={handlePenOnPress} color="#ddd">
-                <Brush fill="#ddd" height={30} width={30} />
-              </Button>
-              <Button
-                onPress={handleColorPicker}
-                color={color}
-                style={styles.endButton}
-              >
-                <Palette fill={color} height={30} width={30} />
-              </Button>
-            </View>
-          </View>
+          )}
         </View>
       </>
     );
@@ -333,16 +490,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#eee',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   canvas: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  canvasContainer: {
-    height: height - 80,
     elevation: 5,
-    width: '100%',
     backgroundColor: 'white',
+    zIndex: 10,
+  },
+  canvasContent: {
+    flex: 1,
   },
   canvasOverlay: {
     position: 'absolute',
@@ -350,10 +507,14 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#000000',
   },
+  bottomContainer: {
+    height: 80,
+    width: '100%',
+    justifyContent: 'center',
+  },
   bottomContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 80,
     justifyContent: 'space-between',
     marginHorizontal: 15,
   },
