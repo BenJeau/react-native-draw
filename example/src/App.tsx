@@ -9,9 +9,10 @@ export default () => {
       <Draw
         width={300}
         height={500}
-        initialValues={{ color: '#AB88F2' }}
+        initialValues={{ color: '#AB88F2', thickness: 15 }}
         canvasStyle={{
           borderRadius: 10,
+          marginTop: 80,
         }}
         brushPreview="none"
         hideBottom={{ brushProperties: true, clear: true, undo: true }}
