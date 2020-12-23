@@ -355,7 +355,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     };
 
     const onHandlerStateChange = ({
-      nativeEvent: { state, x, y },
+      nativeEvent: { state },
     }: PanGestureHandlerStateChangeEvent) => {
       focusCanvas();
 
