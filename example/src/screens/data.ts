@@ -1,0 +1,315 @@
+import type { DrawProps } from '@benjeau/react-native-draw';
+import { ToastAndroid } from 'react-native';
+
+interface Data {
+  name: string;
+  data: {
+    description: string;
+    props?: DrawProps;
+  }[];
+}
+
+const data: Data[] = [
+  {
+    name: 'defaultProps',
+    data: [{ description: 'Drawing component with default props' }],
+  },
+  {
+    name: 'height/width',
+    data: [
+      {
+        description: 'Custom canvas size',
+        props: {
+          height: 500,
+          width: 300,
+        },
+      },
+    ],
+  },
+  {
+    name: 'brushPreview',
+    data: [
+      {
+        description: 'Make the preview a dot',
+        props: {
+          brushPreview: 'dot',
+        },
+      },
+      {
+        description: 'Remove brush preview',
+        props: {
+          brushPreview: 'none',
+        },
+      },
+    ],
+  },
+  {
+    name: 'autoDismissColorPicker',
+    data: [
+      {
+        description: 'Dismiss color picker after selecting a color',
+        props: {
+          autoDismissColorPicker: true,
+        },
+      },
+    ],
+  },
+  {
+    name: 'simplifyOptions',
+    data: [
+      {
+        description: 'Disable SVG simplification',
+        props: {
+          simplifyOptions: {
+            simplifyPaths: false,
+          },
+        },
+      },
+      {
+        description: 'Custom simplification amount',
+        props: {
+          simplifyOptions: {
+            amount: 200,
+          },
+        },
+      },
+      {
+        description: 'Live SVG path simplification',
+        props: {
+          simplifyOptions: {
+            simplifyCurrentPath: true,
+          },
+        },
+      },
+      {
+        description: 'Enable float numbers in points of paths',
+        props: {
+          simplifyOptions: {
+            roundPoints: false,
+          },
+        },
+      },
+    ],
+  },
+  {
+    name: 'sdf',
+    data: [
+      {
+        description: 'wow',
+        props: {
+          onPathsChange(e) {
+            console.log(e);
+            ToastAndroid.show(
+              'Number of paths ' + e.length.toString(),
+              ToastAndroid.SHORT
+            );
+          },
+        },
+      },
+    ],
+  },
+  {
+    name: 'initialValues',
+    data: [
+      {
+        description:
+          'Initial brush color, size, and opacity with an initial drawing',
+        props: {
+          initialValues: {
+            color: '#EC86A8',
+            thickness: 20,
+            opacity: 0.5,
+            paths: [
+              {
+                color: '#F42C1B',
+                path: 'M59,119c0,83 3,166 3,249',
+                data: [
+                  [59, 119],
+                  [59, 161],
+                  [59, 171],
+                  [59, 182],
+                  [59, 194],
+                  [60, 208],
+                  [60, 222],
+                  [60, 237],
+                  [62, 252],
+                  [62, 269],
+                  [62, 284],
+                  [62, 300],
+                  [62, 314],
+                  [62, 327],
+                  [62, 347],
+                  [62, 354],
+                  [62, 359],
+                  [62, 367],
+                  [62, 368],
+                ],
+                thickness: 20,
+                opacity: 1,
+              },
+              {
+                color: '#F42C1B',
+                path: 'M59,251c29,0 57,2 85,2',
+                data: [
+                  [59, 251],
+                  [83, 251],
+                  [89, 251],
+                  [98, 251],
+                  [105, 251],
+                  [111, 251],
+                  [116, 251],
+                  [123, 253],
+                  [128, 253],
+                  [135, 253],
+                  [141, 253],
+                  [141, 253],
+                  [144, 253],
+                ],
+                thickness: 20,
+                opacity: 1,
+              },
+              {
+                color: '#F42C1B',
+                path: 'M147,105c-8,65 -6,133 0,199c1,15 1,33 4,48c0,1 3,6 3,6',
+                data: [
+                  [147, 105],
+                  [143, 139],
+                  [143, 163],
+                  [143, 176],
+                  [143, 189],
+                  [143, 203],
+                  [143, 218],
+                  [143, 233],
+                  [143, 248],
+                  [143, 262],
+                  [145, 278],
+                  [147, 304],
+                  [149, 325],
+                  [150, 333],
+                  [151, 345],
+                  [151, 349],
+                  [151, 352],
+                  [152, 354],
+                  [152, 355],
+                  [153, 356],
+                  [154, 358],
+                  [154, 358],
+                ],
+                thickness: 20,
+                opacity: 1,
+              },
+              {
+                color: '#F42C1B',
+                path:
+                  'M228,236c-6,30 -18,70 -4,100c7,15 21,22 35,27c1,0 9,0 9,0',
+                data: [
+                  [228, 236],
+                  [226, 246],
+                  [225, 251],
+                  [223, 258],
+                  [222, 264],
+                  [222, 272],
+                  [220, 280],
+                  [219, 288],
+                  [219, 298],
+                  [219, 306],
+                  [219, 315],
+                  [221, 322],
+                  [222, 329],
+                  [224, 336],
+                  [228, 342],
+                  [237, 352],
+                  [242, 356],
+                  [251, 361],
+                  [256, 361],
+                  [259, 363],
+                  [262, 363],
+                  [265, 363],
+                  [268, 363],
+                  [268, 363],
+                ],
+                thickness: 20,
+                opacity: 1,
+              },
+              {
+                color: '#F42C1B',
+                path: 'M241,172c-6,18 -30,14 -25,-8c5,-21 35,-21 35,2',
+                data: [
+                  [241, 172],
+                  [239, 178],
+                  [234, 181],
+                  [231, 182],
+                  [229, 184],
+                  [226, 183],
+                  [224, 183],
+                  [218, 182],
+                  [216, 177],
+                  [216, 169],
+                  [216, 164],
+                  [218, 160],
+                  [220, 156],
+                  [223, 153],
+                  [227, 150],
+                  [232, 150],
+                  [237, 149],
+                  [241, 149],
+                  [245, 149],
+                  [249, 152],
+                  [251, 154],
+                  [251, 160],
+                  [251, 166],
+                ],
+                thickness: 20,
+                opacity: 1,
+              },
+              {
+                color: '#4897FA',
+                path:
+                  'M72,407c59,-5 118,-13 177,-13c23,0 47,0 70,0c7,0 13,0 20,0c4,0 14,-1 11,1c-16,12 -183,23 -217,33c-26,8 38,12 56,14c18,2 35,4 53,6c14,2 28,5 42,7',
+                data: [
+                  [72, 407],
+                  [128, 402],
+                  [165, 398],
+                  [187, 396],
+                  [207, 395],
+                  [227, 394],
+                  [249, 394],
+                  [269, 394],
+                  [287, 394],
+                  [306, 394],
+                  [319, 394],
+                  [331, 394],
+                  [339, 394],
+                  [349, 394],
+                  [350, 395],
+                  [345, 397],
+                  [333, 398],
+                  [302, 403],
+                  [284, 405],
+                  [265, 408],
+                  [242, 412],
+                  [217, 416],
+                  [195, 418],
+                  [176, 421],
+                  [143, 425],
+                  [133, 428],
+                  [126, 430],
+                  [128, 432],
+                  [150, 438],
+                  [189, 442],
+                  [242, 448],
+                  [271, 453],
+                  [284, 455],
+                ],
+                thickness: 15,
+                opacity: 0.6000000000000001,
+              },
+            ],
+          },
+        },
+      },
+    ],
+  },
+];
+
+export default data;
