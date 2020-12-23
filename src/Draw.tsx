@@ -77,6 +77,28 @@ export interface HideBottom {
   brushProperties?: boolean | HideBottomBrushProperties;
 }
 
+export interface SimplifyOptions {
+  /**
+   * Enable SVG path simplification on paths, except the one currently being drawn
+   */
+  simplifyPaths?: boolean;
+
+  /**
+   * Enable SVG path simplification on the stroke being drawn
+   */
+  simplifyCurrentPath?: boolean;
+
+  /**
+   * Amount of simplification to apply
+   */
+  amount?: number;
+
+  /**
+   * Ignore fractional part in the points. Improves performance
+   */
+  roundPoints?: boolean;
+}
+
 export interface DrawProps {
   /**
    * Color palette colors, specifying the color palette sections each containing rows of colors
@@ -123,6 +145,11 @@ export interface DrawProps {
    * Hide all of the bottom section, below the canvas, or only certain functionalities
    */
   hideBottom?: boolean | HideBottom;
+
+  /**
+   * SVG simplification options
+   */
+  simplifyOptions?: SimplifyOptions;
 }
 
 export interface DrawRef {
@@ -201,6 +228,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       width = dimen.width,
       brushPreview = 'stroke',
       hideBottom = false,
+      simplifyOptions = {},
     } = {},
     ref
   ) => {
@@ -212,6 +240,14 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       ...initialValues,
     };
 
+    simplifyOptions = {
+      simplifyPaths: true,
+      simplifyCurrentPath: false,
+      amount: 15,
+      roundPoints: true,
+      ...simplifyOptions,
+    };
+
     const viewVisibility = getVisibility(hideBottom);
 
     const [paths, setPaths] = useState<PathType[]>(initialValues.paths!);
@@ -221,10 +257,20 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     const [opacity, setOpacity] = useState(initialValues.opacity!);
     const [colorPickerVisible, setColorPickerVisible] = useState(false);
 
+    const addPath = (x: number, y: number) => {
+      setPath((prev) => [
+        ...prev,
+        [
+          simplifyOptions.roundPoints ? Math.floor(x) : x,
+          simplifyOptions.roundPoints ? Math.floor(y) : y,
+        ],
+      ]);
+    };
+
     const onGestureEvent = ({
       nativeEvent: { x, y },
     }: PanGestureHandlerGestureEvent) => {
-      setPath((prev) => [...prev, [x, y]]);
+      addPath(x, y);
     };
 
     const focusCanvas = () => {
@@ -309,7 +355,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     };
 
     const onHandlerStateChange = ({
-      nativeEvent: { state },
+      nativeEvent: { state, x, y },
     }: PanGestureHandlerStateChangeEvent) => {
       focusCanvas();
 
@@ -318,7 +364,11 @@ const Draw = forwardRef<DrawRef, DrawProps>(
           ...prev,
           {
             color,
-            path: createSVGPath(path),
+            path: createSVGPath(
+              path,
+              simplifyOptions.simplifyPaths ? simplifyOptions.amount! : 0,
+              simplifyOptions.roundPoints!
+            ),
             data: path,
             thickness,
             opacity,
@@ -395,6 +445,12 @@ const Draw = forwardRef<DrawRef, DrawProps>(
                   currentOpacity={opacity}
                   currentPath={path}
                   currentThickness={thickness}
+                  currentPathTolerance={
+                    simplifyOptions.simplifyCurrentPath
+                      ? simplifyOptions.amount!
+                      : 0
+                  }
+                  roundPoints={simplifyOptions.roundPoints!}
                   paths={paths}
                   height={height}
                   width={width}

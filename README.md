@@ -69,6 +69,7 @@ All of the props are optional
 | `initialValues` | Initial values for color the brush and paths | [`DrawInitialValues`](./src/Draw.tsx) | see [below](#DrawInitialValues) |
 | `hideBottom` | Hide all of the bottom section, below the canvas, or only certain functionalities | `boolean | HideBottom` | false |
 | `brushPreview` | Change brush preview preset or remove it | `'stroke' | 'dot' | 'none'` | `stroke` |
+| `simplifyOptions` | SVG simplification options | [`SimplifyOptions`](./src/Draw.tsx) | see [below](#SimplifyOptions) |
 | `canvasStyle` | Override the style of the container of the canvas | `StyleProp` | - |
 | `buttonStyle` | Override the style of the buttons | `StyleProp` | - |
 | `onPathsChange` | Callback function when paths change | (paths: [`PathType`](./src/types.ts)[]) => any | - |
@@ -81,6 +82,15 @@ All of the props are optional
 | `thickness` | Initial thickness of the brush strokes | `number` |  `3` |
 | `opacity` | Initial opacity of the brush strokes | `number` |  `1` |
 | `paths` | Paths to be already drawn | `PathType[]` |  `[]` |
+
+### SimplifyOptions
+
+| name | description  | type | default |
+| --- | --- | --- | --- |
+| `simplifyPaths` | Enable SVG path simplification on paths, except the one currently being drawn | `boolean` | `true` |
+| `simplifyCurrentPath` | Enable SVG path simplification on the stroke being drawn | `boolean` | `false` |
+| `amount` | Amount of simplification to apply | `number` | `10` |
+| `roundPoints` | Ignore fractional part in the points. Improves performance | `boolean` | `true` |
 
 ## Ref functions
 

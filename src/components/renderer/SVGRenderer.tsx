@@ -12,6 +12,8 @@ interface SVGRendererProps {
   paths: PathType[];
   height: number;
   width: number;
+  roundPoints: boolean;
+  currentPathTolerance: number;
 }
 
 const SVGRenderer: React.FC<SVGRendererProps> = ({
@@ -22,10 +24,12 @@ const SVGRenderer: React.FC<SVGRendererProps> = ({
   paths,
   height,
   width,
+  roundPoints,
+  currentPathTolerance,
 }) => {
   const memoizedPath = useMemo(
-    () => (currentPath.length > 1 ? createSVGPath(currentPath) : ''),
-    [currentPath]
+    () => createSVGPath(currentPath, currentPathTolerance, roundPoints),
+    [currentPath, roundPoints, currentPathTolerance]
   );
 
   return (
