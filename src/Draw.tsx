@@ -367,19 +367,54 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     };
 
     const onHandlerStateChange = ({
-      nativeEvent: { state, x, y },
+      nativeEvent: { state, x, y, velocityX, velocityY },
     }: PanGestureHandlerStateChangeEvent) => {
       focusCanvas();
 
       if (state === State.BEGAN) {
         addPath(x, y);
       } else if (state === State.END || state === State.CANCELLED) {
+        let points = path;
+
+        if (state === State.CANCELLED) {
+          const offset = 20;
+
+          let newX = path[path.length - 1][0];
+          let newY = path[path.length - 1][1];
+
+          if (Math.abs(x) < offset) {
+            newX = 0;
+          } else if (width - Math.abs(x) < offset) {
+            newX = width;
+          } else if (Math.abs(y) < offset) {
+            newY = 0;
+          } else if (height - Math.abs(y) < offset) {
+            newY = height;
+          } else {
+            if (Math.abs(velocityX) > Math.abs(velocityY)) {
+              if (velocityX > 0) {
+                newX = width;
+              } else {
+                newX = 0;
+              }
+            } else {
+              if (velocityY > 0) {
+                newY = height;
+              } else {
+                newY = 0;
+              }
+            }
+          }
+
+          points.push([newX, newY]);
+        }
+
         setPaths((prev) => [
           ...prev,
           {
             color,
             path: createSVGPath(
-              path,
+              points,
               simplifyOptions.simplifyPaths ? simplifyOptions.amount! : 0,
               simplifyOptions.roundPoints!
             ),
