@@ -11,7 +11,7 @@ interface Data {
 
 const data: Data[] = [
   {
-    name: 'defaultProps',
+    name: '',
     data: [{ description: 'Drawing component with default props' }],
   },
   {
@@ -92,10 +92,50 @@ const data: Data[] = [
     ],
   },
   {
-    name: 'sdf',
+    name: 'colors',
     data: [
       {
-        description: 'wow',
+        description: 'Custom colors',
+        props: {
+          colors: [
+            [
+              ['#232323', '#00ff00'],
+              ['#aaa', '#ababab'],
+            ],
+            [['#123123', '#f00000']],
+          ],
+        },
+      },
+    ],
+  },
+  {
+    name: 'hideBottom',
+    data: [
+      {
+        description: 'Hide bottom section',
+        props: {
+          hideBottom: true,
+        },
+      },
+      {
+        description: 'Hide everything except the color picker',
+        props: {
+          hideBottom: {
+            brushProperties: true,
+            clear: true,
+            undo: true,
+          },
+          brushPreview: 'none',
+        },
+      },
+    ],
+  },
+  {
+    name: 'onPathsChange',
+    data: [
+      {
+        description:
+          'Subscribe to changes to the paths (see console logs or Toasts on Android)',
         props: {
           onPathsChange(e) {
             console.log(e);
