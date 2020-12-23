@@ -371,24 +371,26 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     }: PanGestureHandlerStateChangeEvent) => {
       focusCanvas();
 
-      if (state === State.BEGAN) {
-        addPath(x, y);
-      } else if (state === State.END || state === State.CANCELLED) {
-        setPaths((prev) => [
-          ...prev,
-          {
-            color,
-            path: createSVGPath(
-              path,
-              simplifyOptions.simplifyPaths ? simplifyOptions.amount! : 0,
-              simplifyOptions.roundPoints!
-            ),
-            data: path,
-            thickness,
-            opacity,
-          },
-        ]);
-        setPath([]);
+      if (!penOpen && !colorPickerVisible) {
+        if (state === State.BEGAN) {
+          addPath(x, y);
+        } else if (state === State.END || state === State.CANCELLED) {
+          setPaths((prev) => [
+            ...prev,
+            {
+              color,
+              path: createSVGPath(
+                path,
+                simplifyOptions.simplifyPaths ? simplifyOptions.amount! : 0,
+                simplifyOptions.roundPoints!
+              ),
+              data: path,
+              thickness,
+              opacity,
+            },
+          ]);
+          setPath([]);
+        }
       }
     };
 
