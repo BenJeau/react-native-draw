@@ -16,6 +16,7 @@ export default () => {
         }}
         brushPreview="none"
         hideBottom={{ brushProperties: true, clear: true, undo: true }}
+        autoDismissColorPicker
       />
     </>
   );
