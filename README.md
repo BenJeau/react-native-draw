@@ -66,6 +66,7 @@ All of the props are optional
 | `colors` | Color palette colors, specifying the color palette sections each containing rows of colors | `string[][][]` |  [`DEFAULT_COLORS`](./src/constants.ts) |
 | `height` | Height of the canvas | `number` | height of the window - 80 |
 | `width` | Width of the canvas | `number` | width of the window |
+| `autoDismissColorPicker` | Automatically close the color picker after selecting a color | `boolean` | `false` |
 | `initialValues` | Initial values for color the brush and paths | [`DrawInitialValues`](./src/Draw.tsx) | see [below](#DrawInitialValues) |
 | `hideBottom` | Hide all of the bottom section, below the canvas, or only certain functionalities | `boolean | HideBottom` | false |
 | `brushPreview` | Change brush preview preset or remove it | `'stroke' | 'dot' | 'none'` | `stroke` |

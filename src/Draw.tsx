@@ -150,6 +150,11 @@ export interface DrawProps {
    * SVG simplification options
    */
   simplifyOptions?: SimplifyOptions;
+
+  /**
+   * Automatically close the color picker after selecting a color
+   */
+  autoDismissColorPicker?: boolean;
 }
 
 export interface DrawRef {
@@ -229,6 +234,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       brushPreview = 'stroke',
       hideBottom = false,
       simplifyOptions = {},
+      autoDismissColorPicker = false,
     } = {},
     ref
   ) => {
@@ -304,6 +310,12 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     const handleUndo = () => {
       focusCanvas();
       setPaths((list) => list.filter((_i, key) => key !== list.length - 1));
+    };
+    const handleColorPickerSelection = (newColor: string) => {
+      setColor(newColor);
+      if (autoDismissColorPicker) {
+        handleColorPicker();
+      }
     };
 
     const clear = () => {
@@ -531,7 +543,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
               />
               <ColorPicker
                 selectedColor={color}
-                updateColor={setColor}
+                updateColor={handleColorPickerSelection}
                 colors={colors}
                 visible={colorPickerVisible}
                 viewOpacity={viewOpacity}
