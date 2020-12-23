@@ -355,11 +355,13 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     };
 
     const onHandlerStateChange = ({
-      nativeEvent: { state },
+      nativeEvent: { state, x, y },
     }: PanGestureHandlerStateChangeEvent) => {
       focusCanvas();
 
-      if (state === State.END || state === State.CANCELLED) {
+      if (state === State.BEGAN) {
+        addPath(x, y);
+      } else if (state === State.END || state === State.CANCELLED) {
         setPaths((prev) => [
           ...prev,
           {
