@@ -57,8 +57,6 @@ const styles = StyleSheet.create({
   },
   content: {
     borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#eee',
     flex: 1,
   },
   container: {

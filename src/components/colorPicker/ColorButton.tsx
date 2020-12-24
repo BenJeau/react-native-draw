@@ -43,7 +43,7 @@ const ColorButton: React.FC<ColorButtonProps> = ({
   };
 
   return (
-    <View style={{ borderWidth: 1, ...borderRadiusStyle, borderColor: '#eee' }}>
+    <View style={{ ...borderRadiusStyle, margin: 1 }}>
       <TouchableOpacity
         style={[styles.button, borderRadiusStyle, style]}
         onPress={handleOnPress}
