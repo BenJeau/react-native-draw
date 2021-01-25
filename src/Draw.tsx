@@ -1,5 +1,7 @@
 import React, {
+  Dispatch,
   forwardRef,
+  SetStateAction,
   useEffect,
   useImperativeHandle,
   useState,
@@ -38,7 +40,7 @@ import {
 } from './constants';
 import type { BrushType } from './components/renderer/BrushPreview';
 
-const dimen = Dimensions.get('window');
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 export interface DrawInitialValues {
   /**
@@ -164,6 +166,11 @@ export interface DrawRef {
   undo: () => void;
 
   /**
+   * Change brush color
+   */
+  setColor: Dispatch<SetStateAction<string>>;
+
+  /**
    * Removes all brush strokes
    */
   clear: () => void;
@@ -229,8 +236,8 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       canvasStyle,
       buttonStyle,
       onPathsChange,
-      height = dimen.height - 80,
-      width = dimen.width,
+      height = screenHeight - 80,
+      width = screenWidth,
       brushPreview = 'stroke',
       hideBottom = false,
       simplifyOptions = {},
@@ -356,7 +363,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       }
       Animated.timing(animVal, {
         useNativeDriver: true,
-        toValue: penOpen ? 0 : -50,
+        toValue: penOpen ? 0 : -90,
         duration: 300,
         easing: Easing.out(Easing.cubic),
       }).start(() => {
@@ -406,10 +413,10 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       extrapolate: 'clamp',
     });
 
-    const canvasContainerSyles = [
+    const canvasContainerStyles = [
       styles.canvas,
       {
-        translateY: animVal,
+        transform: [{ translateY: animVal }],
         height,
         width,
       },
@@ -431,6 +438,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     useImperativeHandle(ref, () => ({
       undo: handleUndo,
       clear,
+      setColor,
       getPaths: () => paths,
       addPath: (newPath) => {
         setPaths((prev) => [...prev, newPath]);
@@ -440,7 +448,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     return (
       <>
         <View style={styles.container}>
-          <Animated.View style={canvasContainerSyles}>
+          <Animated.View style={canvasContainerStyles}>
             <PanGestureHandler
               maxPointers={1}
               minDist={0}
@@ -560,7 +568,6 @@ const Draw = forwardRef<DrawRef, DrawProps>(
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
