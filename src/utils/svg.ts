@@ -7,10 +7,14 @@ export const createSVGPath = (
   roundPoints: boolean
 ) => {
   if (points.length > 1) {
-    return simplifySvgPath(points, {
-      precision: roundPoints ? 0 : 5,
-      tolerance,
-    });
+    try {
+      return simplifySvgPath(points, {
+        precision: roundPoints ? 0 : 5,
+        tolerance,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   } else if (points.length === 1) {
     return `M${points[0][0]},${points[0][1]} L${points[0][0]},${points[0][1]}`;
   }
