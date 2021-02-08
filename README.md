@@ -97,6 +97,7 @@ All of the props are optional
 
 | name | description | type |
 | --- | --- | --- |
+| `setColor` | Set the brush color | `Dispatch<SetStateAction<string>>` |
 | `undo` | Undo last brush stroke | `() => void` |
 | `clear` | Removes all brush strokes | `() => void` |
 | `getPaths` | Get brush strokes data | `() => PathType[]` |
