@@ -5,7 +5,7 @@ import { TouchableOpacity, StyleSheet, Dimensions, View } from 'react-native';
 import { isBright } from '../../utils';
 
 const { width } = Dimensions.get('screen');
-const size = Math.round((width - 40) / 12);
+export const colorButtonSize = Math.round((width - 40) / 12);
 const maxSize = 50;
 
 interface ColorButtonProps {
@@ -54,8 +54,8 @@ const ColorButton: React.FC<ColorButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    height: size,
-    width: size,
+    height: colorButtonSize,
+    width: colorButtonSize,
     maxHeight: maxSize,
     maxWidth: maxSize,
     borderWidth: 3,
