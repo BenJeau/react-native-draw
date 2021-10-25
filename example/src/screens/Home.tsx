@@ -7,11 +7,11 @@ import {
   StyleSheet,
   StatusBar,
 } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import data from './data';
-import { RootStackParamList } from '../App';
+import type { RootStackParamList } from '../App';
 
 type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 

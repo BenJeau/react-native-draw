@@ -7,7 +7,7 @@ import { DrawExample, Home } from './screens';
 
 export type RootStackParamList = {
   Home: undefined;
-  DrawExample: DrawProps;
+  DrawExample?: DrawProps;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
