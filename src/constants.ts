@@ -1,3 +1,5 @@
+import { DrawingTool } from './types';
+
 const grayscale = [
   [
     '#010101',
@@ -77,3 +79,5 @@ const colors = [
 export const DEFAULT_COLORS = [colors, grayscale];
 export const DEFAULT_THICKNESS = 3;
 export const DEFAULT_OPACITY = 1;
+export const DEFAULT_TOOL = DrawingTool.Brush;
+export const DEFAULT_ERASER_SIZE = 5;

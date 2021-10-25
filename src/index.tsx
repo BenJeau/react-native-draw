@@ -1,2 +1,8 @@
-export { default as Draw, DrawRef, DrawProps, DrawInitialValues } from './Draw';
-export { PathType, PathDataType } from './types';
+export {
+  default as Draw,
+  DrawRef,
+  DrawProps,
+  DrawInitialValues,
+  SimplifyOptions,
+} from './Draw';
+export * from './types';

@@ -26,3 +26,11 @@ export interface PathType {
    */
   opacity: number;
 }
+
+/**
+ * Tool used on the canvas
+ */
+export enum DrawingTool {
+  Brush,
+  Eraser,
+}

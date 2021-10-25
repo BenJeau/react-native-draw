@@ -2,7 +2,9 @@ import Slider from '@react-native-community/slider';
 import React from 'react';
 import { Animated, StyleSheet } from 'react-native';
 
-interface BrushPropertiesProps {
+import ColorPicker, { ColorPickerProps } from '../colorPicker/ColorPicker';
+
+interface BrushPropertiesProps extends ColorPickerProps {
   visible: boolean;
   thickness: number;
   thicknessOnChange: (value: number) => void;
@@ -18,9 +20,19 @@ const BrushProperties: React.FC<BrushPropertiesProps> = ({
   opacity,
   opacityOnChange,
   viewOpacity,
+  colors,
+  selectedColor,
+  updateColor,
 }) =>
   visible ? (
     <Animated.View style={[styles.container, { opacity: viewOpacity }]}>
+      <ColorPicker
+        colors={colors}
+        selectedColor={selectedColor}
+        updateColor={updateColor}
+        visible={visible}
+        viewOpacity={viewOpacity}
+      />
       <Slider
         minimumValue={5}
         maximumValue={35}

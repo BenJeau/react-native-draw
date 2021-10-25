@@ -3,22 +3,22 @@ import Svg, { Path, Circle } from 'react-native-svg';
 
 export type BrushType = 'stroke' | 'dot' | 'none';
 
-interface BrushPreviewProps {
+export interface BrushPreviewProps {
   color: string;
   thickness: number;
   opacity: number;
-  type: BrushType;
+  previewType: BrushType;
 }
 
 const BrushPreview: React.FC<BrushPreviewProps> = ({
   color,
   thickness,
   opacity,
-  type,
+  previewType,
 }) =>
-  type !== 'none' ? (
+  previewType !== 'none' ? (
     <Svg height={80} width={100}>
-      {type === 'stroke' ? (
+      {previewType === 'stroke' ? (
         <Path
           d="M 20 60 Q 30 20 50 40 Q 70 60 80 20 "
           fill="none"
