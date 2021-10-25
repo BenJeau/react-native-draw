@@ -1,9 +1,9 @@
 import React from 'react';
 import { Draw } from '@benjeau/react-native-draw';
 import { Button } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { RootStackParamList } from '../App';
+import type { RootStackParamList } from '../App';
 
 type DrawExampleProps = NativeStackScreenProps<
   RootStackParamList,
