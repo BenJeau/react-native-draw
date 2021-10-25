@@ -104,6 +104,7 @@ All of the props are optional
 | `clear`    | Removes all brush strokes                  | `() => void`                       |
 | `getPaths` | Get brush strokes data                     | `() => PathType[]`                 |
 | `addPath`  | Append a path to the current drawing paths | `(path: PathType) => void`         |
+| `getSvg`   | Get SVG path string of the drawing         | `() => string`                     |
 
 ## Contributing
 

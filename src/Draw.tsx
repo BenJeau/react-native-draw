@@ -200,6 +200,11 @@ export interface DrawRef {
    * Append a path to the current drawing paths
    */
   addPath: (path: PathType) => void;
+
+  /**
+   * Get SVG path string of the drawing
+   */
+  getSvg: () => string;
 }
 
 interface Visibility {
@@ -474,6 +479,12 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       addPath: (newPath) => {
         setPaths((prev) => [...prev, newPath]);
       },
+      getSvg: () =>
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${paths.reduce(
+          (acc, p) =>
+            `${acc}<path d="${p.path}" stroke="${p.color}" stroke-width="${p.thickness}" opacity="${p.opacity}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`,
+          ''
+        )}</svg>`,
     }));
 
     return (
