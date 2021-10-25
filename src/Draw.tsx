@@ -450,10 +450,10 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       },
     ];
 
-    useEffect(() => onPathsChange && onPathsChange(paths), [
-      paths,
-      onPathsChange,
-    ]);
+    useEffect(
+      () => onPathsChange && onPathsChange(paths),
+      [paths, onPathsChange]
+    );
 
     useImperativeHandle(ref, () => ({
       undo: handleUndo,
