@@ -3,23 +3,36 @@
   "description": "Example app for @benjeau/react-native-draw",
   "version": "0.0.1",
   "private": true,
+  "main": "index",
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
-    "start": "react-native start"
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "start": "expo start",
+    "test": "jest"
   },
   "dependencies": {
-    "@react-native-community/slider": "^3.0.3",
-    "react": "16.13.1",
-    "react-native": "0.63.4",
-    "react-native-gesture-handler": "^1.9.0",
-    "react-native-navigation": "^7.6.0",
-    "react-native-svg": "^12.1.0"
+    "@react-native-community/slider": "4.1.7",
+    "@react-navigation/native": "^6.0.6",
+    "@react-navigation/native-stack": "^6.2.5",
+    "expo": "^43.0.0",
+    "expo-splash-screen": "~0.13.4",
+    "react": "17.0.1",
+    "react-dom": "^17.0.2",
+    "react-native": "0.64.2",
+    "react-native-gesture-handler": "~1.10.2",
+    "react-native-safe-area-context": "3.3.2",
+    "react-native-screens": "~3.8.0",
+    "react-native-svg": "12.1.1",
+    "react-native-unimodules": "~0.15.0",
+    "react-native-web": "0.17.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/runtime": "^7.12.5",
+    "@babel/core": "^7.12.9",
+    "@babel/runtime": "^7.9.6",
+    "babel-loader": "^8.2.3",
     "babel-plugin-module-resolver": "^4.0.0",
-    "metro-react-native-babel-preset": "^0.64.0"
+    "babel-preset-expo": "8.5.1",
+    "expo-cli": "^4.0.13"
   }
 }
