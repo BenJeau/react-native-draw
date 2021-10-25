@@ -61,47 +61,49 @@ export default function App() {
 
 All of the props are optional
 
-| name | description  | type | default |
-| --- | --- | --- | --- |
-| `colors` | Color palette colors, specifying the color palette sections each containing rows of colors | `string[][][]` |  [`DEFAULT_COLORS`](./src/constants.ts) |
-| `height` | Height of the canvas | `number` | height of the window - 80 |
-| `width` | Width of the canvas | `number` | width of the window |
-| `autoDismissColorPicker` | Automatically close the color picker after selecting a color | `boolean` | `false` |
-| `initialValues` | Initial values for color the brush and paths | [`DrawInitialValues`](./src/Draw.tsx) | see [below](#DrawInitialValues) |
-| `hideBottom` | Hide all of the bottom section, below the canvas, or only certain functionalities | `boolean` or `HideBottom` | false |
-| `brushPreview` | Change brush preview preset or remove it | `stroke` or `dot` or `none` | `stroke` |
-| `simplifyOptions` | SVG simplification options | [`SimplifyOptions`](./src/Draw.tsx) | see [below](#SimplifyOptions) |
-| `canvasStyle` | Override the style of the container of the canvas | `StyleProp` | - |
-| `buttonStyle` | Override the style of the buttons | `StyleProp` | - |
-| `onPathsChange` | Callback function when paths change | (paths: [`PathType`](./src/types.ts)[]) => any | - |
+| name                     | description                                                                                | type                                           | default                                |
+| ------------------------ | ------------------------------------------------------------------------------------------ | ---------------------------------------------- | -------------------------------------- |
+| `colors`                 | Color palette colors, specifying the color palette sections each containing rows of colors | `string[][][]`                                 | [`DEFAULT_COLORS`](./src/constants.ts) |
+| `height`                 | Height of the canvas                                                                       | `number`                                       | height of the window - 80              |
+| `width`                  | Width of the canvas                                                                        | `number`                                       | width of the window                    |
+| `autoDismissColorPicker` | Automatically close the color picker after selecting a color                               | `boolean`                                      | `false`                                |
+| `initialValues`          | Initial values for color the brush and paths                                               | [`DrawInitialValues`](./src/Draw.tsx)          | see [below](#DrawInitialValues)        |
+| `hideBottom`             | Hide all of the bottom section, below the canvas, or only certain functionalities          | `boolean` or `HideBottom`                      | false                                  |
+| `brushPreview`           | Change brush preview preset or remove it                                                   | `stroke` or `dot` or `none`                    | `stroke`                               |
+| `simplifyOptions`        | SVG simplification options                                                                 | [`SimplifyOptions`](./src/Draw.tsx)            | see [below](#SimplifyOptions)          |
+| `canvasStyle`            | Override the style of the container of the canvas                                          | `StyleProp`                                    | -                                      |
+| `buttonStyle`            | Override the style of the buttons                                                          | `StyleProp`                                    | -                                      |
+| `onPathsChange`          | Callback function when paths change                                                        | (paths: [`PathType`](./src/types.ts)[]) => any | -                                      |
+| `eraserSize`             | Width of eraser (to compensate for path simplification)                                    | `number`                                       | `5`                                    |
 
 ### DrawInitialValues
 
-| name | description  | type | default |
-| --- | --- | --- | --- |
-| `color` | Initial brush color, from the colors provided | `string` | the first color of the first row in the first section from `colors` |
-| `thickness` | Initial thickness of the brush strokes | `number` |  `3` |
-| `opacity` | Initial opacity of the brush strokes | `number` |  `1` |
-| `paths` | Paths to be already drawn | `PathType[]` |  `[]` |
+| name        | description                                   | type          | default                                                             |
+| ----------- | --------------------------------------------- | ------------- | ------------------------------------------------------------------- |
+| `color`     | Initial brush color, from the colors provided | `string`      | the first color of the first row in the first section from `colors` |
+| `thickness` | Initial thickness of the brush strokes        | `number`      | `3`                                                                 |
+| `opacity`   | Initial opacity of the brush strokes          | `number`      | `1`                                                                 |
+| `paths`     | Paths to be already drawn                     | `PathType[]`  | `[]`                                                                |
+| `tool`      | Initial tool of the canvas                    | `DrawingTool` | `brush`                                                             |
 
 ### SimplifyOptions
 
-| name | description  | type | default |
-| --- | --- | --- | --- |
-| `simplifyPaths` | Enable SVG path simplification on paths, except the one currently being drawn | `boolean` | `true` |
-| `simplifyCurrentPath` | Enable SVG path simplification on the stroke being drawn | `boolean` | `false` |
-| `amount` | Amount of simplification to apply | `number` | `10` |
-| `roundPoints` | Ignore fractional part in the points. Improves performance | `boolean` | `true` |
+| name                  | description                                                                   | type      | default |
+| --------------------- | ----------------------------------------------------------------------------- | --------- | ------- |
+| `simplifyPaths`       | Enable SVG path simplification on paths, except the one currently being drawn | `boolean` | `true`  |
+| `simplifyCurrentPath` | Enable SVG path simplification on the stroke being drawn                      | `boolean` | `false` |
+| `amount`              | Amount of simplification to apply                                             | `number`  | `10`    |
+| `roundPoints`         | Ignore fractional part in the points. Improves performance                    | `boolean` | `true`  |
 
 ## Ref functions
 
-| name | description | type |
-| --- | --- | --- |
-| `setColor` | Set the brush color | `Dispatch<SetStateAction<string>>` |
-| `undo` | Undo last brush stroke | `() => void` |
-| `clear` | Removes all brush strokes | `() => void` |
-| `getPaths` | Get brush strokes data | `() => PathType[]` |
-| `addPath` | Append a path to the current drawing paths | `(path: PathType) => void` |
+| name       | description                                | type                               |
+| ---------- | ------------------------------------------ | ---------------------------------- |
+| `setColor` | Set the brush color                        | `Dispatch<SetStateAction<string>>` |
+| `undo`     | Undo last brush stroke                     | `() => void`                       |
+| `clear`    | Removes all brush strokes                  | `() => void`                       |
+| `getPaths` | Get brush strokes data                     | `() => PathType[]`                 |
+| `addPath`  | Append a path to the current drawing paths | `(path: PathType) => void`         |
 
 ## Contributing
 

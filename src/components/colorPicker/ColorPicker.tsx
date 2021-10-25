@@ -3,7 +3,7 @@ import { Animated, StyleSheet, View } from 'react-native';
 
 import ColorButton from './ColorButton';
 
-interface ColorPickerProps {
+export interface ColorPickerProps {
   selectedColor: string;
   updateColor: (color: string) => void;
   colors: string[][][];
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 10,
     position: 'absolute',
-    bottom: 80,
+    bottom: 50,
     left: 0,
     right: 0,
     alignItems: 'center',

@@ -24,12 +24,11 @@ import {
 } from 'react-native-gesture-handler';
 
 import { createSVGPath } from './utils';
-import type { PathDataType, PathType } from './types';
-import { Brush, Delete, Palette, Undo } from './icons';
+import { DrawingTool, PathDataType, PathType } from './types';
+import { Brush, Delete, Eraser, Palette, Undo } from './icons';
 import {
   Button,
   SVGRenderer,
-  ColorPicker,
   BrushProperties,
   BrushPreview,
 } from './components';
@@ -37,6 +36,8 @@ import {
   DEFAULT_COLORS,
   DEFAULT_THICKNESS,
   DEFAULT_OPACITY,
+  DEFAULT_TOOL,
+  DEFAULT_ERASER_SIZE,
 } from './constants';
 import type { BrushType } from './components/renderer/BrushPreview';
 
@@ -65,6 +66,12 @@ export interface DrawInitialValues {
    * @default []
    */
   paths?: PathType[];
+
+  /**
+   * Initial tool of the canvas
+   * @default DEFAULT_TOOL
+   */
+  tool?: DrawingTool;
 }
 
 export interface HideBottomBrushProperties {
@@ -157,6 +164,12 @@ export interface DrawProps {
    * Automatically close the color picker after selecting a color
    */
   autoDismissColorPicker?: boolean;
+
+  /**
+   * Width of eraser (to compensate for path simplification)
+   * @default DEFAULT_ERASER_SIZE
+   */
+  eraserSize?: number;
 }
 
 export interface DrawRef {
@@ -242,6 +255,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       hideBottom = false,
       simplifyOptions = {},
       autoDismissColorPicker = false,
+      eraserSize = DEFAULT_ERASER_SIZE,
     } = {},
     ref
   ) => {
@@ -250,6 +264,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       thickness: DEFAULT_THICKNESS,
       opacity: DEFAULT_OPACITY,
       paths: [],
+      tool: DEFAULT_TOOL,
       ...initialValues,
     };
 
@@ -269,6 +284,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     const [thickness, setThickness] = useState(initialValues.thickness!);
     const [opacity, setOpacity] = useState(initialValues.opacity!);
     const [colorPickerVisible, setColorPickerVisible] = useState(false);
+    const [tool, setTool] = useState<DrawingTool>(initialValues.tool!);
 
     const addPath = (x: number, y: number) => {
       setPath((prev) => [
@@ -283,13 +299,30 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     const onGestureEvent = ({
       nativeEvent: { x, y },
     }: PanGestureHandlerGestureEvent) => {
-      addPath(x, y);
+      switch (tool) {
+        case DrawingTool.Brush:
+          addPath(x, y);
+          break;
+        case DrawingTool.Eraser:
+          setPaths((p) =>
+            p.reduce((acc: PathType[], i) => {
+              const closeToPath = i.data.some(
+                ([x1, y1]) =>
+                  Math.abs(x1 - x) < i.thickness + eraserSize &&
+                  Math.abs(y1 - y) < i.thickness + eraserSize
+              );
+              if (closeToPath) {
+                return acc;
+              }
+              return [...acc, i];
+            }, [])
+          );
+          break;
+      }
     };
 
     const focusCanvas = () => {
-      if (penOpen) {
-        handlePenOnPress();
-      } else if (colorPickerVisible) {
+      if (colorPickerVisible) {
         handleColorPicker();
       }
     };
@@ -301,11 +334,10 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     const handleColorPicker = () => {
       if (!colorPickerVisible) {
         setColorPickerVisible(true);
-        setPenOpen(false);
       }
       Animated.timing(animVal, {
         useNativeDriver: true,
-        toValue: colorPickerVisible ? 0 : -180,
+        toValue: colorPickerVisible ? 0 : -230,
         duration: 500,
         easing: Easing.out(Easing.cubic),
       }).start(() => {
@@ -325,12 +357,18 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       }
     };
 
+    const handleModeChange = () => {
+      setTool((prev) =>
+        prev === DrawingTool.Brush ? DrawingTool.Eraser : DrawingTool.Brush
+      );
+    };
+
     const clear = () => {
       setPaths([]);
       setPath([]);
     };
 
-    const reset = () => {
+    const handleClear = () => {
       focusCanvas();
       if (paths.length > 0) {
         Alert.alert(
@@ -354,31 +392,13 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     };
 
     const [animVal] = useState(new Animated.Value(0));
-    const [penOpen, setPenOpen] = useState(false);
-
-    const handlePenOnPress = () => {
-      if (!penOpen) {
-        setPenOpen(true);
-        setColorPickerVisible(false);
-      }
-      Animated.timing(animVal, {
-        useNativeDriver: true,
-        toValue: penOpen ? 0 : -90,
-        duration: 300,
-        easing: Easing.out(Easing.cubic),
-      }).start(() => {
-        if (penOpen) {
-          setPenOpen(false);
-        }
-      });
-    };
 
     const onHandlerStateChange = ({
       nativeEvent: { state, x, y },
     }: PanGestureHandlerStateChangeEvent) => {
       focusCanvas();
 
-      if (!penOpen && !colorPickerVisible) {
+      if (!colorPickerVisible && tool === DrawingTool.Brush) {
         if (state === State.BEGAN) {
           addPath(x, y);
         } else if (state === State.END || state === State.CANCELLED) {
@@ -408,7 +428,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     });
 
     const viewOpacity = animVal.interpolate({
-      inputRange: [penOpen ? -50 : -180, 0],
+      inputRange: [-230, 0],
       outputRange: [1, 0],
       extrapolate: 'clamp',
     });
@@ -430,10 +450,10 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       },
     ];
 
-    useEffect(() => onPathsChange && onPathsChange(paths), [
-      paths,
-      onPathsChange,
-    ]);
+    useEffect(
+      () => onPathsChange && onPathsChange(paths),
+      [paths, onPathsChange]
+    );
 
     useImperativeHandle(ref, () => ({
       undo: handleUndo,
@@ -489,7 +509,11 @@ const Draw = forwardRef<DrawRef, DrawProps>(
               <View style={styles.bottomContent}>
                 <View style={styles.buttonsContainer}>
                   {!viewVisibility.clear && (
-                    <Button onPress={reset} color="#81090A" style={buttonStyle}>
+                    <Button
+                      onPress={handleClear}
+                      color="#81090A"
+                      style={buttonStyle}
+                    >
                       <Delete fill="#81090A" height={30} width={30} />
                     </Button>
                   )}
@@ -510,18 +534,22 @@ const Draw = forwardRef<DrawRef, DrawProps>(
                   color={color}
                   opacity={opacity}
                   thickness={thickness}
-                  type={brushPreview}
+                  previewType={brushPreview}
                 />
 
                 <View style={styles.buttonsContainer}>
                   {(!viewVisibility.brushProperties.opacity ||
                     !viewVisibility.brushProperties.size) && (
                     <Button
-                      onPress={handlePenOnPress}
+                      onPress={handleModeChange}
                       color="#ddd"
                       style={buttonStyle}
                     >
-                      <Brush fill="#ddd" height={30} width={30} />
+                      {tool === DrawingTool.Brush ? (
+                        <Brush fill="#ddd" height={30} width={30} />
+                      ) : (
+                        <Eraser fill="#ddd" height={30} width={30} />
+                      )}
                     </Button>
                   )}
                   {!viewVisibility.colorPicker && (
@@ -544,19 +572,15 @@ const Draw = forwardRef<DrawRef, DrawProps>(
                 </View>
               </View>
               <BrushProperties
-                visible={penOpen}
+                visible={colorPickerVisible}
                 thickness={thickness}
                 thicknessOnChange={handleThicknessOnChange}
                 opacity={opacity}
                 opacityOnChange={handleOpacityOnChange}
                 viewOpacity={viewOpacity}
-              />
-              <ColorPicker
                 selectedColor={color}
                 updateColor={handleColorPickerSelection}
                 colors={colors}
-                visible={colorPickerVisible}
-                viewOpacity={viewOpacity}
               />
             </View>
           )}
