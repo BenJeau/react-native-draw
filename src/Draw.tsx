@@ -460,6 +460,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     ];
 
     const canvasOverlayStyles = [
+      canvasStyle,
       styles.canvasOverlay,
       {
         opacity: opacityOverlay,
