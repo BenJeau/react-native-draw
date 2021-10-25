@@ -61,8 +61,6 @@ const styles = StyleSheet.create({
   },
   container: {
     borderRadius: 10,
-    position: 'absolute',
-    bottom: 50,
     left: 0,
     right: 0,
     alignItems: 'center',
