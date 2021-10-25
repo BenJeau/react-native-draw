@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
       "@benjeau/react-native-draw": ["./src/index"]
     },
