@@ -1,6 +1,6 @@
 import Slider from '@react-native-community/slider';
 import React from 'react';
-import { Animated, StyleSheet } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 
 import ColorPicker, { ColorPickerProps } from '../colorPicker/ColorPicker';
 
@@ -33,24 +33,26 @@ const BrushProperties: React.FC<BrushPropertiesProps> = ({
         visible={visible}
         viewOpacity={viewOpacity}
       />
-      <Slider
-        minimumValue={5}
-        maximumValue={35}
-        step={1}
-        value={thickness}
-        onValueChange={thicknessOnChange}
-        thumbTintColor="black"
-        minimumTrackTintColor="black"
-      />
-      <Slider
-        minimumValue={0}
-        maximumValue={1}
-        step={0.1}
-        value={opacity}
-        onValueChange={opacityOnChange}
-        thumbTintColor="black"
-        minimumTrackTintColor="black"
-      />
+      <View style={styles.sliderContainer}>
+        <Slider
+          minimumValue={5}
+          maximumValue={35}
+          step={1}
+          value={thickness}
+          onValueChange={thicknessOnChange}
+          thumbTintColor="black"
+          minimumTrackTintColor="black"
+        />
+        <Slider
+          minimumValue={0}
+          maximumValue={1}
+          step={0.1}
+          value={opacity}
+          onValueChange={opacityOnChange}
+          thumbTintColor="black"
+          minimumTrackTintColor="black"
+        />
+      </View>
     </Animated.View>
   ) : null;
 
@@ -60,6 +62,9 @@ const styles = StyleSheet.create({
     bottom: 80,
     left: 0,
     right: 0,
+  },
+  sliderContainer: {
+    marginVertical: 10,
   },
 });
 

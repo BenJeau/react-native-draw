@@ -4,6 +4,7 @@ import React, {
   SetStateAction,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useState,
 } from 'react';
 import {
@@ -38,8 +39,10 @@ import {
   DEFAULT_OPACITY,
   DEFAULT_TOOL,
   DEFAULT_ERASER_SIZE,
+  SLIDERS_HEIGHT,
 } from './constants';
 import type { BrushType } from './components/renderer/BrushPreview';
+import { colorButtonSize } from './components/colorPicker/ColorButton';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -286,6 +289,14 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     const [colorPickerVisible, setColorPickerVisible] = useState(false);
     const [tool, setTool] = useState<DrawingTool>(initialValues.tool!);
 
+    const brushPropertiesHeight = useMemo(
+      () =>
+        (colors.length - 1) * 3 +
+        (colors[0].length + colors[1].length) * colorButtonSize +
+        SLIDERS_HEIGHT,
+      [colors]
+    );
+
     const addPath = (x: number, y: number) => {
       setPath((prev) => [
         ...prev,
@@ -337,7 +348,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       }
       Animated.timing(animVal, {
         useNativeDriver: true,
-        toValue: colorPickerVisible ? 0 : -230,
+        toValue: colorPickerVisible ? 0 : -brushPropertiesHeight,
         duration: 500,
         easing: Easing.out(Easing.cubic),
       }).start(() => {
@@ -422,13 +433,13 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     };
 
     const opacityOverlay = animVal.interpolate({
-      inputRange: [-50, 0],
+      inputRange: [-SLIDERS_HEIGHT, 0],
       outputRange: [0.5, 0],
       extrapolate: 'clamp',
     });
 
     const viewOpacity = animVal.interpolate({
-      inputRange: [-230, 0],
+      inputRange: [-brushPropertiesHeight, 0],
       outputRange: [1, 0],
       extrapolate: 'clamp',
     });
