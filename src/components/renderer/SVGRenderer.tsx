@@ -46,15 +46,17 @@ const SVGRenderer: React.FC<SVGRendererProps> = ({
           strokeLinejoin="round"
         />
       ))}
-      <Path
-        d={memoizedPath}
-        fill="none"
-        stroke={currentColor}
-        strokeWidth={currentThickness}
-        strokeLinecap="round"
-        opacity={currentOpacity}
-        strokeLinejoin="round"
-      />
+      {memoizedPath.length > 0 && (
+        <Path
+          d={memoizedPath}
+          fill="none"
+          stroke={currentColor}
+          strokeWidth={currentThickness}
+          strokeLinecap="round"
+          opacity={currentOpacity}
+          strokeLinejoin="round"
+        />
+      )}
     </Svg>
   );
 };
