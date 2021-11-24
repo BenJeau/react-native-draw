@@ -106,6 +106,10 @@ All of the props are optional
 | `addPath`  | Append a path to the current drawing paths | `(path: PathType) => void`         |
 | `getSvg`   | Get SVG path string of the drawing         | `() => string`                     |
 
+## Helper functions
+
+* If you need to create an SVG path, `createSVGPath()` is available to create the string representation of an SVG path.
+
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
