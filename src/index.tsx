@@ -6,3 +6,4 @@ export {
   SimplifyOptions,
 } from './Draw';
 export * from './types';
+export { createSVGPath } from './utils';

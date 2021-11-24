@@ -249,6 +249,39 @@ const getVisibility = (hideBottom: boolean | HideBottom): Visibility => {
   }
 };
 
+/**
+ * Generate SVG path string. Helper method for createSVGPath
+ *
+ * @param paths SVG path data
+ * @param simplifyOptions Simplification options for the SVG drawing simplification
+ * @returns SVG path strings
+ */
+const generateSVGPath = (
+  path: PathDataType,
+  simplifyOptions: SimplifyOptions
+) =>
+  createSVGPath(
+    path,
+    simplifyOptions.simplifyPaths ? simplifyOptions.amount! : 0,
+    simplifyOptions.roundPoints!
+  );
+
+/**
+ * Generate multiple SVG path strings. If the path string is already defined, do not create a new one.
+ *
+ * @param paths SVG data paths
+ * @param simplifyOptions Simplification options for the SVG drawing simplification
+ * @returns An array of SVG path strings
+ */
+const generateSVGPaths = (
+  paths: PathType[],
+  simplifyOptions: SimplifyOptions
+) =>
+  paths.map((i) => ({
+    ...i,
+    path: i.path ? i.path : generateSVGPath(i.data, simplifyOptions),
+  }));
+
 const Draw = forwardRef<DrawRef, DrawProps>(
   (
     {
@@ -267,21 +300,21 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     } = {},
     ref
   ) => {
-    initialValues = {
-      color: colors[0][0][0],
-      thickness: DEFAULT_THICKNESS,
-      opacity: DEFAULT_OPACITY,
-      paths: [],
-      tool: DEFAULT_TOOL,
-      ...initialValues,
-    };
-
     simplifyOptions = {
       simplifyPaths: true,
       simplifyCurrentPath: false,
       amount: 15,
       roundPoints: true,
       ...simplifyOptions,
+    };
+
+    initialValues = {
+      color: colors[0][0][0],
+      thickness: DEFAULT_THICKNESS,
+      opacity: DEFAULT_OPACITY,
+      tool: DEFAULT_TOOL,
+      ...initialValues,
+      paths: generateSVGPaths(initialValues.paths || [], simplifyOptions),
     };
 
     const viewVisibility = getVisibility(hideBottom);
@@ -422,11 +455,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
             ...prev,
             {
               color,
-              path: createSVGPath(
-                path,
-                simplifyOptions.simplifyPaths ? simplifyOptions.amount! : 0,
-                simplifyOptions.roundPoints!
-              ),
+              path: generateSVGPath(path, simplifyOptions),
               data: path,
               thickness,
               opacity,
