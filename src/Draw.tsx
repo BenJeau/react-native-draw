@@ -187,6 +187,11 @@ export interface DrawRef {
   setColor: Dispatch<SetStateAction<string>>;
 
   /**
+   * Change brush thickness
+   */
+  setThickness: (size: number) => void;
+
+  /**
    * Removes all brush strokes
    */
   clear: () => void;
@@ -505,6 +510,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       undo: handleUndo,
       clear,
       setColor,
+      setThickness: handleThicknessOnChange,
       getPaths: () => paths,
       addPath: (newPath) => {
         setPaths((prev) => [...prev, newPath]);
