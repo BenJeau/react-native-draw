@@ -23,17 +23,17 @@ yarn add @benjeau/react-native-draw
 ## Usage
 
 ```tsx
-import React from 'react';
+import React, { useRef } from 'react';
 import { Draw, DrawRef } from "@benjeau/react-native-draw";
 
 export default function App() {
   const drawRef = useRef<DrawRef>(null);
 
-  const removeLastPath = () {
+  const removeLastPath = () => {
     drawRef.current.?undo();
   }
 
-  const clearDrawing = () {
+  const clearDrawing = () => {
     drawRef.current.?clear();
   }
 
@@ -42,16 +42,13 @@ export default function App() {
   return (
     <Draw
       ref={drawRef}
-      height={400}
-      width={300}
+      height={600}
       initialValues={{
         color: "#B644D0",
         thickness: 10,
         opacity: 0.5,
         paths: []
       }}
-      brushPreview="none"
-      canvasStyle={{ elevation: 0, backgroundColor: "red" }}
     />
   )
 }
