@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { TouchableOpacity, StyleSheet, Dimensions, View } from 'react-native';
 
-import { isBright } from './utils';
+import { isBright } from '../../utils';
 
 const { width } = Dimensions.get('screen');
 export const colorButtonSize = Math.round((width - 40) / 12);

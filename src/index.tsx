@@ -22,4 +22,4 @@ export {
 
 export * from './types';
 export * from './components/canvas/utils';
-export * from './components/extras/brushProperties/colorPicker/utils';
+export * from './components/extras/utils';
