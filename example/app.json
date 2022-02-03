@@ -2,21 +2,20 @@
   "name": "@benjeau/react-native-draw-example",
   "displayName": "ReactNativeDraw Example",
   "expo": {
+    "userInterfaceStyle": "automatic",
     "name": "@benjeau/react-native-draw-example",
     "slug": "benjeau-react-native-draw-example",
     "description": "Example app for @benjeau/react-native-draw",
     "privacy": "public",
     "version": "1.0.0",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "ios": {
+      "userInterfaceStyle": "automatic",
       "supportsTablet": true
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ]
+    "android": {
+      "userInterfaceStyle": "automatic"
+    },
+    "assetBundlePatterns": ["**/*"]
   }
 }

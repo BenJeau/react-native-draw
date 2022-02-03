@@ -435,7 +435,7 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
           }}
           shouldCancelWhenOutside
         >
-          <View style={styles.canvasContent}>
+          <View>
             <SVGRenderer
               currentColor={color}
               currentOpacity={opacity}
@@ -460,12 +460,7 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
 
 const styles = StyleSheet.create({
   canvas: {
-    elevation: 5,
     backgroundColor: 'white',
-    zIndex: 10,
-  },
-  canvasContent: {
-    flex: 1,
   },
   canvasOverlay: {
     position: 'absolute',
