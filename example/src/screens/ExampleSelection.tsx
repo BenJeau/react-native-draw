@@ -49,12 +49,12 @@ const ExampleSelection: React.FC<ExampleSelectionProps> = ({
 
 const styles = StyleSheet.create({
   listContainer: {
-    padding: 10,
+    padding: 15,
   },
   sectionTitle: {
     fontSize: 18,
     marginBottom: 10,
-    marginTop: 5,
+    marginTop: 10,
   },
 });
 

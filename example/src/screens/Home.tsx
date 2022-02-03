@@ -44,7 +44,7 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    padding: 20,
   },
 });
 
