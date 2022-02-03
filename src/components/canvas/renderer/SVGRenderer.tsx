@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-import type { PathDataType, PathType } from '../../types';
-import { createSVGPath } from '../../utils';
+import type { PathDataType, PathType } from '../../../types';
+import { createSVGPath } from '../../../utils';
 
 interface SVGRendererProps {
   currentPath: PathDataType;

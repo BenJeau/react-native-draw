@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 
-import { isBright } from '../utils';
+import { isBright } from '../../utils';
 
 interface ButtonProps {
   onPress: () => void;

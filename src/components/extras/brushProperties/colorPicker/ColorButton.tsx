@@ -1,33 +1,65 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, { memo } from 'react';
 import { TouchableOpacity, StyleSheet, Dimensions, View } from 'react-native';
 
-import { isBright } from '../../utils';
+import { isBright } from './utils';
 
 const { width } = Dimensions.get('screen');
 export const colorButtonSize = Math.round((width - 40) / 12);
 const maxSize = 50;
 
 interface ColorButtonProps {
+  /**
+   * Color of the button
+   */
   color: string;
-  selectedColor: string;
-  updateColor: (color: string) => void;
+
+  /**
+   * Wether the button is selected or not
+   * @default false
+   */
+  selected?: boolean;
+
+  /**
+   * Callback the button is pressed
+   * @param color Color of the button
+   */
+  onPress: (color: string) => void;
+
+  /**
+   * Wether the button is the top left corner
+   * @default false
+   */
   isTopStart: boolean;
+
+  /**
+   * Wether the button is the top right corner
+   * @default false
+   */
   isTopEnd: boolean;
+
+  /**
+   * Wether the button is the bottom left corner
+   * @default false
+   */
   isBottomStart: boolean;
+
+  /**
+   * Wether the button is the bottom right corner
+   * @default false
+   */
   isBottomEnd: boolean;
 }
 
 const ColorButton: React.FC<ColorButtonProps> = ({
   color,
-  selectedColor,
-  updateColor,
+  selected,
+  onPress,
   isTopStart,
   isTopEnd,
   isBottomStart,
   isBottomEnd,
 }) => {
-  const handleOnPress = () => updateColor(color);
+  const handleOnPress = () => onPress(color);
 
   const borderRadiusStyle = {
     borderTopStartRadius: isTopStart ? 8 : 0,
@@ -38,7 +70,7 @@ const ColorButton: React.FC<ColorButtonProps> = ({
 
   const style = {
     backgroundColor: color,
-    borderWidth: selectedColor === color ? 2 : 0,
+    borderWidth: selected ? 2 : 0,
     borderColor: isBright(color) ? '#000000b0' : '#ffffffb0',
   };
 
