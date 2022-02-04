@@ -14,10 +14,7 @@ const data: Data[] = [
     name: '',
     data: [
       {
-        description: 'Drawing component with default props and a custom color',
-        props: {
-          color: '#4897FA',
-        },
+        description: 'Drawing component with default props',
       },
     ],
   },
@@ -27,7 +24,6 @@ const data: Data[] = [
       {
         description: 'Custom canvas size',
         props: {
-          color: '#4897FA',
           height: 500,
           width: 300,
         },
@@ -40,7 +36,6 @@ const data: Data[] = [
       {
         description: 'Disable SVG simplification',
         props: {
-          color: '#4897FA',
           simplifyOptions: {
             simplifyPaths: false,
           },
@@ -49,7 +44,6 @@ const data: Data[] = [
       {
         description: 'Custom simplification amount',
         props: {
-          color: '#4897FA',
           simplifyOptions: {
             amount: 200,
           },
@@ -58,7 +52,6 @@ const data: Data[] = [
       {
         description: 'Live SVG path simplification',
         props: {
-          color: '#4897FA',
           simplifyOptions: {
             simplifyCurrentPath: true,
           },
@@ -67,7 +60,6 @@ const data: Data[] = [
       {
         description: 'Enable float numbers in points of paths',
         props: {
-          color: '#4897FA',
           simplifyOptions: {
             roundPoints: false,
           },
@@ -82,7 +74,6 @@ const data: Data[] = [
         description:
           'Subscribe to changes to the paths (see console logs or Toasts on Android)',
         props: {
-          color: '#4897FA',
           onPathsChange(e) {
             console.log(e);
             ToastAndroid.show(
@@ -101,7 +92,6 @@ const data: Data[] = [
         description:
           'Initial brush color, size, and opacity with an initial drawing',
         props: {
-          color: '#4897FA',
           initialPaths: [
             {
               color: '#F42C1B',

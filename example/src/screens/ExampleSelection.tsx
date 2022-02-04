@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Text, View, FlatList, StyleSheet } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import canvasData from './canvas/data';
-import drawData from './draw/data';
+import brushPreviewsData from './brushPreview/data';
+import brushPropertiesData from './brushProperties/data';
+import canvasControlsData from './canvasControls/data';
+import colorPickerData from './colorPicker/data';
+
 import type { RootStackParamList } from '../App';
 import { Button } from '../components';
 import { useTheme } from '@react-navigation/native';
@@ -19,9 +23,46 @@ const ExampleSelection: React.FC<ExampleSelectionProps> = ({
 }) => {
   const theme = useTheme();
 
+  const data = useMemo(() => {
+    switch (route.params.type) {
+      case 'canvas':
+        return canvasData;
+      case 'brushPreview':
+        return brushPreviewsData;
+      case 'brushProperties':
+        return brushPropertiesData;
+      case 'canvasControls':
+        return canvasControlsData;
+      case 'colorPicker':
+        return colorPickerData;
+      default:
+        return [];
+    }
+  }, [route.params]);
+
+  const screenToNavigate = useMemo(() => {
+    switch (route.params.type) {
+      case 'canvas':
+        return 'CanvasExample';
+      case 'brushPreview':
+        return 'BrushPreviewExample';
+      case 'brushProperties':
+        return 'BrushPropertiesExample';
+      case 'canvasControls':
+        return 'CanvasControlsExample';
+      case 'colorPicker':
+        return 'ColorPickerExample';
+    }
+  }, [route.params]);
+
   return (
     <FlatList
-      data={route.params.type === 'canvas' ? canvasData : drawData}
+      data={data}
+      ListHeaderComponent={
+        <Text style={{ color: theme.colors.text, marginBottom: 20 }}>
+          Various examples of the component with its different props
+        </Text>
+      }
       renderItem={({ item }) => (
         <View>
           {!!item.name && (
@@ -32,7 +73,7 @@ const ExampleSelection: React.FC<ExampleSelectionProps> = ({
           {item.data.map(({ description, props }, key) => (
             <Button
               onPress={() => {
-                navigation.navigate('CanvasExample', props);
+                navigation.navigate(screenToNavigate, props);
               }}
               key={key}
             >
@@ -49,7 +90,7 @@ const ExampleSelection: React.FC<ExampleSelectionProps> = ({
 
 const styles = StyleSheet.create({
   listContainer: {
-    padding: 15,
+    padding: 20,
   },
   sectionTitle: {
     fontSize: 18,

@@ -4,8 +4,7 @@ import { TouchableOpacity, StyleSheet, Dimensions, View } from 'react-native';
 import { isBright } from '../../utils';
 
 const { width } = Dimensions.get('screen');
-export const colorButtonSize = Math.round((width - 40) / 12);
-const maxSize = 50;
+export const colorButtonSize = Math.min(Math.round((width - 40) / 12), 50);
 
 interface ColorButtonProps {
   /**
@@ -50,6 +49,9 @@ interface ColorButtonProps {
   isBottomEnd: boolean;
 }
 
+/**
+ * Buttons displaying a color in the `ColorPicker` component
+ */
 const ColorButton: React.FC<ColorButtonProps> = ({
   color,
   selected,
@@ -88,8 +90,6 @@ const styles = StyleSheet.create({
   button: {
     height: colorButtonSize,
     width: colorButtonSize,
-    maxHeight: maxSize,
-    maxWidth: maxSize,
     borderWidth: 3,
   },
 });

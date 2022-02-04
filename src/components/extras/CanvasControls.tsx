@@ -8,11 +8,11 @@ import {
   DEFAULT_TOOL,
 } from '../../constants';
 import { DrawingTool } from '../../types';
-import BrushPreview, { BrushType } from './BrushPreview';
+import BrushPreview, { BrushPreviewProps } from './BrushPreview';
 import Button from './Button';
 import { Brush, Delete, Eraser, Palette, Undo } from './icons';
 
-export interface BottomSectionProps {
+export interface CanvasControlsProps extends BrushPreviewProps {
   /**
    * Callback when the clear button is pressed
    */
@@ -29,9 +29,9 @@ export interface BottomSectionProps {
   onToggleEraser?: () => void;
 
   /**
-   * Callback when the color palette button is pressed
+   * Callback when the brush properties button is pressed
    */
-  onToggleColorPalette?: () => void;
+  onToggleBrushProperties?: () => void;
 
   /**
    * Override the style of the buttons
@@ -39,10 +39,10 @@ export interface BottomSectionProps {
   buttonStyle?: StyleProp<ViewStyle>;
 
   /**
-   * Change brush preview preset or remove it
-   * @default DEFAULT_BRUSH_PREVIEW
+   * Initial tool of the canvas
+   * @default DEFAULT_TOOL
    */
-  brushPreview?: BrushType;
+  tool?: DrawingTool;
 
   /**
    * Delete button color
@@ -55,51 +55,30 @@ export interface BottomSectionProps {
    * @default DEFAULT_OTHER_BUTTONS_COLOR
    */
   otherButtonsColor?: string;
-
-  /**
-   * Initial tool of the canvas
-   * @default DEFAULT_TOOL
-   */
-  tool?: DrawingTool;
-
-  /**
-   * Current brush color
-   */
-  color: string;
-
-  /**
-   * Current brush opacity
-   */
-  opacity: number;
-
-  /**
-   * Current brush size
-   */
-  thickness: number;
 }
 
 /**
- * Bottom section of the canvas, allowing the user can change the brush
+ * Bottom section of the canvas, allowing the user to change the brush
  * properties, clear the canvas, undo strokes.
  *
  * The buttons will be visible if the corresponding callback is provided.
  */
-const BottomSection: React.FC<BottomSectionProps> = ({
+const CanvasControls: React.FC<CanvasControlsProps> = ({
   onClear,
   onUndo,
   onToggleEraser,
-  onToggleColorPalette,
+  onToggleBrushProperties,
   buttonStyle,
-  brushPreview = DEFAULT_BRUSH_PREVIEW,
   tool = DEFAULT_TOOL,
   deleteButtonColor = DEFAULT_DELETE_BUTTON_COLOR,
   otherButtonsColor = DEFAULT_OTHER_BUTTONS_COLOR,
   color,
-  opacity,
   thickness,
+  opacity,
+  brushPreview = DEFAULT_BRUSH_PREVIEW,
 }) => (
-  <View style={styles.bottomContainer}>
-    <View style={styles.bottomContent}>
+  <View style={styles.container}>
+    <View style={styles.content}>
       <View style={styles.buttonsContainer}>
         {onClear && (
           <Button
@@ -127,7 +106,7 @@ const BottomSection: React.FC<BottomSectionProps> = ({
         color={color}
         opacity={opacity}
         thickness={thickness}
-        previewType={brushPreview}
+        brushPreview={brushPreview}
       />
 
       <View style={styles.buttonsContainer}>
@@ -144,10 +123,10 @@ const BottomSection: React.FC<BottomSectionProps> = ({
             )}
           </Button>
         )}
-        {onToggleColorPalette && (
+        {onToggleBrushProperties && (
           <View style={onToggleEraser && styles.endButton}>
             <Button
-              onPress={onToggleColorPalette}
+              onPress={onToggleBrushProperties}
               color={color}
               style={buttonStyle}
             >
@@ -161,12 +140,12 @@ const BottomSection: React.FC<BottomSectionProps> = ({
 );
 
 const styles = StyleSheet.create({
-  bottomContainer: {
+  container: {
     height: 80,
     width: '100%',
     justifyContent: 'center',
   },
-  bottomContent: {
+  content: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -181,4 +160,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BottomSection;
+export default CanvasControls;

@@ -4,12 +4,6 @@
 
 Cross-platform React Native drawing component based on SVG
 
-> Note: Performance may not be great, this is not my main focus right now, but will be tackled via resolving this [issue](https://github.com/BenJeau/react-native-draw/issues/4)
-
-![Drawing Example](assets/drawingExample.gif)
-
-Example application with React Native performance overlay
-
 ## Installation
 
 ```sh
@@ -18,41 +12,190 @@ npm install @benjeau/react-native-draw
 yarn add @benjeau/react-native-draw
 ```
 
-> Also, you need to install [react-native-gesture-handler](https://github.com/software-mansion/react-native-gesture-handler), [@react-native-community/slider](https://github.com/callstack/react-native-slider) and [react-native-svg](https://github.com/react-native-svg/react-native-svg), and follow their installation instructions.
+> Also, you need to install [react-native-gesture-handler](https://github.com/software-mansion/react-native-gesture-handler) and [react-native-svg](https://github.com/react-native-svg/react-native-svg), and follow their installation instructions.
 
 ## Usage
 
+> All the following examples are also available in the [example](./example/) Expo application
+
+### Simple example
+
+Here's the most simple example:
+
+```tsx
+import React from 'react';
+import { Canvas } from '@benjeau/react-native-draw';
+
+export default () => <Canvas />;
+```
+
+https://user-images.githubusercontent.com/22248828/152287845-d5d2dea0-7f7e-430b-bbfd-1769aca8af11.mp4
+
+### Complex example
+
+Here's a more complex example:
+
+<details>
+  <summary>Complex example - Code snippet</summary>
+
 ```tsx
 import React, { useRef } from 'react';
-import { Draw, DrawRef } from "@benjeau/react-native-draw";
+import { Button } from 'react-native';
+import { Canvas, CanvasRef } from '@benjeau/react-native-draw';
 
-export default function App() {
-  const drawRef = useRef<DrawRef>(null);
+export default () => {
+  const canvasRef = useRef<CanvasRef>(null);
 
-  const removeLastPath = () => {
-    drawRef.current?.undo();
-  }
+  const handleUndo = () => {
+    canvasRef.current?.undo();
+  };
 
-  const clearDrawing = () => {
-    drawRef.current?.clear();
-  }
-
-  // ... for more ref functions, look below
+  const handleClear = () => {
+    canvasRef.current?.clear();
+  };
 
   return (
-    <Draw
-      ref={drawRef}
-      height={600}
-      initialValues={{
-        color: "#B644D0",
-        thickness: 10,
-        opacity: 0.5,
-        paths: []
-      }}
-    />
-  )
-}
+    <>
+      <Canvas
+        ref={canvasRef}
+        height={600}
+        color="red"
+        thickness={20}
+        opacity={0.6}
+        style={{ backgroundColor: 'black' }}
+      />
+      <Button title="Undo" onPress={handleUndo} />
+      <Button title="Clear" onPress={handleClear} />
+    </>
+  );
+};
 ```
+</details>
+
+https://user-images.githubusercontent.com/22248828/152287758-95089f75-2b9e-4807-b7a3-a03654acf7ac.mp4
+
+### Example with `@BenJeau/react-native-draw-extras`
+
+This uses the `@BenJeau/react-native-draw-extras` npm package for the color picker and the bottom buttons/brush preview.
+
+> As this package does not depend on `@BenJeau/react-native-draw-extras`, it is completely optional and you can build your own supporting UI, just like the previous example
+
+<details>
+  <summary>Extras example - Code snippet</summary>
+
+```tsx
+import React, { useRef, useState } from 'react';
+import { Animated, StyleSheet, View } from 'react-native';
+import {
+  BrushProperties,
+  Canvas,
+  CanvasControls,
+  CanvasRef,
+  DEFAULT_COLORS,
+  DrawingTool,
+} from '@benjeau/react-native-draw';
+
+export default () => {
+  const canvasRef = useRef<CanvasRef>(null);
+
+  const [color, setColor] = useState(DEFAULT_COLORS[0][0][0]);
+  const [thickness, setThickness] = useState(5);
+  const [opacity, setOpacity] = useState(1);
+  const [tool, setTool] = useState(DrawingTool.Brush);
+  const [visibleBrushProperties, setVisibleBrushProperties] = useState(false);
+
+  const handleUndo = () => {
+    canvasRef.current?.undo();
+  };
+
+  const handleClear = () => {
+    canvasRef.current?.clear();
+  };
+
+  const handleToggleEraser = () => {
+    setTool((prev) =>
+      prev === DrawingTool.Brush ? DrawingTool.Eraser : DrawingTool.Brush
+    );
+  };
+
+  const [overlayOpacity] = useState(new Animated.Value(0));
+  const handleToggleBrushProperties = () => {
+    if (!visibleBrushProperties) {
+      setVisibleBrushProperties(true);
+
+      Animated.timing(overlayOpacity, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(overlayOpacity, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start(() => {
+        setVisibleBrushProperties(false);
+      });
+    }
+  };
+
+  return (
+    <>
+      <Canvas
+        ref={canvasRef}
+        height={600}
+        color={color}
+        thickness={thickness}
+        opacity={opacity}
+        tool={tool}
+        style={{
+          borderBottomWidth: StyleSheet.hairlineWidth,
+          borderColor: '#ccc',
+        }}
+      />
+      <View>
+        <CanvasControls
+          onUndo={handleUndo}
+          onClear={handleClear}
+          onToggleEraser={handleToggleEraser}
+          onToggleBrushProperties={handleToggleBrushProperties}
+          tool={tool}
+          color={color}
+          opacity={opacity}
+          thickness={thickness}
+        />
+        {visibleBrushProperties && (
+          <BrushProperties
+            color={color}
+            thickness={thickness}
+            opacity={opacity}
+            onColorChange={setColor}
+            onThicknessChange={setThickness}
+            onOpacityChange={setOpacity}
+            style={{
+              position: 'absolute',
+              bottom: 80,
+              left: 0,
+              right: 0,
+              padding: 10,
+              backgroundColor: '#f2f2f2',
+              borderTopEndRadius: 10,
+              borderTopStartRadius: 10,
+              borderWidth: StyleSheet.hairlineWidth,
+              borderBottomWidth: 0,
+              borderTopColor: '#ccc',
+              opacity: overlayOpacity,
+            }}
+          />
+        )}
+      </View>
+    </>
+  );
+};
+```
+</details>
+
+https://user-images.githubusercontent.com/22248828/152296353-4512848a-c39b-4ef0-930b-c65a7010e2db.mp4
 
 ## Props
 
@@ -103,6 +246,10 @@ All of the props are optional
 | `getPaths` | Get brush strokes data                     | `() => PathType[]`                 |
 | `addPath`  | Append a path to the current drawing paths | `(path: PathType) => void`         |
 | `getSvg`   | Get SVG path string of the drawing         | `() => string`                     |
+
+## Troubleshooting
+
+If you cannot draw on the canvas, make sure you have followed the extra steps of [react-native-gesture-handler](https://github.com/software-mansion/react-native-gesture-handler)
 
 ## Helper functions
 

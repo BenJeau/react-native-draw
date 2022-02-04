@@ -81,6 +81,7 @@ export const DEFAULT_THICKNESS = 3;
 export const DEFAULT_OPACITY = 1;
 export const DEFAULT_TOOL = DrawingTool.Brush;
 export const DEFAULT_BRUSH_PREVIEW = 'stroke';
+export const DEFAULT_BRUSH_COLOR = '#000000';
 export const DEFAULT_OPACITY_STEP = 0.1;
 export const DEFAULT_THICKNESS_STEP = 1;
 export const DEFAULT_THICKNESS_MIN = 5;

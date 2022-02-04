@@ -4,21 +4,41 @@ import Svg, { Path, Circle } from 'react-native-svg';
 export type BrushType = 'stroke' | 'dot' | 'none';
 
 export interface BrushPreviewProps {
+  /**
+   * Color of the brush strokes
+   */
   color: string;
+
+  /**
+   * Thickness of the brush strokes
+   */
   thickness: number;
+
+  /**
+   * Opacity of the brush strokes
+   */
   opacity: number;
-  previewType: BrushType;
+
+  /**
+   * Brush preview preset, for different kinds of previews
+   * @default DEFAULT_BRUSH_PREVIEW
+   */
+  brushPreview?: BrushType;
 }
 
+/**
+ * Displays a preview of the current brush with its color, size, and
+ * opacity. The preview can either be a stroke or a dot.
+ */
 const BrushPreview: React.FC<BrushPreviewProps> = ({
   color,
   thickness,
   opacity,
-  previewType,
+  brushPreview,
 }) =>
-  previewType !== 'none' ? (
+  brushPreview !== 'none' ? (
     <Svg height={80} width={100}>
-      {previewType === 'stroke' ? (
+      {brushPreview === 'stroke' ? (
         <Path
           d="M 20 60 Q 30 20 50 40 Q 70 60 80 20 "
           fill="none"

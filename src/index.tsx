@@ -6,14 +6,21 @@ export {
 } from './components/canvas/Canvas';
 
 export {
-  default as BottomSection,
-  BottomSectionProps,
-} from './components/extras/BottomSection';
+  default as CanvasControls,
+  CanvasControlsProps,
+} from './components/extras/CanvasControls';
 
 export {
   default as BrushProperties,
   BrushPropertiesProps,
+  BrushPropertiesRef,
 } from './components/extras/brushProperties/BrushProperties';
+
+export {
+  default as BrushPreview,
+  BrushPreviewProps,
+  BrushType,
+} from './components/extras/BrushPreview';
 
 export {
   default as ColorPicker,
@@ -23,3 +30,4 @@ export {
 export * from './types';
 export * from './components/canvas/utils';
 export * from './components/extras/utils';
+export * from './constants';

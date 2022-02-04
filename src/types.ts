@@ -37,6 +37,6 @@ export interface PathType {
  * Tool used on the canvas
  */
 export enum DrawingTool {
-  Brush,
-  Eraser,
+  Brush = 'brush',
+  Eraser = 'eraser',
 }

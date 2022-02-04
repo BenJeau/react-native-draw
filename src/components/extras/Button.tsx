@@ -27,6 +27,7 @@ const Button: React.FC<ButtonProps> = ({ children, onPress, color, style }) => {
           ? '#000000b0'
           : '#ffffffb0'
         : '',
+      borderColor: color,
     },
     style,
   ];
@@ -38,6 +39,7 @@ const Button: React.FC<ButtonProps> = ({ children, onPress, color, style }) => {
         style={buttonStyle}
         activeOpacity={0.5}
         rippleColor={color}
+        underlayColor={color}
       >
         {children}
       </RectButton>
@@ -54,6 +56,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     height: 50,
     width: 50,
+    borderWidth: StyleSheet.hairlineWidth,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -5,11 +5,12 @@ import React, {
   useState,
 } from 'react';
 import {
-  StyleSheet,
+  Animated,
   Dimensions,
   StyleProp,
-  ViewStyle,
+  StyleSheet,
   View,
+  ViewStyle,
 } from 'react-native';
 import {
   PanGestureHandler,
@@ -19,6 +20,7 @@ import {
 } from 'react-native-gesture-handler';
 
 import {
+  DEFAULT_BRUSH_COLOR,
   DEFAULT_ERASER_SIZE,
   DEFAULT_OPACITY,
   DEFAULT_THICKNESS,
@@ -33,8 +35,9 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 export interface CanvasProps {
   /**
    * Initial brush color, from the colors provided
+   * @default DEFAULT_BRUSH_COLOR
    */
-  color: string;
+  color?: string;
 
   /**
    * Thickness of the brush strokes
@@ -67,7 +70,7 @@ export interface CanvasProps {
   /**
    * Override the style of the container of the canvas
    */
-  canvasStyle?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
 
   /**
    * Callback function when paths change
@@ -196,11 +199,11 @@ const generateSVGPaths = (
 const Canvas = forwardRef<CanvasRef, CanvasProps>(
   (
     {
-      color,
+      color = DEFAULT_BRUSH_COLOR,
       thickness = DEFAULT_THICKNESS,
       opacity = DEFAULT_OPACITY,
       initialPaths = [],
-      canvasStyle,
+      style,
       height = screenHeight - 80,
       width = screenWidth,
       simplifyOptions = {},
@@ -230,7 +233,7 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
         height,
         width,
       },
-      canvasStyle,
+      style,
     ];
 
     const addPointToPath = (x: number, y: number) => {
@@ -420,7 +423,7 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
     };
 
     return (
-      <View style={canvasContainerStyles}>
+      <Animated.View style={canvasContainerStyles}>
         <PanGestureHandler
           maxPointers={1}
           minDist={0}
@@ -453,7 +456,7 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
             />
           </View>
         </PanGestureHandler>
-      </View>
+      </Animated.View>
     );
   }
 );

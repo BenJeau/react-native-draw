@@ -12,16 +12,23 @@ export interface ColorPickerProps {
 
   /**
    * Callback when a color is selected
+   * @param newColor - New selected color
    */
-  onColorChange: (color: string) => void;
+  onColorChange: (newColor: string) => void;
 
   /**
-   * Color palette colors, specifying the color palette sections each containing rows of colors
+   * Color picker colors, specifying the color picker sections each
+   * containing rows of colors. First array defines the sections, second
+   * one defines the rows, and the last one defines the columns.
    * @default DEFAULT_COLORS
    */
-  colors: string[][][];
+  colors?: string[][][];
 }
 
+/**
+ * Color picker component displaying a grid of colors triggering a
+ * callback when a color is selected and being able to select a color
+ */
 const ColorPicker: React.FC<ColorPickerProps> = ({
   color,
   onColorChange,
@@ -29,12 +36,12 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
 }) => (
   <View style={styles.container}>
     <View style={styles.content}>
-      {colors.map((group, gKey) => (
+      {colors.map((section, gKey) => (
         <View
           key={gKey}
           style={colors.length - 1 !== gKey ? styles.divider : {}}
         >
-          {group.map((row, rKey) => (
+          {section.map((row, rKey) => (
             <View style={styles.row} key={rKey}>
               {row.map((buttonColor, colorKey) => (
                 <ColorButton
@@ -43,11 +50,11 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                   selected={color === buttonColor}
                   onPress={onColorChange}
                   isTopStart={rKey === 0 && colorKey === 0}
-                  isTopEnd={rKey === 0 && colorKey === group[0].length - 1}
-                  isBottomStart={rKey === group.length - 1 && colorKey === 0}
+                  isTopEnd={rKey === 0 && colorKey === section[0].length - 1}
+                  isBottomStart={rKey === section.length - 1 && colorKey === 0}
                   isBottomEnd={
-                    rKey === group.length - 1 &&
-                    colorKey === group[0].length - 1
+                    rKey === section.length - 1 &&
+                    colorKey === section[0].length - 1
                   }
                 />
               ))}
