@@ -12,7 +12,7 @@ import {
   DEFAULT_THICKNESS_MIN,
   DEFAULT_THICKNESS_STEP,
   SLIDERS_HEIGHT,
-} from '../../../constants';
+} from '../constants';
 import ColorPicker, { ColorPickerProps } from './colorPicker/ColorPicker';
 import { colorButtonSize } from './colorPicker/ColorButton';
 

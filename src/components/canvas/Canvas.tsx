@@ -25,8 +25,8 @@ import {
   DEFAULT_OPACITY,
   DEFAULT_THICKNESS,
   DEFAULT_TOOL,
-} from '../../constants';
-import { DrawingTool, PathDataType, PathType } from '../../types';
+} from './constants';
+import { DrawingTool, PathDataType, PathType } from './types';
 import { createSVGPath } from './utils';
 import SVGRenderer from './renderer/SVGRenderer';
 import RendererHelper from './renderer/RendererHelper';

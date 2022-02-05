@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { DEFAULT_COLORS } from '../../../../constants';
+import { DEFAULT_COLORS } from '../../constants';
 import ColorButton from './ColorButton';
 
 export interface ColorPickerProps {

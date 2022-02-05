@@ -1,5 +1,5 @@
 import simplifySvgPath from '@luncheon/simplify-svg-path';
-import type { PathDataType } from '../../types';
+import type { PathDataType } from './types';
 
 export const createSVGPath = (
   points: PathDataType,

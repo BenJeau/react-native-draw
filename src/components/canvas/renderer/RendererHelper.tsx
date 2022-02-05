@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 
-import type { PathDataType, PathType } from '../../../types';
+import type { PathDataType, PathType } from '../types';
 import { createSVGPath } from '../utils';
 
 export interface RendererProps {

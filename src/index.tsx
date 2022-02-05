@@ -27,7 +27,8 @@ export {
   ColorPickerProps,
 } from './components/extras/brushProperties/colorPicker/ColorPicker';
 
-export * from './types';
+export * from './components/canvas/types';
 export * from './components/canvas/utils';
+export * from './components/canvas/constants';
 export * from './components/extras/utils';
-export * from './constants';
+export * from './components/extras/constants';
