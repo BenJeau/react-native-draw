@@ -26,6 +26,11 @@ export interface PathType {
    * Opacity of the path
    */
   opacity: number;
+
+  /**
+   * Combine all the paths
+   */
+  combine?: boolean;
 }
 
 /**

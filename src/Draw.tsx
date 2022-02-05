@@ -173,6 +173,13 @@ export interface DrawProps {
    * @default DEFAULT_ERASER_SIZE
    */
   eraserSize?: number;
+
+  /**
+   * Combine current path with the last path if it's the same color,
+   * thickness, and opacity
+   * @default false
+   */
+  combineWithLatestPath?: boolean;
 }
 
 export interface DrawRef {
@@ -310,6 +317,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       simplifyOptions = {},
       autoDismissColorPicker = false,
       eraserSize = DEFAULT_ERASER_SIZE,
+      combineWithLatestPath = false,
     } = {},
     ref
   ) => {
@@ -435,7 +443,14 @@ const Draw = forwardRef<DrawRef, DrawProps>(
         list.reduce((acc: PathType[], path, index) => {
           if (index === list.length - 1) {
             if (path.data.length > 1) {
-              return [...acc, { ...path, data: path.data.slice(0, -1), path: path.path!.slice(0, -1) }];
+              return [
+                ...acc,
+                {
+                  ...path,
+                  data: path.data.slice(0, -1),
+                  path: path.path!.slice(0, -1),
+                },
+              ];
             }
             return acc;
           }
@@ -506,6 +521,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
                   data: [path],
                   thickness,
                   opacity,
+                  combine: combineWithLatestPath,
                 },
               ];
             }
@@ -532,6 +548,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
                 data: [path],
                 thickness,
                 opacity,
+                combine: combineWithLatestPath,
               },
             ];
           });
@@ -584,12 +601,43 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       addPath: (newPath) => {
         setPaths((prev) => [...prev, newPath]);
       },
-      getSvg: () =>
-        `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${paths.reduce(
-          (acc, p) =>
-            `${acc}<path d="${p.path!.join(" ")}" stroke="${p.color}" stroke-width="${p.thickness}" opacity="${p.opacity}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`,
+      getSvg: () => {
+        const serializePath = (
+          path: string,
+          color: string,
+          thickness: number,
+          opacity: number
+        ) =>
+          `<path d="${path}" stroke="${color}" stroke-width="${thickness}" opacity="${opacity}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
+
+        const separatePaths = (path: PathType) =>
+          path.path!.reduce(
+            (acc, innerPath) =>
+              `${acc}${serializePath(
+                innerPath,
+                path.color,
+                path.thickness,
+                path.opacity
+              )}`,
+            ''
+          );
+
+        const combinedPath = (path: PathType) =>
+          `${serializePath(
+            path.path!.join(' '),
+            path.color,
+            path.thickness,
+            path.opacity
+          )}`;
+
+        const serializedPaths = paths.reduce(
+          (acc, path) =>
+            `${acc}${path.combine ? combinedPath(path) : separatePaths(path)}`,
           ''
-        )}</svg>`,
+        );
+
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${serializedPaths}</svg>`;
+      },
     }));
 
     return (
