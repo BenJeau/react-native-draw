@@ -284,7 +284,15 @@ const generateSVGPaths = (
 ) =>
   paths.map((i) => ({
     ...i,
-    path: i.path ? i.path : generateSVGPath(i.data, simplifyOptions),
+    path: i.path
+      ? i.path
+      : i.data.reduce(
+          (acc: string[], data) => [
+            ...acc,
+            generateSVGPath(data, simplifyOptions),
+          ],
+          []
+        ),
   }));
 
 const Draw = forwardRef<DrawRef, DrawProps>(
@@ -358,17 +366,38 @@ const Draw = forwardRef<DrawRef, DrawProps>(
           addPath(x, y);
           break;
         case DrawingTool.Eraser:
-          setPaths((p) =>
-            p.reduce((acc: PathType[], i) => {
-              const closeToPath = i.data.some(
-                ([x1, y1]) =>
-                  Math.abs(x1 - x) < i.thickness + eraserSize &&
-                  Math.abs(y1 - y) < i.thickness + eraserSize
+          setPaths((paths) =>
+            paths.reduce((acc: PathType[], path) => {
+              const filteredDataPaths = path.data.reduce(
+                (
+                  acc: { data: PathDataType[]; path: string[] },
+                  data,
+                  index
+                ) => {
+                  const closeToPath = data.some(
+                    ([x1, y1]) =>
+                      Math.abs(x1 - x) < path.thickness + eraserSize &&
+                      Math.abs(y1 - y) < path.thickness + eraserSize
+                  );
+
+                  // If point close to path, don't include it
+                  if (closeToPath) {
+                    return acc;
+                  }
+
+                  return {
+                    data: [...acc.data, data],
+                    path: [...acc.path, path.path![index]],
+                  };
+                },
+                { data: [], path: [] }
               );
-              if (closeToPath) {
-                return acc;
+
+              if (filteredDataPaths.data.length > 0) {
+                return [...acc, { ...path, ...filteredDataPaths }];
               }
-              return [...acc, i];
+
+              return acc;
             }, [])
           );
           break;
@@ -402,7 +431,17 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     };
     const handleUndo = () => {
       focusCanvas();
-      setPaths((list) => list.filter((_i, key) => key !== list.length - 1));
+      setPaths((list) =>
+        list.reduce((acc: PathType[], path, index) => {
+          if (index === list.length - 1) {
+            if (path.data.length > 1) {
+              return [...acc, { ...path, data: path.data.slice(0, -1), path: path.path!.slice(0, -1) }];
+            }
+            return acc;
+          }
+          return [...acc, path];
+        }, [])
+      );
     };
     const handleColorPickerSelection = (newColor: string) => {
       setColor(newColor);
@@ -456,16 +495,46 @@ const Draw = forwardRef<DrawRef, DrawProps>(
         if (state === State.BEGAN) {
           addPath(x, y);
         } else if (state === State.END || state === State.CANCELLED) {
-          setPaths((prev) => [
-            ...prev,
-            {
-              color,
-              path: generateSVGPath(path, simplifyOptions),
-              data: path,
-              thickness,
-              opacity,
-            },
-          ]);
+          setPaths((prev) => {
+            const newSVGPath = generateSVGPath(path, simplifyOptions);
+
+            if (prev.length === 0) {
+              return [
+                {
+                  color,
+                  path: [newSVGPath],
+                  data: [path],
+                  thickness,
+                  opacity,
+                },
+              ];
+            }
+
+            const lastPath = prev[prev.length - 1];
+
+            // Check if the last path has the same properties
+            if (
+              lastPath.color === color &&
+              lastPath.thickness === thickness &&
+              lastPath.opacity === opacity
+            ) {
+              lastPath.path = [...lastPath.path!, newSVGPath];
+              lastPath.data = [...lastPath.data, path];
+
+              return [...prev.slice(0, -1), lastPath];
+            }
+
+            return [
+              ...prev,
+              {
+                color,
+                path: [newSVGPath],
+                data: [path],
+                thickness,
+                opacity,
+              },
+            ];
+          });
           setPath([]);
         }
       }
@@ -518,7 +587,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       getSvg: () =>
         `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${paths.reduce(
           (acc, p) =>
-            `${acc}<path d="${p.path}" stroke="${p.color}" stroke-width="${p.thickness}" opacity="${p.opacity}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`,
+            `${acc}<path d="${p.path!.join(" ")}" stroke="${p.color}" stroke-width="${p.thickness}" opacity="${p.opacity}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`,
           ''
         )}</svg>`,
     }));
