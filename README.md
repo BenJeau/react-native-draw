@@ -199,33 +199,22 @@ https://user-images.githubusercontent.com/22248828/152296353-4512848a-c39b-4ef0-
 
 ## Props
 
-All of the props are optional
+### Canvas
 
-| name                     | description                                                                                | type                                           | default                                |
-| ------------------------ | ------------------------------------------------------------------------------------------ | ---------------------------------------------- | -------------------------------------- |
-| `colors`                 | Color palette colors, specifying the color palette sections each containing rows of colors | `string[][][]`                                 | [`DEFAULT_COLORS`](./src/constants.ts) |
-| `height`                 | Height of the canvas                                                                       | `number`                                       | height of the window - 80              |
-| `width`                  | Width of the canvas                                                                        | `number`                                       | width of the window                    |
-| `autoDismissColorPicker` | Automatically close the color picker after selecting a color                               | `boolean`                                      | `false`                                |
-| `initialValues`          | Initial values for color the brush and paths                                               | [`DrawInitialValues`](./src/Draw.tsx)          | see [below](#DrawInitialValues)        |
-| `hideBottom`             | Hide all of the bottom section, below the canvas, or only certain functionalities          | `boolean` or `HideBottom`                      | false                                  |
-| `brushPreview`           | Change brush preview preset or remove it                                                   | `stroke` or `dot` or `none`                    | `stroke`                               |
-| `simplifyOptions`        | SVG simplification options                                                                 | [`SimplifyOptions`](./src/Draw.tsx)            | see [below](#SimplifyOptions)          |
-| `canvasStyle`            | Override the style of the container of the canvas                                          | `StyleProp`                                    | -                                      |
-| `buttonStyle`            | Override the style of the buttons                                                          | `StyleProp`                                    | -                                      |
-| `onPathsChange`          | Callback function when paths change                                                        | (paths: [`PathType`](./src/types.ts)[]) => any | -                                      |
-| `eraserSize`             | Width of eraser (to compensate for path simplification)                                    | `number`                                       | `5`                                    |
-| `combineWithLatestPath`  | Combine current path with the last path if it's the same color, thickness, and opacity     | `boolean`                                      | `false`                                |
-
-### DrawInitialValues
-
-| name        | description                                   | type          | default                                                             |
-| ----------- | --------------------------------------------- | ------------- | ------------------------------------------------------------------- |
-| `color`     | Initial brush color, from the colors provided | `string`      | the first color of the first row in the first section from `colors` |
-| `thickness` | Initial thickness of the brush strokes        | `number`      | `3`                                                                 |
-| `opacity`   | Initial opacity of the brush strokes          | `number`      | `1`                                                                 |
-| `paths`     | Paths to be already drawn                     | `PathType[]`  | `[]`                                                                |
-| `tool`      | Initial tool of the canvas                    | `DrawingTool` | `brush`                                                             |
+| name                    | description                                                                            | type                                           | default                       |
+| ----------------------- | -------------------------------------------------------------------------------------- | ---------------------------------------------- | ----------------------------- |
+| `color`                 | Color of the brush strokes                                                             | `string`                                       | - (required)                  |
+| `thickness`             | Thickness of the brush strokes                                                         | `number`                                       | - (required)                  |
+| `opacity`               | Opacity of the brush strokes                                                           | `number`                                       | - (required)                  |
+| `initialPaths`          | Paths to be already drawn                                                              | `PathType[]`                                   | `[]`                          |
+| `height`                | Height of the canvas                                                                   | `number`                                       | height of the window - 80     |
+| `width`                 | Width of the canvas                                                                    | `number`                                       | width of the window           |
+| `style`                 | Override the style of the container of the canvas                                      | `StyleProp`                                    | -                             |
+| `onPathsChange`         | Callback function when paths change                                                    | (paths: [`PathType`](./src/types.ts)[]) => any | -                             |
+| `simplifyOptions`       | SVG simplification options                                                             | [`SimplifyOptions`](./src/Draw.tsx)            | see [below](#SimplifyOptions) |
+| `eraserSize`            | Width of eraser (to compensate for path simplification)                                | `number`                                       | `5`                           |
+| `tool`                  | Initial tool of the canvas                                                             | `brush` or `eraser`                            | `brush`                       |
+| `combineWithLatestPath` | Combine current path with the last path if it's the same color, thickness, and opacity | `boolean`                                      | `false`                       |
 
 ### SimplifyOptions
 
@@ -238,14 +227,13 @@ All of the props are optional
 
 ## Ref functions
 
-| name       | description                                | type                               |
-| ---------- | ------------------------------------------ | ---------------------------------- |
-| `setColor` | Set the brush color                        | `Dispatch<SetStateAction<string>>` |
-| `undo`     | Undo last brush stroke                     | `() => void`                       |
-| `clear`    | Removes all brush strokes                  | `() => void`                       |
-| `getPaths` | Get brush strokes data                     | `() => PathType[]`                 |
-| `addPath`  | Append a path to the current drawing paths | `(path: PathType) => void`         |
-| `getSvg`   | Get SVG path string of the drawing         | `() => string`                     |
+| name       | description                                | type                       |
+| ---------- | ------------------------------------------ | -------------------------- |
+| `undo`     | Undo last brush stroke                     | `() => void`               |
+| `clear`    | Removes all brush strokes                  | `() => void`               |
+| `getPaths` | Get brush strokes data                     | `() => PathType[]`         |
+| `addPath`  | Append a path to the current drawing paths | `(path: PathType) => void` |
+| `getSvg`   | Get SVG path string of the drawing         | `() => string`             |
 
 ## Troubleshooting
 

@@ -33,50 +33,42 @@ yarn add @benjeau/react-native-draw-extras
 
 Contains all the props of [BrushProperties](#brushproperties) and the following:
 
-| name                      | description                                          | type                   | default                                             |
-| ------------------------- | ---------------------------------------------------- | ---------------------- | --------------------------------------------------- |
-| `onClear`                 | Callback when the clear button is pressed            | `() => void`           | -                                                   |
-| `onUndo`                  | Callback when the undo button is pressed             | `() => void`           | -                                                   |
-| `onToggleEraser`          | Callback when the eraser button is pressed           | `() => void`           | -                                                   |
-| `onToggleBrushProperties` | Callback when the brush properties button is pressed | `() => void`           | -                                                   |
-| `buttonStyle`             | Override the style of the buttons                    | `() => void`           | -                                                   |
-| `tool`                    | Initial tool of the canvas                           | `StyleProp<ViewStyle>` | -                                                   |
-| `deleteButtonColor`       | Delete button color                                  | `string`               | [`DEFAULT_DELETE_BUTTON_COLOR`](./src/constants.ts) |
-| `otherButtonsColor`       | Other buttons color (undo and eraser mode toggle)    | `string`               | [`DEFAULT_OTHER_BUTTONS_COLOR`](./src/constants.ts) |
-
-#### DrawingTool
-
-`brush` or `eraser`
+| name                      | description                                          | type                   | default   |
+| ------------------------- | ---------------------------------------------------- | ---------------------- | --------- |
+| `onClear`                 | Callback when the clear button is pressed            | `() => void`           | -         |
+| `onUndo`                  | Callback when the undo button is pressed             | `() => void`           | -         |
+| `onToggleEraser`          | Callback when the eraser button is pressed           | `() => void`           | -         |
+| `onToggleBrushProperties` | Callback when the brush properties button is pressed | `() => void`           | -         |
+| `buttonStyle`             | Override the style of the buttons                    | `StyleProp<ViewStyle>` | -         |
+| `tool`                    | Initial tool of the canvas                           | `brush` or `eraser`    | -         |
+| `deleteButtonColor`       | Delete button color                                  | `string`               | `#81090A` |
+| `otherButtonsColor`       | Other buttons color (undo and eraser mode toggle)    | `string`               | `#DDD`    |
 
 ### BrushPreview
 
-| name           | description                                           | type                      | default      |
-| -------------- | ----------------------------------------------------- | ------------------------- | ------------ |
-| `color`        | Color of the brush strokes                            | `string`                  | - (required) |
-| `thickness`    | Thickness of the brush strokes                        | `number`                  | - (required) |
-| `opacity`      | Opacity of the brush strokes                          | `number`                  | - (required) |
-| `brushPreview` | Brush preview preset, for different kinds of previews | [`BrushType`](#brushtype) | - (required) |
-
-#### BrushType
-
-`stroke` or `dot` or `none`
+| name           | description                                           | type                        | default      |
+| -------------- | ----------------------------------------------------- | --------------------------- | ------------ |
+| `color`        | Color of the brush strokes                            | `string`                    | - (required) |
+| `thickness`    | Thickness of the brush strokes                        | `number`                    | - (required) |
+| `opacity`      | Opacity of the brush strokes                          | `number`                    | - (required) |
+| `brushPreview` | Brush preview preset, for different kinds of previews | `stroke` or `dot` or `none` | - (required) |
 
 ### BrushProperties
 
 Contains all the props of [ColorPicker](#colorpicker) and the following:
 
-| name                | description                                                                                         | type                             | default                                        |
-| ------------------- | --------------------------------------------------------------------------------------------------- | -------------------------------- | ---------------------------------------------- |
-| `thickness`         | Thickness of the brush strokes                                                                      | `number`                         | [`DEFAULT_THICKNESS`](./src/constants.ts)      |
-| `opacity`           | Opacity of the brush strokes                                                                        | `number`                         | [`DEFAULT_OPACITY`](./src/constants.ts)        |
-| `onThicknessChange` | Callback when brush size is changed via the slider                                                  | `(newThickness: number) => void` | -                                              |
-| `onOpacityChange`   | Callback when brush opacity is changed via the slider                                               | `(newOpacity: number) => void`   | -                                              |
-| `opacityStep`       | Step value of the opacity slider, should be between 0 and 1                                         | `number`                         | [`DEFAULT_OPACITY_STEP`](./src/constants.ts)   |
-| `thicknessMin`      | Minimum value of the thickness slider                                                               | `number`                         | [`DEFAULT_THICKNESS_MIN`](./src/constants.ts)  |
-| `thicknessMax`      | Maximum value of the thickness slider                                                               | `number`                         | [`DEFAULT_THICKNESS_MAX`](./src/constants.ts)  |
-| `thicknessStep`     | Step value of the thickness slider, should be between `props.thicknessMin` and `props.thicknessMax` | `number`                         | [`DEFAULT_THICKNESS_STEP`](./src/constants.ts) |
-| `sliderColor`       | Slider color                                                                                        | `string`                         | [`DEFAULT_SLIDER_COLOR`](./src/constants.ts)   |
-| `style`             | Style of the container                                                                              | `StyleProp<ViewStyle>`           | -                                              |
+| name                | description                                                                                         | type                             | default |
+| ------------------- | --------------------------------------------------------------------------------------------------- | -------------------------------- | ------- |
+| `thickness`         | Thickness of the brush strokes                                                                      | `number`                         | `3`     |
+| `opacity`           | Opacity of the brush strokes                                                                        | `number`                         | `1`     |
+| `onThicknessChange` | Callback when brush size is changed via the slider                                                  | `(newThickness: number) => void` | -       |
+| `onOpacityChange`   | Callback when brush opacity is changed via the slider                                               | `(newOpacity: number) => void`   | -       |
+| `opacityStep`       | Step value of the opacity slider, should be between 0 and 1                                         | `number`                         | `0.1`   |
+| `thicknessMin`      | Minimum value of the thickness slider                                                               | `number`                         | `5`     |
+| `thicknessMax`      | Maximum value of the thickness slider                                                               | `number`                         | `35`    |
+| `thicknessStep`     | Step value of the thickness slider, should be between `props.thicknessMin` and `props.thicknessMax` | `number`                         | `1`     |
+| `sliderColor`       | Slider color                                                                                        | `string`                         | `#000`  |
+| `style`             | Style of the container                                                                              | `StyleProp<ViewStyle>`           | -       |
 
 ### ColorPicker
 

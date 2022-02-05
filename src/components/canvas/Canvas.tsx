@@ -35,7 +35,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 export interface CanvasProps {
   /**
-   * Initial brush color, from the colors provided
+   * Color of the brush strokes
    * @default DEFAULT_BRUSH_COLOR
    */
   color?: string;
