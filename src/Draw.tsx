@@ -154,7 +154,8 @@ export interface DrawProps {
   brushPreview?: BrushType;
 
   /**
-   * Hide all of the bottom section, below the canvas, or only certain functionalities
+   * Hide all of the bottom section, below the canvas, or only certain
+   * functionalities
    */
   hideBottom?: boolean | HideBottom;
 
@@ -176,7 +177,10 @@ export interface DrawProps {
 
   /**
    * Combine current path with the last path if it's the same color,
-   * thickness, and opacity
+   * thickness, and opacity.
+   * 
+   * **Note**: changing this value while drawing will only be effective
+   * on the next change to opacity, thickness, or color change
    * @default false
    */
   combineWithLatestPath?: boolean;
