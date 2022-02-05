@@ -1,4 +1,3 @@
-
 import React, { useRef } from 'react';
 import { Button } from 'react-native';
 import { Canvas, CanvasRef } from '@benjeau/react-native-draw';

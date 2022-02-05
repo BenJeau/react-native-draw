@@ -84,7 +84,7 @@ export interface BrushPropertiesRef {
 /**
  * Component allowing user to change brush properties, such as the color,
  * thickness, and opacity.
- * 
+ *
  * If no thickness or opacity is provided, the component will behave like the
  * `ColorPicker` component.
  */

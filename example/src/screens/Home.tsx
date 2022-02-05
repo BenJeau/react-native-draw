@@ -1,5 +1,5 @@
 import { useTheme } from '@react-navigation/native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import {
   ScrollView,
@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 
-import { RootStackParamList } from '../App';
+import type { RootStackParamList } from '../App';
 import { Button } from '../components';
 
 type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>;

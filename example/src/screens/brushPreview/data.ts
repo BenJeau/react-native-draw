@@ -18,7 +18,7 @@ const data: Data[] = [
           color: '#000000',
           thickness: 1,
           opacity: 1,
-          brushPreview: 'stroke'
+          brushPreview: 'stroke',
         },
       },
     ],

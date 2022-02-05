@@ -45,7 +45,15 @@ const RendererHelper: React.FC<RendererHelperProps> = ({
         data: [currentPath],
       },
     ],
-    [currentColor, currentThickness, currentOpacity, paths]
+    [
+      currentColor,
+      currentThickness,
+      currentPath,
+      currentOpacity,
+      paths,
+      currentPathTolerance,
+      roundPoints,
+    ]
   );
 
   return <Renderer height={height} width={width} paths={mergedPaths} />;

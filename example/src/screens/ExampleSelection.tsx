@@ -52,6 +52,8 @@ const ExampleSelection: React.FC<ExampleSelectionProps> = ({
         return 'CanvasControlsExample';
       case 'colorPicker':
         return 'ColorPickerExample';
+      default:
+        return 'CanvasExample';
     }
   }, [route.params]);
 
