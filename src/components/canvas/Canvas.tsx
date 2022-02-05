@@ -29,6 +29,7 @@ import {
 import { DrawingTool, PathDataType, PathType } from '../../types';
 import { createSVGPath } from './utils';
 import SVGRenderer from './renderer/SVGRenderer';
+import RendererHelper from './renderer/RendererHelper';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -439,7 +440,7 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
           shouldCancelWhenOutside
         >
           <View>
-            <SVGRenderer
+            <RendererHelper
               currentColor={color}
               currentOpacity={opacity}
               currentPath={path}
@@ -453,6 +454,7 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
               paths={paths}
               height={height}
               width={width}
+              Renderer={SVGRenderer}
             />
           </View>
         </PanGestureHandler>
