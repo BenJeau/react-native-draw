@@ -1,7 +1,7 @@
 import {
   BrushPropertiesProps,
   DEFAULT_COLORS,
-} from '@benjeau/react-native-draw';
+} from '@benjeau/react-native-draw-extras';
 
 interface Data {
   name: string;

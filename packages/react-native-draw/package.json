@@ -1,0 +1,68 @@
+{
+  "name": "@benjeau/react-native-draw",
+  "version": "0.6.0",
+  "description": "Cross-platform React Native drawing component",
+  "main": "lib/commonjs/index",
+  "module": "lib/module/index",
+  "types": "lib/typescript/index.d.ts",
+  "react-native": "src/index",
+  "source": "src/index",
+  "scripts": {
+    "prepare": "bob build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BenJeau/react-native-draw.git",
+    "directory": "packages/react-native-draw"
+  },
+  "author": "Benoit Jeaurond <benoit@jeaurond.dev> (https://github.com/BenJeau)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BenJeau/react-native-draw/issues"
+  },
+  "files": [
+    "src",
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "homepage": "https://github.com/BenJeau/react-native-draw#readme",
+  "keywords": [
+    "react-native-component",
+    "react-component",
+    "react-native",
+    "ios",
+    "android",
+    "draw",
+    "svg"
+  ],
+  "dependencies": {
+    "@luncheon/simplify-svg-path": "^0.1.4"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.38",
+    "@types/react-native": "0.66.15",
+    "react": "17.0.2",
+    "react-native": "0.67.2",
+    "react-native-builder-bob": "^0.18.2",
+    "react-native-gesture-handler": "^2.2.0",
+    "react-native-svg": "^12.1.1",
+    "typescript": "^4.5.5"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "react-native-gesture-handler": ">=2.2.0",
+    "react-native-svg": ">=12.1.1"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
+  }
+}

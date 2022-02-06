@@ -1,4 +1,4 @@
-import type { CanvasControlsProps } from '@benjeau/react-native-draw';
+import type { CanvasControlsProps } from '@benjeau/react-native-draw-extras';
 
 interface Data {
   name: string;

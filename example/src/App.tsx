@@ -8,11 +8,13 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type {
   CanvasProps,
+} from '@benjeau/react-native-draw';
+import type {
   BrushPreviewProps,
   BrushPropertiesProps,
   CanvasControlsProps,
   ColorPickerProps,
-} from '@benjeau/react-native-draw';
+} from '@benjeau/react-native-draw-extras';
 
 import {
   CanvasExample,

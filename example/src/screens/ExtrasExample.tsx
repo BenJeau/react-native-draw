@@ -1,13 +1,15 @@
 import React, { useRef, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import {
-  BrushProperties,
   Canvas,
-  CanvasControls,
   CanvasRef,
-  DEFAULT_COLORS,
   DrawingTool,
 } from '@benjeau/react-native-draw';
+import {
+  BrushProperties,
+  CanvasControls,
+  DEFAULT_COLORS,
+} from '@benjeau/react-native-draw-extras';
 
 export default () => {
   const canvasRef = useRef<CanvasRef>(null);

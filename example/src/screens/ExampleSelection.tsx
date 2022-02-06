@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Text, View, FlatList, StyleSheet } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useTheme } from '@react-navigation/native';
 
 import canvasData from './canvas/data';
 import brushPreviewsData from './brushPreview/data';
@@ -10,7 +11,6 @@ import colorPickerData from './colorPicker/data';
 
 import type { RootStackParamList } from '../App';
 import { Button } from '../components';
-import { useTheme } from '@react-navigation/native';
 
 type ExampleSelectionProps = NativeStackScreenProps<
   RootStackParamList,

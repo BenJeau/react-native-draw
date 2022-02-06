@@ -1,4 +1,4 @@
-import type { BrushPreviewProps } from '@benjeau/react-native-draw';
+import type { BrushPreviewProps } from '@benjeau/react-native-draw-extras';
 
 interface Data {
   name: string;
