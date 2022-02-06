@@ -30,11 +30,11 @@ export default function App() {
   const drawRef = useRef<DrawRef>(null);
 
   const removeLastPath = () => {
-    drawRef.current.?undo();
+    drawRef.current?.undo();
   }
 
   const clearDrawing = () => {
-    drawRef.current.?clear();
+    drawRef.current?.clear();
   }
 
   // ... for more ref functions, look below
