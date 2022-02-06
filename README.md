@@ -72,6 +72,7 @@ All of the props are optional
 | `buttonStyle`            | Override the style of the buttons                                                          | `StyleProp`                                    | -                                      |
 | `onPathsChange`          | Callback function when paths change                                                        | (paths: [`PathType`](./src/types.ts)[]) => any | -                                      |
 | `eraserSize`             | Width of eraser (to compensate for path simplification)                                    | `number`                                       | `5`                                    |
+| `combineWithLatestPath`  | Combine current path with the last path if it's the same color, thickness, and opacity     | `boolean`                                      | `false`                                |
 
 ### DrawInitialValues
 

@@ -10,12 +10,12 @@ export interface PathType {
    * SVG path. It does not need to be defined while passing a PathType to Draw as initialValues.
    * It will always be defined if you get the path data from the component.
    */
-  path?: string;
+  path?: string[];
 
   /**
    * Raw points data used to create the SVG path
    */
-  data: PathDataType;
+  data: PathDataType[];
 
   /**
    * Thickness of the path
@@ -26,6 +26,11 @@ export interface PathType {
    * Opacity of the path
    */
   opacity: number;
+
+  /**
+   * Combine all the paths
+   */
+  combine?: boolean;
 }
 
 /**

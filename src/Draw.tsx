@@ -154,7 +154,8 @@ export interface DrawProps {
   brushPreview?: BrushType;
 
   /**
-   * Hide all of the bottom section, below the canvas, or only certain functionalities
+   * Hide all of the bottom section, below the canvas, or only certain
+   * functionalities
    */
   hideBottom?: boolean | HideBottom;
 
@@ -173,6 +174,16 @@ export interface DrawProps {
    * @default DEFAULT_ERASER_SIZE
    */
   eraserSize?: number;
+
+  /**
+   * Combine current path with the last path if it's the same color,
+   * thickness, and opacity.
+   *
+   * **Note**: changing this value while drawing will only be effective
+   * on the next change to opacity, thickness, or color change
+   * @default false
+   */
+  combineWithLatestPath?: boolean;
 }
 
 export interface DrawRef {
@@ -284,7 +295,15 @@ const generateSVGPaths = (
 ) =>
   paths.map((i) => ({
     ...i,
-    path: i.path ? i.path : generateSVGPath(i.data, simplifyOptions),
+    path: i.path
+      ? i.path
+      : i.data.reduce(
+          (acc: string[], data) => [
+            ...acc,
+            generateSVGPath(data, simplifyOptions),
+          ],
+          []
+        ),
   }));
 
 const Draw = forwardRef<DrawRef, DrawProps>(
@@ -302,6 +321,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       simplifyOptions = {},
       autoDismissColorPicker = false,
       eraserSize = DEFAULT_ERASER_SIZE,
+      combineWithLatestPath = false,
     } = {},
     ref
   ) => {
@@ -358,17 +378,38 @@ const Draw = forwardRef<DrawRef, DrawProps>(
           addPath(x, y);
           break;
         case DrawingTool.Eraser:
-          setPaths((p) =>
-            p.reduce((acc: PathType[], i) => {
-              const closeToPath = i.data.some(
-                ([x1, y1]) =>
-                  Math.abs(x1 - x) < i.thickness + eraserSize &&
-                  Math.abs(y1 - y) < i.thickness + eraserSize
+          setPaths((prevPaths) =>
+            prevPaths.reduce((acc: PathType[], p) => {
+              const filteredDataPaths = p.data.reduce(
+                (
+                  acc2: { data: PathDataType[]; path: string[] },
+                  data,
+                  index
+                ) => {
+                  const closeToPath = data.some(
+                    ([x1, y1]) =>
+                      Math.abs(x1 - x) < p.thickness + eraserSize &&
+                      Math.abs(y1 - y) < p.thickness + eraserSize
+                  );
+
+                  // If point close to path, don't include it
+                  if (closeToPath) {
+                    return acc2;
+                  }
+
+                  return {
+                    data: [...acc2.data, data],
+                    path: [...acc2.path, p.path![index]],
+                  };
+                },
+                { data: [], path: [] }
               );
-              if (closeToPath) {
-                return acc;
+
+              if (filteredDataPaths.data.length > 0) {
+                return [...acc, { ...p, ...filteredDataPaths }];
               }
-              return [...acc, i];
+
+              return acc;
             }, [])
           );
           break;
@@ -402,7 +443,24 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     };
     const handleUndo = () => {
       focusCanvas();
-      setPaths((list) => list.filter((_i, key) => key !== list.length - 1));
+      setPaths((list) =>
+        list.reduce((acc: PathType[], p, index) => {
+          if (index === list.length - 1) {
+            if (p.data.length > 1) {
+              return [
+                ...acc,
+                {
+                  ...p,
+                  data: p.data.slice(0, -1),
+                  path: p.path!.slice(0, -1),
+                },
+              ];
+            }
+            return acc;
+          }
+          return [...acc, p];
+        }, [])
+      );
     };
     const handleColorPickerSelection = (newColor: string) => {
       setColor(newColor);
@@ -456,16 +514,48 @@ const Draw = forwardRef<DrawRef, DrawProps>(
         if (state === State.BEGAN) {
           addPath(x, y);
         } else if (state === State.END || state === State.CANCELLED) {
-          setPaths((prev) => [
-            ...prev,
-            {
-              color,
-              path: generateSVGPath(path, simplifyOptions),
-              data: path,
-              thickness,
-              opacity,
-            },
-          ]);
+          setPaths((prev) => {
+            const newSVGPath = generateSVGPath(path, simplifyOptions);
+
+            if (prev.length === 0) {
+              return [
+                {
+                  color,
+                  path: [newSVGPath],
+                  data: [path],
+                  thickness,
+                  opacity,
+                  combine: combineWithLatestPath,
+                },
+              ];
+            }
+
+            const lastPath = prev[prev.length - 1];
+
+            // Check if the last path has the same properties
+            if (
+              lastPath.color === color &&
+              lastPath.thickness === thickness &&
+              lastPath.opacity === opacity
+            ) {
+              lastPath.path = [...lastPath.path!, newSVGPath];
+              lastPath.data = [...lastPath.data, path];
+
+              return [...prev.slice(0, -1), lastPath];
+            }
+
+            return [
+              ...prev,
+              {
+                color,
+                path: [newSVGPath],
+                data: [path],
+                thickness,
+                opacity,
+                combine: combineWithLatestPath,
+              },
+            ];
+          });
           setPath([]);
         }
       }
@@ -515,12 +605,42 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       addPath: (newPath) => {
         setPaths((prev) => [...prev, newPath]);
       },
-      getSvg: () =>
-        `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${paths.reduce(
-          (acc, p) =>
-            `${acc}<path d="${p.path}" stroke="${p.color}" stroke-width="${p.thickness}" opacity="${p.opacity}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`,
+      getSvg: () => {
+        const serializePath = (
+          d: string,
+          stroke: string,
+          strokeWidth: number,
+          strokeOpacity: number
+        ) =>
+          `<path d="${d}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${strokeOpacity}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
+
+        const separatePaths = (p: PathType) =>
+          p.path!.reduce(
+            (acc, innerPath) =>
+              `${acc}${serializePath(
+                innerPath,
+                p.color,
+                p.thickness,
+                p.opacity
+              )}`,
+            ''
+          );
+
+        const combinedPath = (p: PathType) =>
+          `${serializePath(
+            p.path!.join(' '),
+            p.color,
+            p.thickness,
+            p.opacity
+          )}`;
+
+        const serializedPaths = paths.reduce(
+          (acc, p) => `${acc}${p.combine ? combinedPath(p) : separatePaths(p)}`,
           ''
-        )}</svg>`,
+        );
+
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${serializedPaths}</svg>`;
+      },
     }));
 
     return (

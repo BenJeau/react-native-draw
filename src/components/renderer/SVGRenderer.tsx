@@ -34,18 +34,30 @@ const SVGRenderer: React.FC<SVGRendererProps> = ({
 
   return (
     <Svg height={height} width={width}>
-      {paths.map(({ color, path, thickness, opacity }, i) => (
-        <Path
-          key={i}
-          d={path}
-          fill="none"
-          stroke={color}
-          strokeWidth={thickness}
-          strokeLinecap="round"
-          opacity={opacity}
-          strokeLinejoin="round"
-        />
-      ))}
+      {paths.map(({ color, path, thickness, opacity, combine }, i) =>
+        combine ? (
+          <SVGRendererPath
+            key={i}
+            path={path}
+            color={color}
+            thickness={thickness}
+            opacity={opacity}
+          />
+        ) : (
+          path!.map((svgPath, j) => (
+            <Path
+              key={`${i}-${j}`}
+              d={svgPath}
+              fill="none"
+              stroke={color}
+              strokeWidth={thickness}
+              strokeLinecap="round"
+              opacity={opacity}
+              strokeLinejoin="round"
+            />
+          ))
+        )
+      )}
       {memoizedPath.length > 0 && (
         <Path
           d={memoizedPath}
@@ -58,6 +70,34 @@ const SVGRenderer: React.FC<SVGRendererProps> = ({
         />
       )}
     </Svg>
+  );
+};
+
+interface SVGRendererPathProps {
+  path?: string[];
+  color: string;
+  thickness: number;
+  opacity: number;
+}
+
+const SVGRendererPath: React.FC<SVGRendererPathProps> = ({
+  path,
+  color,
+  thickness,
+  opacity,
+}) => {
+  const memoizedPath = useMemo(() => path?.join(' ') ?? '', [path]);
+
+  return (
+    <Path
+      d={memoizedPath}
+      fill="none"
+      stroke={color}
+      strokeWidth={thickness}
+      strokeLinecap="round"
+      opacity={opacity}
+      strokeLinejoin="round"
+    />
   );
 };
 
