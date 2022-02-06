@@ -178,7 +178,7 @@ export interface DrawProps {
   /**
    * Combine current path with the last path if it's the same color,
    * thickness, and opacity.
-   * 
+   *
    * **Note**: changing this value while drawing will only be effective
    * on the next change to opacity, thickness, or color change
    * @default false
@@ -378,35 +378,35 @@ const Draw = forwardRef<DrawRef, DrawProps>(
           addPath(x, y);
           break;
         case DrawingTool.Eraser:
-          setPaths((paths) =>
-            paths.reduce((acc: PathType[], path) => {
-              const filteredDataPaths = path.data.reduce(
+          setPaths((prevPaths) =>
+            prevPaths.reduce((acc: PathType[], p) => {
+              const filteredDataPaths = p.data.reduce(
                 (
-                  acc: { data: PathDataType[]; path: string[] },
+                  acc2: { data: PathDataType[]; path: string[] },
                   data,
                   index
                 ) => {
                   const closeToPath = data.some(
                     ([x1, y1]) =>
-                      Math.abs(x1 - x) < path.thickness + eraserSize &&
-                      Math.abs(y1 - y) < path.thickness + eraserSize
+                      Math.abs(x1 - x) < p.thickness + eraserSize &&
+                      Math.abs(y1 - y) < p.thickness + eraserSize
                   );
 
                   // If point close to path, don't include it
                   if (closeToPath) {
-                    return acc;
+                    return acc2;
                   }
 
                   return {
-                    data: [...acc.data, data],
-                    path: [...acc.path, path.path![index]],
+                    data: [...acc2.data, data],
+                    path: [...acc2.path, p.path![index]],
                   };
                 },
                 { data: [], path: [] }
               );
 
               if (filteredDataPaths.data.length > 0) {
-                return [...acc, { ...path, ...filteredDataPaths }];
+                return [...acc, { ...p, ...filteredDataPaths }];
               }
 
               return acc;
@@ -444,21 +444,21 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     const handleUndo = () => {
       focusCanvas();
       setPaths((list) =>
-        list.reduce((acc: PathType[], path, index) => {
+        list.reduce((acc: PathType[], p, index) => {
           if (index === list.length - 1) {
-            if (path.data.length > 1) {
+            if (p.data.length > 1) {
               return [
                 ...acc,
                 {
-                  ...path,
-                  data: path.data.slice(0, -1),
-                  path: path.path!.slice(0, -1),
+                  ...p,
+                  data: p.data.slice(0, -1),
+                  path: p.path!.slice(0, -1),
                 },
               ];
             }
             return acc;
           }
-          return [...acc, path];
+          return [...acc, p];
         }, [])
       );
     };
@@ -607,36 +607,35 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       },
       getSvg: () => {
         const serializePath = (
-          path: string,
-          color: string,
-          thickness: number,
-          opacity: number
+          d: string,
+          stroke: string,
+          strokeWidth: number,
+          strokeOpacity: number
         ) =>
-          `<path d="${path}" stroke="${color}" stroke-width="${thickness}" opacity="${opacity}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
+          `<path d="${d}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${strokeOpacity}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
 
-        const separatePaths = (path: PathType) =>
-          path.path!.reduce(
+        const separatePaths = (p: PathType) =>
+          p.path!.reduce(
             (acc, innerPath) =>
               `${acc}${serializePath(
                 innerPath,
-                path.color,
-                path.thickness,
-                path.opacity
+                p.color,
+                p.thickness,
+                p.opacity
               )}`,
             ''
           );
 
-        const combinedPath = (path: PathType) =>
+        const combinedPath = (p: PathType) =>
           `${serializePath(
-            path.path!.join(' '),
-            path.color,
-            path.thickness,
-            path.opacity
+            p.path!.join(' '),
+            p.color,
+            p.thickness,
+            p.opacity
           )}`;
 
         const serializedPaths = paths.reduce(
-          (acc, path) =>
-            `${acc}${path.combine ? combinedPath(path) : separatePaths(path)}`,
+          (acc, p) => `${acc}${p.combine ? combinedPath(p) : separatePaths(p)}`,
           ''
         );
 

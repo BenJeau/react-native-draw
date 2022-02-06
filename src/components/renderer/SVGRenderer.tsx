@@ -44,10 +44,10 @@ const SVGRenderer: React.FC<SVGRendererProps> = ({
             opacity={opacity}
           />
         ) : (
-          path!.map((path, j) => (
+          path!.map((svgPath, j) => (
             <Path
               key={`${i}-${j}`}
-              d={path}
+              d={svgPath}
               fill="none"
               stroke={color}
               strokeWidth={thickness}
@@ -73,11 +73,11 @@ const SVGRenderer: React.FC<SVGRendererProps> = ({
   );
 };
 
-interface SVGRendererPathProps{
-  path?: string[],
-  color: string,
-  thickness: number,
-  opacity: number,
+interface SVGRendererPathProps {
+  path?: string[];
+  color: string;
+  thickness: number;
+  opacity: number;
 }
 
 const SVGRendererPath: React.FC<SVGRendererPathProps> = ({
@@ -86,7 +86,7 @@ const SVGRendererPath: React.FC<SVGRendererPathProps> = ({
   thickness,
   opacity,
 }) => {
-  const memoizedPath = useMemo(() => path?.join(" ") ?? "", [path]);
+  const memoizedPath = useMemo(() => path?.join(' ') ?? '', [path]);
 
   return (
     <Path
@@ -99,6 +99,6 @@ const SVGRendererPath: React.FC<SVGRendererPathProps> = ({
       strokeLinejoin="round"
     />
   );
-}
+};
 
 export default SVGRenderer;
