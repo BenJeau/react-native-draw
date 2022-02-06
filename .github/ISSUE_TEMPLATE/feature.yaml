@@ -1,0 +1,25 @@
+name: 🚀 Feature Request
+description: I have a suggestion (and may want to implement it 🙂)!
+labels: [enhancement, needs triage]
+body:
+- type: textarea
+  attributes:
+    label: Is your feature request related to a problem?
+    description: A clear and concise description of what the problem is. Ex. I have an issue when [...]
+- type: textarea
+  attributes:
+    label: Desired solution (feature)
+    description: A clear and concise description of what you want to happen. Add any considered drawbacks.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Alternatives considered
+    description: A clear and concise description of any alternative solutions or features you've considered.
+- type: textarea
+  attributes:
+    label: Anything else?
+    description: |
+      Links? References? Anything that will give us more context about the issue you are encountering!
+
+      Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
