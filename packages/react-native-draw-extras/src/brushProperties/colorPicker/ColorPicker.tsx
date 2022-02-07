@@ -25,7 +25,7 @@ export interface ColorPickerProps {
   colors?: string[][][];
 
   /**
-   * Color picker style
+   * Style of the container
    */
   style?: StyleProp<ViewStyle>;
 }

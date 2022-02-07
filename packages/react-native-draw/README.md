@@ -14,6 +14,10 @@ yarn add @benjeau/react-native-draw
 
 > Also, you need to install [react-native-gesture-handler](https://github.com/software-mansion/react-native-gesture-handler) and [react-native-svg](https://github.com/react-native-svg/react-native-svg), and follow their installation instructions.
 
+### Extras
+
+Supporting components, such as `CanvasControls`, `ColorPicker` and `BrushProperties` components, are available as a separate package, [`@benjeau/react-native-draw-extras`](https://github.com/BenJeau/react-native-draw/packages/react-native-draw-extras)
+
 ## Usage
 
 > All the following examples are also available in the [example](./example/) Expo application
@@ -29,7 +33,7 @@ import { Canvas } from '@benjeau/react-native-draw';
 export default () => <Canvas />;
 ```
 
-https://user-images.githubusercontent.com/22248828/152287845-d5d2dea0-7f7e-430b-bbfd-1769aca8af11.mp4
+https://user-images.githubusercontent.com/22248828/152838002-3bf01ff0-8c8d-43ec-abdf-4f856d200bc5.mp4
 
 ### Complex example
 
@@ -72,7 +76,7 @@ export default () => {
 ```
 </details>
 
-https://user-images.githubusercontent.com/22248828/152287758-95089f75-2b9e-4807-b7a3-a03654acf7ac.mp4
+https://user-images.githubusercontent.com/22248828/152837975-a51bdcf5-9a62-4aa2-8e5e-26c1d52fcf79.mp4
 
 ### Example with `@BenJeau/react-native-draw-extras`
 
@@ -195,7 +199,7 @@ export default () => {
 ```
 </details>
 
-https://user-images.githubusercontent.com/22248828/152296353-4512848a-c39b-4ef0-930b-c65a7010e2db.mp4
+https://user-images.githubusercontent.com/22248828/152837922-757d3a13-1d35-409a-936a-b38ea9248262.mp4
 
 ## Props
 

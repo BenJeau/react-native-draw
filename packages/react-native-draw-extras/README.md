@@ -1,5 +1,7 @@
 # @benjeau/react-native-draw-extras
 
+[![NPM badge](https://img.shields.io/npm/v/@benjeau/react-native-draw-extras)](https://www.npmjs.com/package/@benjeau/react-native-draw-extras) [![CircleCI Status](https://img.shields.io/circleci/build/gh/BenJeau/react-native-draw)](https://app.circleci.com/pipelines/github/BenJeau/react-native-draw) ![Platform badge](https://img.shields.io/badge/platform-android%20%7C%20ios%20%7C%20web-blue)
+
 Extra components to complement [@benjeau/react-native-draw](https://github.com/BenJeau/react-native-draw):
 
 * `CanvasControls`
@@ -77,6 +79,7 @@ Contains all the props of [ColorPicker](#colorpicker) and the following:
 | `color`         | Brush color, one from the colors provided                                                                                                                                                      | `string`                     | - (required)                           |
 | `onColorChange` | Callback when a color is selected                                                                                                                                                              | `(newColor: string) => void` | - (required)                           |
 | `colors`        | Color picker colors, specifying the color picker sections each containing rows of colors. First array defines the sections, second one defines the rows, and the last one defines the columns. | `string[][][]`               | [`DEFAULT_COLORS`](./src/constants.ts) |
+| `style`         | Style of the container                                                                                                                                                                         | `StyleProp<ViewStyle>`       | -                                      |
 
 ## Helper functions
 
