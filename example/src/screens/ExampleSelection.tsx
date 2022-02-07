@@ -59,6 +59,7 @@ const ExampleSelection: React.FC<ExampleSelectionProps> = ({
 
   return (
     <FlatList
+      // @ts-ignore
       data={data}
       ListHeaderComponent={
         <Text style={[{ color: theme.colors.text }, styles.headerText]}>
@@ -75,6 +76,7 @@ const ExampleSelection: React.FC<ExampleSelectionProps> = ({
           {item.data.map(({ description, props }, key) => (
             <Button
               onPress={() => {
+                // @ts-ignore
                 navigation.navigate(screenToNavigate, props);
               }}
               key={key}

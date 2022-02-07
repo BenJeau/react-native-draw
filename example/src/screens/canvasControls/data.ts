@@ -23,6 +23,8 @@ const data: Data[] = [
           onUndo: () => {},
           onToggleBrushProperties: () => {},
           color: '#09F',
+          thickness: 1,
+          opacity: 1,
         },
       },
       {
@@ -34,6 +36,7 @@ const data: Data[] = [
           onToggleBrushProperties: () => {},
           color: '#0A3FA9',
           thickness: 10,
+          opacity: 1,
         },
       },
     ],

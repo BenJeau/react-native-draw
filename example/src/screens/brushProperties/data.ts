@@ -16,7 +16,8 @@ const data: Data[] = [
     name: '',
     data: [
       {
-        description: 'BrushProperties component with default props (will render only the color picker)',
+        description:
+          'BrushProperties component with default props (will render only the color picker)',
         props: {
           color: DEFAULT_COLORS[0][0][0],
           onColorChange: () => {},

@@ -88,6 +88,7 @@ export default () => {
             onThicknessChange={setThickness}
             onOpacityChange={setOpacity}
             sliderColor={theme.colors.text}
+            //@ts-ignore
             style={{
               position: 'absolute',
               bottom: 80,

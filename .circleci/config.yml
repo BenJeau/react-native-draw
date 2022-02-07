@@ -59,14 +59,16 @@ jobs:
           command: |
             yarn typescript
 
-  build-package:
+  build-packages:
     executor: default
     steps:
       - attach_project
       - run:
-          name: Build package
-          command: |
-            yarn prepare
+          name: Build packages in the monorepo
+          command: yarn lerna run prepare
+      - run:
+          name: Verify built type definitions are correct
+          command: yarn typescript
 
 workflows:
   build-and-test:
@@ -78,6 +80,6 @@ workflows:
       - typescript:
           requires:
             - install-dependencies
-      - build-package:
+      - build-packages:
           requires:
             - install-dependencies
