@@ -1,6 +1,6 @@
 {
   "name": "@benjeau/react-native-draw-extras",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Extra components for @benjeau/react-native-draw Canvas component",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -38,9 +38,9 @@
     "svg"
   ],
   "devDependencies": {
+    "@react-native-community/slider": "^4.2.0",
     "@types/react": "^17.0.1",
     "@types/react-native": "0.64.3",
-    "@react-native-community/slider": "^4.2.0",
     "react": "17.0.1",
     "react-native": "0.64.3",
     "react-native-builder-bob": "^0.18.2",

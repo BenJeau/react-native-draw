@@ -1,6 +1,6 @@
 {
   "name": "@benjeau/react-native-draw",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Cross-platform React Native drawing component",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
