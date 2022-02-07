@@ -16,7 +16,7 @@ yarn add @benjeau/react-native-draw
 
 ### Extras
 
-Supporting components, such as `CanvasControls`, `ColorPicker` and `BrushProperties` components, are available as a separate package, [`@benjeau/react-native-draw-extras`](https://github.com/BenJeau/react-native-draw/packages/react-native-draw-extras)
+Supporting components, such as `CanvasControls`, `ColorPicker` and `BrushProperties` components, are available as a separate package, [`@benjeau/react-native-draw-extras`](https://github.com/BenJeau/react-native-draw/tree/master/packages/react-native-draw-extras)
 
 ## Usage
 
@@ -80,7 +80,7 @@ https://user-images.githubusercontent.com/22248828/152837975-a51bdcf5-9a62-4aa2-
 
 ### Example with `@BenJeau/react-native-draw-extras`
 
-This uses the [`@benjeau/react-native-draw-extras`](https://github.com/BenJeau/react-native-draw/packages/react-native-draw-extras) npm package for the color picker and the bottom buttons/brush preview.
+This uses the [`@benjeau/react-native-draw-extras`](https://github.com/BenJeau/react-native-draw/tree/master/packages/react-native-draw-extras) npm package for the color picker and the bottom buttons/brush preview.
 
 > As this package does not depend on `@BenJeau/react-native-draw-extras`, it is completely optional and you can build your own supporting UI, just like the previous example
 
