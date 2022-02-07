@@ -6,8 +6,11 @@ import {
   CanvasControls,
   DEFAULT_COLORS,
 } from '@benjeau/react-native-draw-extras';
+import { useTheme } from '@react-navigation/native';
 
 export default () => {
+  const theme = useTheme();
+
   const canvasRef = useRef<CanvasRef>(null);
 
   const [color, setColor] = useState(DEFAULT_COLORS[0][0][0]);
@@ -62,7 +65,7 @@ export default () => {
         tool={tool}
         style={{
           borderBottomWidth: StyleSheet.hairlineWidth,
-          borderColor: '#ccc',
+          borderColor: theme.colors.border,
         }}
       />
       <View>
@@ -84,13 +87,14 @@ export default () => {
             onColorChange={setColor}
             onThicknessChange={setThickness}
             onOpacityChange={setOpacity}
+            sliderColor={theme.colors.text}
             style={{
               position: 'absolute',
               bottom: 80,
               left: 0,
               right: 0,
               padding: 10,
-              backgroundColor: '#f2f2f2',
+              backgroundColor: theme.colors.background,
               borderTopEndRadius: 10,
               borderTopStartRadius: 10,
               borderWidth: StyleSheet.hairlineWidth,

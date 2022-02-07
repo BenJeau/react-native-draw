@@ -80,7 +80,7 @@ https://user-images.githubusercontent.com/22248828/152837975-a51bdcf5-9a62-4aa2-
 
 ### Example with `@BenJeau/react-native-draw-extras`
 
-This uses the `@BenJeau/react-native-draw-extras` npm package for the color picker and the bottom buttons/brush preview.
+This uses the [`@benjeau/react-native-draw-extras`](https://github.com/BenJeau/react-native-draw/packages/react-native-draw-extras) npm package for the color picker and the bottom buttons/brush preview.
 
 > As this package does not depend on `@BenJeau/react-native-draw-extras`, it is completely optional and you can build your own supporting UI, just like the previous example
 

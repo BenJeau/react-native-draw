@@ -29,6 +29,10 @@ yarn add @benjeau/react-native-draw-extras
 
 > Also, you need to install [@react-native-community/slider](https://github.com/callstack/react-native-slider) and [react-native-svg](https://github.com/react-native-svg/react-native-svg), and follow their installation instructions.
 
+## Example
+
+Please see the [example](../../example/) Expo application showcasing the components
+
 ## Props
 
 ### CanvasControls

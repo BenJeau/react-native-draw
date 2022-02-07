@@ -13,12 +13,21 @@ const data: Data[] = [
     name: '',
     data: [
       {
-        description: 'Drawing component with default props',
+        description: 'BrushPreview component as a stroke',
         props: {
-          color: '#000000',
-          thickness: 1,
+          color: '#0000A3',
+          thickness: 10,
           opacity: 1,
           brushPreview: 'stroke',
+        },
+      },
+      {
+        description: 'BrushPreview component as dot',
+        props: {
+          color: '#000000',
+          thickness: 10,
+          opacity: 1,
+          brushPreview: 'dot',
         },
       },
     ],

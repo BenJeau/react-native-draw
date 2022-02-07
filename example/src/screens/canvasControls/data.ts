@@ -8,6 +8,36 @@ interface Data {
   }[];
 }
 
-const data: Data[] = [];
+const data: Data[] = [
+  {
+    name: '',
+    data: [
+      {
+        description:
+          'CanvasControls component with default props (will render nothing)',
+      },
+      {
+        description:
+          'CanvasControls component with undo and brushProperties callback props',
+        props: {
+          onUndo: () => {},
+          onToggleBrushProperties: () => {},
+          color: '#09F',
+        },
+      },
+      {
+        description: 'CanvasControls component with every prop',
+        props: {
+          onUndo: () => {},
+          onClear: () => {},
+          onToggleEraser: () => {},
+          onToggleBrushProperties: () => {},
+          color: '#0A3FA9',
+          thickness: 10,
+        },
+      },
+    ],
+  },
+];
 
 export default data;

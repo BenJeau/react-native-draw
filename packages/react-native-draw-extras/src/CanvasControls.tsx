@@ -123,7 +123,7 @@ const CanvasControls: React.FC<CanvasControlsProps> = ({
             )}
           </Button>
         )}
-        {onToggleBrushProperties && (
+        {onToggleBrushProperties && color && (
           <View style={onToggleEraser && styles.endButton}>
             <Button
               onPress={onToggleBrushProperties}
