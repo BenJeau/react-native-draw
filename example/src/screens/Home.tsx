@@ -20,7 +20,10 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
 
   return (
     <ScrollView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
+      contentContainerStyle={[
+        styles.container,
+        { backgroundColor: theme.colors.background },
+      ]}
     >
       <Text style={{ color: theme.colors.text, marginBottom: 10 }}>
         Various collection of examples, feel free to explore them
