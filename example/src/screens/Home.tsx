@@ -25,13 +25,11 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
         { backgroundColor: theme.colors.background },
       ]}
     >
-      <Text style={{ color: theme.colors.text, marginBottom: 10 }}>
+      <Text style={[{ color: theme.colors.text }, styles.description]}>
         Various collection of examples, feel free to explore them
       </Text>
 
-      <Text
-        style={{ color: theme.colors.text, marginVertical: 10, fontSize: 18 }}
-      >
+      <Text style={[{ color: theme.colors.text }, styles.title]}>
         Drawing Examples
       </Text>
 
@@ -45,9 +43,7 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
         Example using the extras package
       </Button>
 
-      <Text
-        style={{ color: theme.colors.text, marginVertical: 10, fontSize: 18 }}
-      >
+      <Text style={[{ color: theme.colors.text }, styles.title]}>
         Individual Component Examples
       </Text>
       <Button
@@ -101,14 +97,8 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
         ColorPicker
       </Button>
 
-      <View
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginTop: 20,
-        }}
-      >
-        <View style={{ flexDirection: 'row' }}>
+      <View style={styles.footerContainer}>
+        <View style={styles.footerTop}>
           <Text
             style={{
               color: theme.colors.text,
@@ -124,7 +114,7 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <View style={{ flexDirection: 'row', marginTop: 5 }}>
+        <View style={styles.footerBottom}>
           <Text
             style={{
               color: theme.colors.text,
@@ -153,6 +143,20 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
   },
+  footerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  footerTop: {
+    flexDirection: 'row',
+  },
+  footerBottom: {
+    flexDirection: 'row',
+    marginTop: 5,
+  },
+  title: { marginVertical: 10, fontSize: 18 },
+  description: { marginBottom: 10 },
 });
 
 export default Home;

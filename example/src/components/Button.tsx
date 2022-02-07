@@ -30,10 +30,12 @@ const Button: React.FC<ButtonProps> = ({ onPress, children }) => {
         onPress={onPress}
       >
         <Text
-          style={{
-            color: theme.colors.text,
-            lineHeight: 20,
-          }}
+          style={[
+            {
+              color: theme.colors.text,
+            },
+            styles.buttonText,
+          ]}
         >
           {children}
         </Text>
@@ -52,6 +54,9 @@ const styles = StyleSheet.create({
   button: {
     padding: 10,
     borderRadius: 5,
+  },
+  buttonText: {
+    lineHeight: 20,
   },
 });
 

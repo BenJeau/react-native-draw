@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { DEFAULT_COLORS } from '../../constants';
 import ColorButton from './ColorButton';
@@ -23,6 +23,11 @@ export interface ColorPickerProps {
    * @default DEFAULT_COLORS
    */
   colors?: string[][][];
+
+  /**
+   * Color picker style
+   */
+  style?: StyleProp<ViewStyle>;
 }
 
 /**
@@ -33,8 +38,9 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
   color,
   onColorChange,
   colors = DEFAULT_COLORS,
+  style,
 }) => (
-  <View style={styles.container}>
+  <View style={[styles.container, style]}>
     <View style={styles.content}>
       {colors.map((section, gKey) => (
         <View

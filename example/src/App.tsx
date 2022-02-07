@@ -6,9 +6,7 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import type {
-  CanvasProps,
-} from '@benjeau/react-native-draw';
+import type { CanvasProps } from '@benjeau/react-native-draw';
 import type {
   BrushPreviewProps,
   BrushPropertiesProps,

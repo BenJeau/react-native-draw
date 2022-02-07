@@ -1,4 +1,7 @@
-import { ColorPickerProps, DEFAULT_COLORS } from '@benjeau/react-native-draw-extras';
+import {
+  ColorPickerProps,
+  DEFAULT_COLORS,
+} from '@benjeau/react-native-draw-extras';
 
 interface Data {
   name: string;

@@ -61,7 +61,7 @@ const ExampleSelection: React.FC<ExampleSelectionProps> = ({
     <FlatList
       data={data}
       ListHeaderComponent={
-        <Text style={{ color: theme.colors.text, marginBottom: 20 }}>
+        <Text style={[{ color: theme.colors.text }, styles.headerText]}>
           Various examples of the component with its different props
         </Text>
       }
@@ -98,6 +98,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 10,
     marginTop: 10,
+  },
+  headerText: {
+    marginBottom: 20,
   },
 });
 
