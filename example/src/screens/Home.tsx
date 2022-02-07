@@ -1,88 +1,162 @@
+import { useTheme } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import {
-  Text,
-  Pressable,
-  View,
-  FlatList,
+  ScrollView,
   StyleSheet,
-  StatusBar,
+  Text,
+  Linking,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import data from './data';
 import type { RootStackParamList } from '../App';
+import { Button } from '../components';
 
 type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const Home: React.FC<HomeProps> = ({ navigation }) => {
-  const insets = useSafeAreaInsets();
+  const theme = useTheme();
+
   return (
-    <>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="#00000000"
-        translucent
-      />
-      <FlatList
-        data={data}
-        ListHeaderComponent={
-          <Text style={styles.title}>@benjeau/react-native-draw</Text>
+    <ScrollView
+      contentContainerStyle={[
+        styles.container,
+        { backgroundColor: theme.colors.background },
+      ]}
+    >
+      <Text style={[{ color: theme.colors.text }, styles.description]}>
+        Various collection of examples, feel free to explore them
+      </Text>
+
+      <Text style={[{ color: theme.colors.text }, styles.title]}>
+        Drawing Examples
+      </Text>
+
+      <Button onPress={() => navigation.navigate('SimpleExample')}>
+        Simple drawing example
+      </Button>
+      <Button onPress={() => navigation.navigate('MoreComplexExample')}>
+        Complex drawing example
+      </Button>
+      <Button onPress={() => navigation.navigate('ExtrasExample')}>
+        Example using the extras package
+      </Button>
+
+      <Text style={[{ color: theme.colors.text }, styles.title]}>
+        Individual Component Examples
+      </Text>
+      <Button
+        onPress={() =>
+          navigation.navigate('ExampleSelection', {
+            type: 'canvas',
+            title: 'Canvas Examples',
+          })
         }
-        renderItem={({ item }) => (
-          <>
-            <Text style={styles.sectionTitle}>{item.name}</Text>
-            {item.data.map(({ description, props }, key) => (
-              <View style={styles.buttonContainer} key={key}>
-                <Pressable
-                  style={styles.button}
-                  android_ripple={{ color: '#777' }}
-                  onPress={() => {
-                    navigation.navigate('DrawExample', props);
-                  }}
-                >
-                  <Text>{description}</Text>
-                </Pressable>
-              </View>
-            ))}
-          </>
-        )}
-        contentContainerStyle={[
-          styles.listContainer,
-          { paddingTop: insets.top },
-        ]}
-      />
-    </>
+      >
+        Canvas
+      </Button>
+      <Button
+        onPress={() =>
+          navigation.navigate('ExampleSelection', {
+            type: 'canvasControls',
+            title: 'CanvasControls Examples',
+          })
+        }
+      >
+        CanvasControls
+      </Button>
+      <Button
+        onPress={() =>
+          navigation.navigate('ExampleSelection', {
+            type: 'brushPreview',
+            title: 'BrushPreview Examples',
+          })
+        }
+      >
+        BrushPreview
+      </Button>
+      <Button
+        onPress={() =>
+          navigation.navigate('ExampleSelection', {
+            type: 'brushProperties',
+            title: 'BrushProperties Examples',
+          })
+        }
+      >
+        BrushProperties
+      </Button>
+      <Button
+        onPress={() =>
+          navigation.navigate('ExampleSelection', {
+            type: 'colorPicker',
+            title: 'ColorPicker Examples',
+          })
+        }
+      >
+        ColorPicker
+      </Button>
+
+      <View style={styles.footerContainer}>
+        <View style={styles.footerTop}>
+          <Text
+            style={{
+              color: theme.colors.text,
+              marginRight: 4,
+            }}
+          >
+            Made with ♥️ by
+          </Text>
+          <TouchableOpacity
+            onPress={() => Linking.openURL('https://github.com/BenJeau')}
+          >
+            <Text style={{ color: theme.colors.primary }}>@BenJeau</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.footerBottom}>
+          <Text
+            style={{
+              color: theme.colors.text,
+              fontWeight: 'bold',
+              marginRight: 4,
+            }}
+          >
+            Open source and available on
+          </Text>
+          <TouchableOpacity
+            onPress={() =>
+              Linking.openURL('https://github.com/BenJeau/react-native-draw')
+            }
+          >
+            <Text style={{ color: theme.colors.primary, fontWeight: 'bold' }}>
+              GitHub
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    overflow: 'hidden',
-    borderRadius: 10,
-    backgroundColor: 'white',
-    elevation: 5,
-    marginBottom: 10,
+  container: {
+    padding: 20,
   },
-  button: {
-    padding: 10,
+  footerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
   },
-  buttonTitle: {
-    fontWeight: 'bold',
-    fontSize: 18,
+  footerTop: {
+    flexDirection: 'row',
   },
-  listContainer: {
-    padding: 10,
-    backgroundColor: '#EEE',
-  },
-  title: {
-    fontSize: 25,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    marginBottom: 10,
+  footerBottom: {
+    flexDirection: 'row',
     marginTop: 5,
   },
+  title: { marginVertical: 10, fontSize: 18 },
+  description: { marginBottom: 10 },
 });
 
 export default Home;

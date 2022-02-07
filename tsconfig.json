@@ -1,14 +1,18 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
-      "@benjeau/react-native-draw": ["./src/index"]
+      "@benjeau/react-native-draw": ["./packages/react-native-draw/src"],
+      "@benjeau/react-native-draw-extras": [
+        "./packages/react-native-draw-extras/src"
+      ]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
     "importsNotUsedAsValues": "error",
     "forceConsistentCasingInFileNames": true,
+    "composite": true,
     "jsx": "react",
     "lib": ["esnext"],
     "module": "esnext",
@@ -23,5 +27,8 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext"
-  }
+  },
+  "exclude": [
+    "packages/*/lib",
+  ]
 }

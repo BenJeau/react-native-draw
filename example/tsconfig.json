@@ -1,4 +1,14 @@
 {
-  "compilerOptions": {},
-  "extends": "expo/tsconfig.base"
+  "extends": "../tsconfig",
+  "references": [
+    {
+      "path": "../packages/react-native-draw"
+    },
+    {
+      "path": "../packages/react-native-draw-extras"
+    },
+  ],
+  "compilerOptions": {
+    // Avoid expo-cli auto-generating a tsconfig
+  }
 }
