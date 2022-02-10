@@ -1,4 +1,4 @@
-import type { CanvasProps } from '@benjeau/react-native-draw';
+import type { CanvasProps } from 'packages/core/src';
 import { ToastAndroid } from 'react-native';
 
 interface Data {

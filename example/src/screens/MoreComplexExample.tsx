@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Button } from 'react-native';
-import { Canvas, CanvasRef } from '@benjeau/react-native-draw';
+import { Canvas, CanvasRef } from 'packages/core/src';
 
 export default () => {
   const canvasRef = useRef<CanvasRef>(null);

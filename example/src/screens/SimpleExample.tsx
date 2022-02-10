@@ -1,4 +1,4 @@
 import React from 'react';
-import { Canvas } from '@benjeau/react-native-draw';
+import { Canvas } from 'packages/core/src';
 
 export default () => <Canvas />;

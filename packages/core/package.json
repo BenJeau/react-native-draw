@@ -1,0 +1,61 @@
+{
+  "name": "@benjeau/react-native-draw",
+  "version": "0.0.1",
+  "description": "Core utilities for different renderers",
+  "main": "lib/commonjs/index",
+  "module": "lib/module/index",
+  "types": "lib/typescript/index.d.ts",
+  "react-native": "src/index",
+  "source": "src/index",
+  "scripts": {
+    "prepare": "bob build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BenJeau/react-native-draw.git",
+    "directory": "packages/core"
+  },
+  "author": "Benoit Jeaurond <benoit@jeaurond.dev> (https://github.com/BenJeau)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BenJeau/react-native-draw/issues"
+  },
+  "files": [
+    "src",
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "homepage": "https://github.com/BenJeau/react-native-draw#readme",
+  "keywords": [
+    "react-native-component",
+    "react-component",
+    "react-native",
+    "ios",
+    "android",
+    "draw"
+  ],
+  "devDependencies": {
+    "@types/react": "^17.0.1",
+    "@types/react-native": "0.64.3",
+    "react": "17.0.1",
+    "react-native": "0.64.3",
+    "react-native-builder-bob": "^0.18.2",
+    "typescript": "^4.5.5"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
+  }
+}
