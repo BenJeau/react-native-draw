@@ -1,0 +1,64 @@
+{
+  "name": "@benjeau/react-native-draw-skia",
+  "version": "0.0.1",
+  "description": "Cross-platform Skia based React Native drawing component",
+  "main": "lib/commonjs/index",
+  "module": "lib/module/index",
+  "types": "lib/typescript/index.d.ts",
+  "react-native": "src/index",
+  "source": "src/index",
+  "scripts": {
+    "prepare": "bob build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BenJeau/react-native-draw.git",
+    "directory": "packages/skia"
+  },
+  "author": "Benoit Jeaurond <benoit@jeaurond.dev> (https://github.com/BenJeau)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BenJeau/react-native-draw/issues"
+  },
+  "files": [
+    "src",
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "homepage": "https://github.com/BenJeau/react-native-draw#readme",
+  "keywords": [
+    "react-native-component",
+    "react-component",
+    "react-native",
+    "ios",
+    "android",
+    "draw",
+    "skia"
+  ],
+  "devDependencies": {
+    "@types/react": "^17.0.1",
+    "@types/react-native": "0.64.3",
+    "@shopify/react-native-skia": "https://github.com/Shopify/react-native-skia/releases/download/v0.1.103-alpha/shopify-react-native-skia-0.1.103.tgz",
+    "react": "17.0.1",
+    "react-native": "0.64.3",
+    "react-native-builder-bob": "^0.18.2",
+    "typescript": "^4.5.5"
+  },
+  "peerDependencies": {
+    "@shopify/react-native-skia": "*",
+    "react": "*",
+    "react-native": "*"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
+  }
+}
