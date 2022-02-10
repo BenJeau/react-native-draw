@@ -25,6 +25,7 @@
     "lib"
   ],
   "publishConfig": {
+    "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "homepage": "https://github.com/BenJeau/react-native-draw#readme",
@@ -61,5 +62,6 @@
       "module",
       "typescript"
     ]
-  }
+  },
+  "gitHead": "35dacae8f6063d0394ca5eda3691a0525c9b1100"
 }
