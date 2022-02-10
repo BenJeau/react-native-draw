@@ -39,6 +39,7 @@
     "svg"
   ],
   "dependencies": {
+    "@benjeau/react-native-draw-core": "file:../core",
     "@luncheon/simplify-svg-path": "^0.1.4"
   },
   "devDependencies": {

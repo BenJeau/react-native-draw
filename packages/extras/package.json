@@ -37,6 +37,9 @@
     "android",
     "draw"
   ],
+  "dependencies": {
+    "@benjeau/react-native-draw-core": "file:../core"
+  },
   "devDependencies": {
     "@react-native-community/slider": "^4.2.0",
     "@types/react": "^17.0.1",

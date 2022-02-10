@@ -1,13 +1,12 @@
 import React from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { DEFAULT_TOOL, DrawingTool } from '@benjeau/react-native-draw-core';
 
 import {
   DEFAULT_BRUSH_PREVIEW,
   DEFAULT_DELETE_BUTTON_COLOR,
   DEFAULT_OTHER_BUTTONS_COLOR,
-  DEFAULT_TOOL,
 } from './constants';
-import { DrawingTool } from './types';
 import BrushPreview, { BrushPreviewProps } from './BrushPreview';
 import Button from './Button';
 import { Brush, Delete, Eraser, Palette, Undo } from './icons';

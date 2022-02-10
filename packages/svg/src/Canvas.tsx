@@ -6,11 +6,8 @@ import React, {
 } from 'react';
 import {
   Animated,
-  Dimensions,
-  StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
 } from 'react-native';
 import {
   PanGestureHandler,
@@ -18,186 +15,37 @@ import {
   PanGestureHandlerStateChangeEvent,
   State,
 } from 'react-native-gesture-handler';
-
 import {
   DEFAULT_BRUSH_COLOR,
   DEFAULT_ERASER_SIZE,
   DEFAULT_OPACITY,
   DEFAULT_THICKNESS,
   DEFAULT_TOOL,
-} from './constants';
-import { DrawingTool, PathDataType, PathType } from './types';
-import { createSVGPath } from './utils';
-import SVGRenderer from './renderer/SVGRenderer';
+  DrawingTool,
+  PathDataType,
+  PathType,
+  CanvasRef,
+  CanvasProps as CoreCanvasProps,
+  screenHeight,
+  screenWidth,
+} from '@benjeau/react-native-draw-core';
+
+import type { SimplifyOptions } from './types';
+import { createSVGPaths, createSVGPathWithSimplifyOptions } from './utils';
 import RendererHelper from './renderer/RendererHelper';
+import SVGRenderer from './renderer/SVGRenderer';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-
-export interface CanvasProps {
-  /**
-   * Color of the brush strokes
-   * @default DEFAULT_BRUSH_COLOR
-   */
-  color?: string;
-
-  /**
-   * Thickness of the brush strokes
-   * @default DEFAULT_THICKNESS
-   */
-  thickness?: number;
-
-  /**
-   * Opacity of the brush strokes
-   * @default DEFAULT_OPACITY
-   */
-  opacity?: number;
-
-  /**
-   * Paths to be already drawn
-   * @default []
-   */
-  initialPaths?: PathType[];
-
-  /**
-   * Height of the canvas
-   */
-  height?: number;
-
-  /**
-   * Width of the canvas
-   */
-  width?: number;
-
-  /**
-   * Override the style of the container of the canvas
-   */
-  style?: StyleProp<ViewStyle>;
-
-  /**
-   * Callback function when paths change
-   */
-  onPathsChange?: (paths: PathType[]) => any;
-
+export interface CanvasProps extends CoreCanvasProps {
   /**
    * SVG simplification options
    */
   simplifyOptions?: SimplifyOptions;
-
-  /**
-   * Width of eraser (to compensate for path simplification)
-   * @default DEFAULT_ERASER_SIZE
-   */
-  eraserSize?: number;
-
-  /**
-   * Initial tool of the canvas
-   * @default DEFAULT_TOOL
-   */
-  tool?: DrawingTool;
-
-  /**
-   * Combine current path with the last path if it's the same color,
-   * thickness, and opacity.
-   *
-   * **Note**: changing this value while drawing will only be effective
-   * on the next change to opacity, thickness, or color change
-   * @default false
-   */
-  combineWithLatestPath?: boolean;
-}
-
-export interface SimplifyOptions {
-  /**
-   * Enable SVG path simplification on paths, except the one currently being drawn
-   */
-  simplifyPaths?: boolean;
-
-  /**
-   * Enable SVG path simplification on the stroke being drawn
-   */
-  simplifyCurrentPath?: boolean;
-
-  /**
-   * Amount of simplification to apply
-   */
-  amount?: number;
-
-  /**
-   * Ignore fractional part in the points. Improves performance
-   */
-  roundPoints?: boolean;
-}
-
-export interface CanvasRef {
-  /**
-   * Undo last brush stroke
-   */
-  undo: () => void;
-
-  /**
-   * Removes all brush strokes
-   */
-  clear: () => void;
-
-  /**
-   * Get brush strokes data
-   */
-  getPaths: () => PathType[];
-
-  /**
-   * Append a path to the current drawing paths
-   * @param path Path to append/draw
-   */
-  addPath: (path: PathType) => void;
-
-  /**
-   * Get SVG path string of the drawing
-   */
-  getSvg: () => string;
 }
 
 /**
- * Generate SVG path string. Helper method for createSVGPath
- *
- * @param paths SVG path data
- * @param simplifyOptions Simplification options for the SVG drawing simplification
- * @returns SVG path strings
+ * SVG version of the `Canvas` component
  */
-const generateSVGPath = (
-  path: PathDataType,
-  simplifyOptions: SimplifyOptions
-) =>
-  createSVGPath(
-    path,
-    simplifyOptions.simplifyPaths ? simplifyOptions.amount! : 0,
-    simplifyOptions.roundPoints!
-  );
-
-/**
- * Generate multiple SVG path strings. If the path string is already defined, do not create a new one.
- *
- * @param paths SVG data paths
- * @param simplifyOptions Simplification options for the SVG drawing simplification
- * @returns An array of SVG path strings
- */
-const generateSVGPaths = (
-  paths: PathType[],
-  simplifyOptions: SimplifyOptions
-) =>
-  paths.map((i) => ({
-    ...i,
-    path: i.path
-      ? i.path
-      : i.data.reduce(
-          (acc: string[], data) => [
-            ...acc,
-            generateSVGPath(data, simplifyOptions),
-          ],
-          []
-        ),
-  }));
-
-const Canvas = forwardRef<CanvasRef, CanvasProps>(
+const SVGCanvas = forwardRef<CanvasRef, CanvasProps>(
   (
     {
       color = DEFAULT_BRUSH_COLOR,
@@ -224,7 +72,7 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
     };
 
     const [paths, setPaths] = useState<PathType[]>(
-      generateSVGPaths(initialPaths, simplifyOptions)
+      createSVGPaths(initialPaths, simplifyOptions)
     );
     const [path, setPath] = useState<PathDataType>([]);
 
@@ -377,7 +225,10 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
           addPointToPath(x, y);
         } else if (state === State.END || state === State.CANCELLED) {
           setPaths((prev) => {
-            const newSVGPath = generateSVGPath(path, simplifyOptions);
+            const newSVGPath = createSVGPathWithSimplifyOptions(
+              path,
+              simplifyOptions
+            );
 
             if (prev.length === 0) {
               return [
@@ -475,4 +326,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Canvas;
+export default SVGCanvas;

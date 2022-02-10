@@ -1,13 +1,12 @@
 import React, { forwardRef, useImperativeHandle, useMemo } from 'react';
 import { Animated, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import Slider from '@react-native-community/slider';
+import { DEFAULT_OPACITY, DEFAULT_THICKNESS } from '@benjeau/react-native-draw-core';
 
 import {
   DEFAULT_COLORS,
-  DEFAULT_OPACITY,
   DEFAULT_OPACITY_STEP,
   DEFAULT_SLIDER_COLOR,
-  DEFAULT_THICKNESS,
   DEFAULT_THICKNESS_MAX,
   DEFAULT_THICKNESS_MIN,
   DEFAULT_THICKNESS_STEP,
