@@ -5,29 +5,30 @@ import type { RendererProps } from './RendererHelper';
 
 const SVGRenderer: React.FC<RendererProps> = ({ paths, height, width }) => (
   <Svg height={height} width={width}>
-    {paths.map(({ color, path, thickness, opacity, combine }, i) =>
-      combine ? (
-        <SVGRendererPath
-          key={i}
-          path={path}
-          color={color}
-          thickness={thickness}
-          opacity={opacity}
-        />
-      ) : (
-        path!.map((svgPath, j) => (
-          <Path
-            key={`${i}-${j}`}
-            d={svgPath}
-            fill="none"
-            stroke={color}
-            strokeWidth={thickness}
-            strokeLinecap="round"
+    {paths.map(
+      ({ color, path, thickness, opacity, combine, cap, join, filled }, i) =>
+        combine ? (
+          <SVGRendererPath
+            key={i}
+            path={path}
+            color={color}
+            thickness={thickness}
             opacity={opacity}
-            strokeLinejoin="round"
           />
-        ))
-      )
+        ) : (
+          path!.map((svgPath, j) => (
+            <Path
+              key={`${i}-${j}`}
+              d={svgPath}
+              fill={filled ? color : 'none'}
+              stroke={color}
+              strokeWidth={thickness}
+              strokeLinecap={cap}
+              opacity={opacity}
+              strokeLinejoin={join}
+            />
+          ))
+        )
     )}
   </Svg>
 );

@@ -4,159 +4,105 @@ import React, {
   useRef,
   forwardRef,
   useCallback,
+  useEffect,
 } from 'react';
-import {StyleSheet, ViewStyle} from 'react-native';
-import {IPaint, IPath, StrokeJoin} from '@shopify/react-native-skia';
+import { StyleSheet } from 'react-native';
 import {
   Skia,
   usePaint,
   useDrawCallback,
   useTouchHandler,
   PaintStyle,
-  StrokeCap,
   SkiaView,
 } from '@shopify/react-native-skia';
+import {
+  DEFAULT_BRUSH_COLOR,
+  DEFAULT_ERASER_SIZE,
+  DEFAULT_OPACITY,
+  DEFAULT_STROKE_CAP,
+  DEFAULT_STROKE_JOIN,
+  DEFAULT_THICKNESS,
+  DEFAULT_TOOL,
+  CanvasRef,
+  CanvasProps as CoreCanvasProps,
+  DrawingTool,
+  PathType,
+  PointDataType,
+  getSvgHelper,
+} from '@benjeau/react-native-draw-core';
 
-type Point = {x: number; y: number};
+import {
+  convertCorePathsToSkiaPaths,
+  convertCorePathToSkiaPath,
+  convertInnerPathsToStandardPaths,
+  drawPoint,
+  setPaint,
+} from './utils';
 
-interface CustomPath {
-  path: IPath;
-  paint: IPaint;
-  style: PaintStyle;
-}
-
-interface SerializedPath {
-  path: string;
-  color: string;
-  opacity: number;
-  thickness: number;
-  rawColor: number;
-  paintStyle: PaintStyle;
-  cap: StrokeCap;
-  join: StrokeJoin;
-}
-
-export interface SkiaRendererRef {
-  undo: () => void;
-  clear: () => void;
-  getPaths: () => SerializedPath[];
-  getSvg: () => string;
-}
-
-interface SkiaRendererProps {
-  backgroundColor?: string;
-  strokeColor?: string;
-  strokeThickness?: number;
-  strokeOpacity?: number;
-  strokePaintStyle?: PaintStyle;
-  strokeCap?: StrokeCap;
-  strokeJoin?: StrokeJoin;
-  shareStrokeProperties?: boolean;
-  height?: string | number;
-  width?: string | number;
+export interface CanvasProps extends CoreCanvasProps {
   debug?: boolean;
-  style?: ViewStyle;
-  erasing?: boolean;
-  eraserSize?: number;
-  touchDisabled?: boolean;
+  backgroundColor?: string;
 }
 
-// onPathsChange,
-// simplifyOptions = {},
-
-const convertIntColor = (color: number): {color: string; opacity: number} => {
-  const hex = color.toString(16);
-
-  return {
-    opacity: parseInt(hex.substring(0, 2), 16) / 255,
-    color: hex.substring(2),
-  };
-};
-
-const SVGPaintStyle: {[key in PaintStyle]: string} = {
-  [PaintStyle.Fill]: 'fill',
-  [PaintStyle.Stroke]: 'stroke',
-};
-
-/**
- * https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linecap
- */
-const SVGStrokeCap: {[key in StrokeCap]: string} = {
-  [StrokeCap.Butt]: 'butt',
-  [StrokeCap.Round]: 'round',
-  [StrokeCap.Square]: 'square',
-};
-
-/**
- * A subset of https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linejoin
- */
-const SVGStrokeJoin: {[key in StrokeJoin]: string} = {
-  [StrokeJoin.Bevel]: 'bevel',
-  [StrokeJoin.Miter]: 'miter',
-  [StrokeJoin.Round]: 'round',
-};
-
-const SkiaRenderer = forwardRef<SkiaRendererRef, SkiaRendererProps>(
+const SkiaRenderer = forwardRef<CanvasRef, CanvasProps>(
   (
     {
-      strokeColor = '#000000',
-      strokeThickness = 5,
-      strokeOpacity = 1,
-      strokePaintStyle = PaintStyle.Stroke,
-      strokeCap = StrokeCap.Round,
-      strokeJoin = StrokeJoin.Round,
-      backgroundColor = '#FFFFFF',
-      shareStrokeProperties,
+      color = DEFAULT_BRUSH_COLOR,
+      thickness = DEFAULT_THICKNESS,
+      opacity = DEFAULT_OPACITY,
+      filled,
+      cap = DEFAULT_STROKE_CAP,
+      join = DEFAULT_STROKE_JOIN,
+      initialPaths = [],
+      style,
       height = '100%',
       width = '100%',
+      eraserSize = DEFAULT_ERASER_SIZE,
+      tool = DEFAULT_TOOL,
+      onPathsChange,
+      backgroundColor = '#FFFFFF',
       debug,
-      style,
-      erasing,
-      eraserSize = 20,
+      shareStrokeProperties,
       touchDisabled,
     },
-    ref,
+    ref
   ) => {
-    const prevPointRef = useRef<Point>();
+    const prevPointRef = useRef<PointDataType>();
     const skiaViewRef = useRef<SkiaView>(null);
 
-    const paths = useMemo(() => [] as CustomPath[], []);
-    let eraserPoint = useMemo(() => ({x: 0, y: 0, erasing: false}), []);
+    const paths = useMemo(() => convertCorePathsToSkiaPaths(initialPaths), []);
+    let eraserPoint = useMemo(() => ({ x: 0, y: 0, erasing: false }), []);
 
-    const canvasPaint = usePaint(p => p.setColor(Skia.Color(backgroundColor)));
+    const canvasPaint = usePaint((p) =>
+      p.setColor(Skia.Color(backgroundColor))
+    );
 
-    const pathPaint = usePaint(p => {
-      p.setColor(Skia.Color(strokeColor));
-      p.setStrokeWidth(strokeThickness);
-      p.setAlphaf(strokeOpacity);
-      p.setStrokeCap(strokeCap);
-      p.setStrokeJoin(strokeJoin);
-      p.setStyle(strokePaintStyle);
+    const pathPaint = usePaint((p) => {
+      setPaint(p, {
+        color,
+        thickness,
+        opacity,
+        filled,
+        cap,
+        join,
+      });
     });
 
-    const eraserPaint = usePaint(p => {
+    const eraserPaint = usePaint((p) => {
       p.setColor(Skia.Color('#000000'));
       p.setStyle(PaintStyle.Fill);
     });
 
     const getPaths = useCallback(
-      (): SerializedPath[] =>
-        paths.map(({paint, path, style}) => {
-          const rawColor = paint.getColor();
-          const {color, opacity} = convertIntColor(rawColor);
+      (): PathType[] => convertInnerPathsToStandardPaths(paths),
+      [paths]
+    );
 
-          return {
-            color,
-            thickness: paint.getStrokeWidth(),
-            path: path.toSVGString(),
-            opacity,
-            rawColor,
-            cap: paint.getStrokeCap(),
-            join: paint.getStrokeJoin(),
-            paintStyle: style,
-          };
-        }),
-      [paths],
+    const addPath = useCallback(
+      (path: PathType) => {
+        paths.push(convertCorePathToSkiaPath(path));
+      },
+      [paths]
     );
 
     const undo = useCallback(() => {
@@ -170,67 +116,60 @@ const SkiaRenderer = forwardRef<SkiaRendererRef, SkiaRendererProps>(
     }, [paths, skiaViewRef]);
 
     const getSvg = useCallback(
-      () =>
-        `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${getPaths().reduce(
-          (acc, {color, opacity, path, thickness, paintStyle, cap, join}) =>
-            `${acc}<path d="${path}" stroke="${color}" stroke-width="${thickness}" opacity="${opacity}" stroke-linecap="${SVGStrokeCap[cap]}" stroke-linejoin="${SVGStrokeJoin[join]}" fill="${SVGPaintStyle[paintStyle]}"/>`,
-          '',
-        )}</svg>`,
-      [getPaths],
+      () => getSvgHelper(getPaths(), width, height),
+      [getPaths, width, height]
     );
 
     useImperativeHandle(ref, () => ({
       undo,
       clear,
       getPaths,
+      addPath,
       getSvg,
     }));
 
     const erasingPaths = useCallback(
       (x: number, y: number) => {
         const reversedPaths = [...paths].reverse();
-        reversedPaths.forEach(({path}, index) => {
+        reversedPaths.forEach(({ path }, index) => {
           if (path.contains(x, y)) {
             paths.splice(reversedPaths.length - index - 1, 1);
           }
         });
       },
-      [paths],
+      [paths]
     );
 
     const touchHandler = useTouchHandler({
-      onStart: ({x, y}) => {
-        if (erasing) {
+      onStart: ({ x, y }) => {
+        if (tool === DrawingTool.Eraser) {
           erasingPaths(x, y);
-          eraserPoint = {x, y, erasing: true};
+          eraserPoint = { x, y, erasing: true };
         } else {
           const path = Skia.Path.Make();
           path.setIsVolatile(true);
-          paths.push({path, paint: pathPaint, style: strokePaintStyle});
+          paths.push({
+            path,
+            paint: pathPaint,
+            style: filled ? PaintStyle.Fill : PaintStyle.Stroke,
+            data: [[x, y]],
+          });
           path.moveTo(x, y);
-          prevPointRef.current = {x, y};
+          prevPointRef.current = [x, y];
         }
       },
-      onActive: ({x, y}) => {
-        if (erasing) {
+      onActive: ({ x, y }) => {
+        if (tool === DrawingTool.Eraser) {
           erasingPaths(x, y);
-          eraserPoint = {x, y, erasing: true};
+          eraserPoint = { x, y, erasing: true };
         } else {
           // Get current path object
-          const {path} = paths[paths.length - 1];
+          const { path } = paths[paths.length - 1];
 
-          // Calculate and draw a smooth curve
-          const xMid = (prevPointRef.current!.x + x) / 2;
-          const yMid = (prevPointRef.current!.y + y) / 2;
+          drawPoint(path, prevPointRef.current!, [x, y]);
 
-          path.quadTo(
-            prevPointRef.current!.x,
-            prevPointRef.current!.y,
-            xMid,
-            yMid,
-          );
-
-          prevPointRef.current = {x, y};
+          prevPointRef.current = [x, y];
+          paths[paths.length].data.push([x, y]);
         }
       },
       onEnd: () => {
@@ -250,19 +189,17 @@ const SkiaRenderer = forwardRef<SkiaRendererRef, SkiaRendererProps>(
 
         // Draw paths
         if (shareStrokeProperties) {
-          paths.forEach(({path}) => canvas.drawPath(path, pathPaint));
+          paths.forEach(({ path }) => canvas.drawPath(path, pathPaint));
         } else {
-          paths.forEach(({path, paint}) => canvas.drawPath(path, paint));
+          paths.forEach(({ path, paint }) => canvas.drawPath(path, paint));
         }
-
-        console.log(eraserPoint)
 
         if (eraserPoint.erasing) {
           canvas.drawCircle(
             eraserPoint.x,
             eraserPoint.y,
             eraserSize,
-            eraserPaint,
+            eraserPaint
           );
         }
       },
@@ -275,22 +212,28 @@ const SkiaRenderer = forwardRef<SkiaRendererRef, SkiaRendererProps>(
         paths,
         touchDisabled,
         shareStrokeProperties,
-      ],
+      ]
+    );
+
+    useEffect(
+      () =>
+        onPathsChange && onPathsChange(convertInnerPathsToStandardPaths(paths)),
+      [paths, onPathsChange]
     );
 
     return (
       <SkiaView
         ref={skiaViewRef}
-        style={[styles.skiaview, style, {width, height}]}
+        style={[styles.skia, style, { width, height }]}
         onDraw={onDraw}
         debug={debug}
       />
     );
-  },
+  }
 );
 
 const styles = StyleSheet.create({
-  skiaview: {
+  skia: {
     flex: 1,
     overflow: 'hidden',
   },

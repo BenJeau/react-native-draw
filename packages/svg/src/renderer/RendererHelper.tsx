@@ -1,22 +1,28 @@
 import React, { useMemo } from 'react';
 
-import type { PathDataType, PathType } from '../../../core/src/types';
+import type {
+  PathDataType,
+  PathType,
+  StrokeCap,
+  StrokeJoin,
+} from '@benjeau/react-native-draw-core';
 import { createSVGPath } from '../utils';
 
 export interface RendererProps {
   paths: PathType[];
-  height: number;
-  width: number;
+  height: number | string;
+  width: number | string;
 }
 
-interface RendererHelperProps {
+interface RendererHelperProps extends RendererProps {
   currentPath: PathDataType;
   currentColor: string;
   currentThickness: number;
   currentOpacity: number;
-  paths: PathType[];
-  height: number;
-  width: number;
+  currentFilled?: boolean;
+  currentCap: StrokeCap;
+  currentJoin: StrokeJoin;
+  shareStrokeProperties?: boolean;
   roundPoints: boolean;
   currentPathTolerance: number;
   Renderer: React.FC<RendererProps>;
@@ -27,6 +33,10 @@ const RendererHelper: React.FC<RendererHelperProps> = ({
   currentColor,
   currentThickness,
   currentOpacity,
+  currentFilled,
+  currentCap,
+  currentJoin,
+  shareStrokeProperties,
   paths,
   height,
   width,
@@ -36,13 +46,27 @@ const RendererHelper: React.FC<RendererHelperProps> = ({
 }) => {
   const mergedPaths = useMemo(
     () => [
-      ...paths,
+      ...(shareStrokeProperties
+        ? paths.map((path) => ({
+            ...path,
+            color: currentColor,
+            thickness: currentThickness,
+            opacity: currentOpacity,
+            data: [currentPath],
+            filled: currentFilled,
+            cap: currentCap,
+            join: currentJoin,
+          }))
+        : paths),
       {
         color: currentColor,
         path: [createSVGPath(currentPath, currentPathTolerance, roundPoints)],
         thickness: currentThickness,
         opacity: currentOpacity,
         data: [currentPath],
+        filled: currentFilled,
+        cap: currentCap,
+        join: currentJoin,
       },
     ],
     [
@@ -50,6 +74,10 @@ const RendererHelper: React.FC<RendererHelperProps> = ({
       currentThickness,
       currentPath,
       currentOpacity,
+      currentFilled,
+      currentCap,
+      currentJoin,
+      shareStrokeProperties,
       paths,
       currentPathTolerance,
       roundPoints,

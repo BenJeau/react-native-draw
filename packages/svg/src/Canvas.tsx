@@ -4,11 +4,7 @@ import React, {
   useImperativeHandle,
   useState,
 } from 'react';
-import {
-  Animated,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
@@ -19,15 +15,18 @@ import {
   DEFAULT_BRUSH_COLOR,
   DEFAULT_ERASER_SIZE,
   DEFAULT_OPACITY,
+  DEFAULT_STROKE_CAP,
+  DEFAULT_STROKE_JOIN,
   DEFAULT_THICKNESS,
   DEFAULT_TOOL,
+  CanvasProps as CoreCanvasProps,
+  CanvasRef,
   DrawingTool,
   PathDataType,
   PathType,
-  CanvasRef,
-  CanvasProps as CoreCanvasProps,
   screenHeight,
   screenWidth,
+  getSvgHelper,
 } from '@benjeau/react-native-draw-core';
 
 import type { SimplifyOptions } from './types';
@@ -51,6 +50,9 @@ const SVGCanvas = forwardRef<CanvasRef, CanvasProps>(
       color = DEFAULT_BRUSH_COLOR,
       thickness = DEFAULT_THICKNESS,
       opacity = DEFAULT_OPACITY,
+      filled,
+      cap = DEFAULT_STROKE_CAP,
+      join = DEFAULT_STROKE_JOIN,
       initialPaths = [],
       style,
       height = screenHeight - 80,
@@ -59,7 +61,9 @@ const SVGCanvas = forwardRef<CanvasRef, CanvasProps>(
       onPathsChange,
       eraserSize = DEFAULT_ERASER_SIZE,
       tool = DEFAULT_TOOL,
-      combineWithLatestPath = false,
+      combineWithLatestPath,
+      shareStrokeProperties,
+      touchDisabled,
     },
     ref
   ) => {
@@ -126,37 +130,7 @@ const SVGCanvas = forwardRef<CanvasRef, CanvasProps>(
     const addPath = (newPath: PathType) =>
       setPaths((prev) => [...prev, newPath]);
 
-    const getSvg = () => {
-      const serializePath = (
-        d: string,
-        stroke: string,
-        strokeWidth: number,
-        strokeOpacity: number
-      ) =>
-        `<path d="${d}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${strokeOpacity}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
-
-      const separatePaths = (p: PathType) =>
-        p.path!.reduce(
-          (acc, innerPath) =>
-            `${acc}${serializePath(
-              innerPath,
-              p.color,
-              p.thickness,
-              p.opacity
-            )}`,
-          ''
-        );
-
-      const combinedPath = (p: PathType) =>
-        `${serializePath(p.path!.join(' '), p.color, p.thickness, p.opacity)}`;
-
-      const serializedPaths = paths.reduce(
-        (acc, p) => `${acc}${p.combine ? combinedPath(p) : separatePaths(p)}`,
-        ''
-      );
-
-      return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${serializedPaths}</svg>`;
-    };
+    const getSvg = () => getSvgHelper(paths, width, height);
 
     useImperativeHandle(ref, () => ({
       undo,
@@ -239,6 +213,9 @@ const SVGCanvas = forwardRef<CanvasRef, CanvasProps>(
                   thickness,
                   opacity,
                   combine: combineWithLatestPath,
+                  filled,
+                  cap,
+                  join,
                 },
               ];
             }
@@ -266,6 +243,9 @@ const SVGCanvas = forwardRef<CanvasRef, CanvasProps>(
                 thickness,
                 opacity,
                 combine: combineWithLatestPath,
+                filled,
+                cap,
+                join,
               },
             ];
           });
@@ -283,24 +263,30 @@ const SVGCanvas = forwardRef<CanvasRef, CanvasProps>(
           onHandlerStateChange={onHandlerStateChange}
           onGestureEvent={onGestureEvent}
           hitSlop={{
-            height,
-            width,
+            // @ts-ignore
+            height: Number.isFinite(height) ? height : undefined,
+            width: Number.isFinite(width) ? width : undefined,
             top: 0,
             left: 0,
           }}
           shouldCancelWhenOutside
+          enabled={!touchDisabled}
         >
           <View>
             <RendererHelper
-              currentColor={color}
-              currentOpacity={opacity}
               currentPath={path}
+              currentColor={color}
               currentThickness={thickness}
+              currentOpacity={opacity}
+              currentFilled={filled}
+              currentCap={cap}
+              currentJoin={join}
               currentPathTolerance={
                 simplifyOptions.simplifyCurrentPath
                   ? simplifyOptions.amount!
                   : 0
               }
+              shareStrokeProperties={shareStrokeProperties}
               roundPoints={simplifyOptions.roundPoints!}
               paths={paths}
               height={height}
@@ -317,12 +303,6 @@ const SVGCanvas = forwardRef<CanvasRef, CanvasProps>(
 const styles = StyleSheet.create({
   canvas: {
     backgroundColor: 'white',
-  },
-  canvasOverlay: {
-    position: 'absolute',
-    height: '100%',
-    width: '100%',
-    backgroundColor: '#000000',
   },
 });
 

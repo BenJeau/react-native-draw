@@ -1,9 +1,24 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 
 /**
+ *  A point [x, y]
+ */
+export type PointDataType = [number, number];
+
+/**
  * An array of points making up a path [x, y][]
  */
-export type PathDataType = [number, number][];
+export type PathDataType = PointDataType[];
+
+/**
+ * Shape to be used at the end of open sub paths
+ */
+export type StrokeCap = 'butt' | 'round' | 'square';
+
+/**
+ * Shape to be used at the corners of paths
+ */
+export type StrokeJoin = 'bevel' | 'miter' | 'round';
 
 /**
  * Grouped data paths of the same color, thickness, and opacity, drawn consecutively
@@ -34,6 +49,21 @@ export interface PathType {
    * Opacity of the path
    */
   opacity: number;
+
+  /**
+   * Wether the path is filled or not
+   */
+  filled?: boolean;
+
+  /**
+   * The cap of the stroke, shape to be used at the end of open sub paths
+   */
+  cap: StrokeCap;
+
+  /**
+   * The join of the stroke, shape to be used at the corners of paths
+   */
+  join: StrokeJoin;
 
   /**
    * Combine all the paths
@@ -72,6 +102,23 @@ export interface CanvasProps {
   opacity?: number;
 
   /**
+   * Wether the path is filled or not
+   */
+  filled?: boolean;
+
+  /**
+   * The cap of the stroke, shape to be used at the end of open sub paths
+   * @default DEFAULT_STROKE_CAP
+   */
+  cap?: StrokeCap;
+
+  /**
+   * The join of the stroke, shape to be used at the corners of paths
+   * @default DEFAULT_STROKE_JOIN
+   */
+  join?: StrokeJoin;
+
+  /**
    * Paths to be already drawn
    * @default []
    */
@@ -80,12 +127,12 @@ export interface CanvasProps {
   /**
    * Height of the canvas
    */
-  height?: number;
+  height?: number | string;
 
   /**
    * Width of the canvas
    */
-  width?: number;
+  width?: number | string;
 
   /**
    * Override the style of the container of the canvas
@@ -118,8 +165,21 @@ export interface CanvasProps {
    * @default false
    */
   combineWithLatestPath?: boolean;
-}
 
+  /**
+   * Make all the strokes on the canvas share the same properties (color, thickness, opacity, filled, cap, join)
+   *
+   * Can help you achieve some cool things
+   * @default false
+   */
+  shareStrokeProperties?: boolean;
+
+  /**
+   * Disable touch events on the canvas
+   * @default false
+   */
+  touchDisabled?: boolean;
+}
 
 /**
  * React ref for a generic `Canvas` component
