@@ -8,6 +8,7 @@ export const DEFAULT_OPACITY = 1;
 export const DEFAULT_STROKE_CAP = 'round';
 export const DEFAULT_STROKE_JOIN = 'round';
 export const DEFAULT_TOOL = DrawingTool.Brush;
+export const DEFAULT_CANVAS_BACKGROUND_COLOR = '#FFFFFF';
 
 export const { width: screenWidth, height: screenHeight } =
   Dimensions.get('window');

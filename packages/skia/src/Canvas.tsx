@@ -23,6 +23,7 @@ import {
   DEFAULT_STROKE_JOIN,
   DEFAULT_THICKNESS,
   DEFAULT_TOOL,
+  DEFAULT_CANVAS_BACKGROUND_COLOR,
   CanvasRef,
   CanvasProps as CoreCanvasProps,
   DrawingTool,
@@ -40,11 +41,21 @@ import {
 } from './utils';
 
 export interface CanvasProps extends CoreCanvasProps {
+  /**
+   * When set to true the view will display information about the
+   * average time it takes to render.
+   * @default false
+   */
   debug?: boolean;
+
+  /**
+   * Background color of the canvas
+   * @default DEFAULT_CANVAS_BACKGROUND_COLOR
+   */
   backgroundColor?: string;
 }
 
-const SkiaRenderer = forwardRef<CanvasRef, CanvasProps>(
+const Canvas = forwardRef<CanvasRef, CanvasProps>(
   (
     {
       color = DEFAULT_BRUSH_COLOR,
@@ -60,7 +71,7 @@ const SkiaRenderer = forwardRef<CanvasRef, CanvasProps>(
       eraserSize = DEFAULT_ERASER_SIZE,
       tool = DEFAULT_TOOL,
       onPathsChange,
-      backgroundColor = '#FFFFFF',
+      backgroundColor = DEFAULT_CANVAS_BACKGROUND_COLOR,
       debug,
       shareStrokeProperties,
       touchDisabled,
@@ -93,6 +104,16 @@ const SkiaRenderer = forwardRef<CanvasRef, CanvasProps>(
       p.setStyle(PaintStyle.Fill);
     });
 
+    const undo = useCallback(() => {
+      paths.length = Math.max(0, paths.length - 1);
+      skiaViewRef.current?.redraw();
+    }, [paths, skiaViewRef]);
+
+    const clear = useCallback(() => {
+      paths.length = 0;
+      skiaViewRef.current?.redraw();
+    }, [paths, skiaViewRef]);
+
     const getPaths = useCallback(
       (): PathType[] => convertInnerPathsToStandardPaths(paths),
       [paths]
@@ -105,15 +126,23 @@ const SkiaRenderer = forwardRef<CanvasRef, CanvasProps>(
       [paths]
     );
 
-    const undo = useCallback(() => {
-      paths.length = Math.max(0, paths.length - 1);
-      skiaViewRef.current?.redraw();
-    }, [paths, skiaViewRef]);
+    const addPaths = useCallback(
+      (corePaths: PathType[]) => {
+        paths.push(...convertCorePathsToSkiaPaths(corePaths));
+      },
+      [paths]
+    );
 
-    const clear = useCallback(() => {
-      paths.length = 0;
-      skiaViewRef.current?.redraw();
-    }, [paths, skiaViewRef]);
+    const setPaths = useCallback(
+      (corePaths: PathType[]) => {
+        paths.splice(
+          0,
+          paths.length,
+          ...convertCorePathsToSkiaPaths(corePaths)
+        );
+      },
+      [paths]
+    );
 
     const getSvg = useCallback(
       () => getSvgHelper(getPaths(), width, height),
@@ -125,6 +154,8 @@ const SkiaRenderer = forwardRef<CanvasRef, CanvasProps>(
       clear,
       getPaths,
       addPath,
+      addPaths,
+      setPaths,
       getSvg,
     }));
 
@@ -239,4 +270,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SkiaRenderer;
+export default Canvas;

@@ -13,7 +13,7 @@ interface ColorButtonProps {
   color: string;
 
   /**
-   * Wether the button is selected or not
+   * Whether the button is selected or not
    * @default false
    */
   selected?: boolean;
@@ -25,25 +25,25 @@ interface ColorButtonProps {
   onPress: (color: string) => void;
 
   /**
-   * Wether the button is the top left corner
+   * Whether the button is the top left corner
    * @default false
    */
   isTopStart: boolean;
 
   /**
-   * Wether the button is the top right corner
+   * Whether the button is the top right corner
    * @default false
    */
   isTopEnd: boolean;
 
   /**
-   * Wether the button is the bottom left corner
+   * Whether the button is the bottom left corner
    * @default false
    */
   isBottomStart: boolean;
 
   /**
-   * Wether the button is the bottom right corner
+   * Whether the button is the bottom right corner
    * @default false
    */
   isBottomEnd: boolean;

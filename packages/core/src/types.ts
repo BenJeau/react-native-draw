@@ -21,7 +21,8 @@ export type StrokeCap = 'butt' | 'round' | 'square';
 export type StrokeJoin = 'bevel' | 'miter' | 'round';
 
 /**
- * Grouped data paths of the same color, thickness, and opacity, drawn consecutively
+ * Grouped data paths of the same color, thickness, opacity, filled, cap, and join drawn
+ * consecutively
  */
 export interface PathType {
   /**
@@ -51,7 +52,7 @@ export interface PathType {
   opacity: number;
 
   /**
-   * Wether the path is filled or not
+   * Whether the path is filled or not
    */
   filled?: boolean;
 
@@ -102,7 +103,7 @@ export interface CanvasProps {
   opacity?: number;
 
   /**
-   * Wether the path is filled or not
+   * Whether the path is filled or not
    */
   filled?: boolean;
 
@@ -167,7 +168,8 @@ export interface CanvasProps {
   combineWithLatestPath?: boolean;
 
   /**
-   * Make all the strokes on the canvas share the same properties (color, thickness, opacity, filled, cap, join)
+   * Make all the strokes on the canvas share the same properties (color,
+   * thickness, opacity, filled, cap, join)
    *
    * Can help you achieve some cool things
    * @default false
@@ -191,7 +193,7 @@ export interface CanvasRef {
   undo: () => void;
 
   /**
-   * Removes all brush strokes
+   * Remove all brush strokes
    */
   clear: () => void;
 
@@ -205,6 +207,19 @@ export interface CanvasRef {
    * @param path Path to append/draw
    */
   addPath: (path: PathType) => void;
+
+  /**
+   * Append multiple paths to the current drawing paths
+   * @param paths Multiple paths to append/draw
+   */
+  addPaths: (paths: PathType[]) => void;
+
+  /**
+   * Replace current drawing paths with new ones (similar to calling `clear()`
+   * and then `addPaths()`)
+   * @param paths Multiple paths to append/draw
+   */
+  setPaths: (paths: PathType[]) => void;
 
   /**
    * Get SVG path string of the drawing

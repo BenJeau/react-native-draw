@@ -1,5 +1,6 @@
 import React, {
   forwardRef,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useState,
@@ -27,6 +28,7 @@ import {
   screenHeight,
   screenWidth,
   getSvgHelper,
+  DEFAULT_CANVAS_BACKGROUND_COLOR,
 } from '@benjeau/react-native-draw-core';
 
 import type { SimplifyOptions } from './types';
@@ -130,6 +132,20 @@ const SVGCanvas = forwardRef<CanvasRef, CanvasProps>(
     const addPath = (newPath: PathType) =>
       setPaths((prev) => [...prev, newPath]);
 
+    const addPaths = useCallback(
+      (corePaths: PathType[]) => {
+        paths.push(...corePaths);
+      },
+      [paths]
+    );
+
+    const refSetPaths = useCallback(
+      (corePaths: PathType[]) => {
+        paths.splice(0, paths.length, ...corePaths);
+      },
+      [paths]
+    );
+
     const getSvg = () => getSvgHelper(paths, width, height);
 
     useImperativeHandle(ref, () => ({
@@ -137,6 +153,8 @@ const SVGCanvas = forwardRef<CanvasRef, CanvasProps>(
       clear,
       getPaths,
       addPath,
+      addPaths,
+      setPaths: refSetPaths,
       getSvg,
     }));
 
@@ -302,7 +320,7 @@ const SVGCanvas = forwardRef<CanvasRef, CanvasProps>(
 
 const styles = StyleSheet.create({
   canvas: {
-    backgroundColor: 'white',
+    backgroundColor: DEFAULT_CANVAS_BACKGROUND_COLOR,
   },
 });
 

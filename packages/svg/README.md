@@ -1,15 +1,15 @@
-# `@benjeau/react-native-draw`
+# `@benjeau/react-native-draw-svg`
 
-[![NPM badge](https://img.shields.io/npm/v/@benjeau/react-native-draw)](https://www.npmjs.com/package/@benjeau/react-native-draw) [![CircleCI Status](https://img.shields.io/circleci/build/gh/BenJeau/react-native-draw)](https://app.circleci.com/pipelines/github/BenJeau/react-native-draw) ![Platform badge](https://img.shields.io/badge/platform-android%20%7C%20ios%20%7C%20web-blue)
+[![NPM badge](https://img.shields.io/npm/v/@benjeau/react-native-draw-svg)](https://www.npmjs.com/package/@benjeau/react-native-draw-svg)
 
-Cross-platform React Native drawing component based on SVG
+Cross-platform React Native drawing `Canvas` component based on SVG
 
 ## Installation
 
 ```sh
-npm install @benjeau/react-native-draw
+npm install @benjeau/react-native-draw-svg
 # or
-yarn add @benjeau/react-native-draw
+yarn add @benjeau/react-native-draw-svg
 ```
 
 > Also, you need to install [react-native-gesture-handler](https://github.com/software-mansion/react-native-gesture-handler) and [react-native-svg](https://github.com/react-native-svg/react-native-svg), and follow their installation instructions.
@@ -203,22 +203,13 @@ https://user-images.githubusercontent.com/22248828/152837922-757d3a13-1d35-409a-
 
 ## Props
 
-### Canvas
+### `Canvas`
 
-| name                    | description                                                                            | type                                           | default                       |
-| ----------------------- | -------------------------------------------------------------------------------------- | ---------------------------------------------- | ----------------------------- |
-| `color`                 | Color of the brush strokes                                                             | `string`                                       | - (required)                  |
-| `thickness`             | Thickness of the brush strokes                                                         | `number`                                       | - (required)                  |
-| `opacity`               | Opacity of the brush strokes                                                           | `number`                                       | - (required)                  |
-| `initialPaths`          | Paths to be already drawn                                                              | `PathType[]`                                   | `[]`                          |
-| `height`                | Height of the canvas                                                                   | `number`                                       | height of the window - 80     |
-| `width`                 | Width of the canvas                                                                    | `number`                                       | width of the window           |
-| `style`                 | Override the style of the container of the canvas                                      | `StyleProp`                                    | -                             |
-| `onPathsChange`         | Callback function when paths change                                                    | (paths: [`PathType`](./src/types.ts)[]) => any | -                             |
-| `simplifyOptions`       | SVG simplification options                                                             | [`SimplifyOptions`](./src/Draw.tsx)            | see [below](#SimplifyOptions) |
-| `eraserSize`            | Width of eraser (to compensate for path simplification)                                | `number`                                       | `5`                           |
-| `tool`                  | Initial tool of the canvas                                                             | `brush` or `eraser`                            | `brush`                       |
-| `combineWithLatestPath` | Combine current path with the last path if it's the same color, thickness, and opacity | `boolean`                                      | `false`                       |
+In addition to the standard [`Canvas` props](../../README.md#Props), the following props are also available for the SVG `Canvas`
+
+| name              | description                | type                                | default                       |
+| ----------------- | -------------------------- | ----------------------------------- | ----------------------------- |
+| `simplifyOptions` | SVG simplification options | [`SimplifyOptions`](./src/Draw.tsx) | see [below](#SimplifyOptions) |
 
 ### SimplifyOptions
 
@@ -229,16 +220,6 @@ https://user-images.githubusercontent.com/22248828/152837922-757d3a13-1d35-409a-
 | `amount`              | Amount of simplification to apply                                             | `number`  | `10`    |
 | `roundPoints`         | Ignore fractional part in the points. Improves performance                    | `boolean` | `true`  |
 
-## Ref functions
-
-| name       | description                                | type                       |
-| ---------- | ------------------------------------------ | -------------------------- |
-| `undo`     | Undo last brush stroke                     | `() => void`               |
-| `clear`    | Removes all brush strokes                  | `() => void`               |
-| `getPaths` | Get brush strokes data                     | `() => PathType[]`         |
-| `addPath`  | Append a path to the current drawing paths | `(path: PathType) => void` |
-| `getSvg`   | Get SVG path string of the drawing         | `() => string`             |
-
 ## Troubleshooting
 
 If you cannot draw on the canvas, make sure you have followed the extra steps of [react-native-gesture-handler](https://github.com/software-mansion/react-native-gesture-handler)
@@ -246,11 +227,3 @@ If you cannot draw on the canvas, make sure you have followed the extra steps of
 ## Helper functions
 
 * If you need to create an SVG path, `createSVGPath()` is available to create the string representation of an SVG path.
-
-## Contributing
-
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
-
-## License
-
-MIT

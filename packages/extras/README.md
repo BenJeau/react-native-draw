@@ -1,8 +1,8 @@
-# @benjeau/react-native-draw-extras
+# `@benjeau/react-native-draw-extras`
 
-[![NPM badge](https://img.shields.io/npm/v/@benjeau/react-native-draw-extras)](https://www.npmjs.com/package/@benjeau/react-native-draw-extras) [![CircleCI Status](https://img.shields.io/circleci/build/gh/BenJeau/react-native-draw)](https://app.circleci.com/pipelines/github/BenJeau/react-native-draw) ![Platform badge](https://img.shields.io/badge/platform-android%20%7C%20ios%20%7C%20web-blue)
+[![NPM badge](https://img.shields.io/npm/v/@benjeau/react-native-draw-extras)](https://www.npmjs.com/package/@benjeau/react-native-draw-extras)
 
-Extra components to complement [@benjeau/react-native-draw](https://github.com/BenJeau/react-native-draw):
+Extra components to complement [`Canvas`](https://github.com/BenJeau/react-native-draw):
 
 * `CanvasControls`
   * Clear drawing
