@@ -1,8 +1,13 @@
-# React Native Draw
+<div align="center">
+  <img src="./assets/header.png"/>
 
-![Platform badge](https://img.shields.io/badge/platform-android%20%7C%20ios%20%7C%20web-blue)  [![CircleCI Status](https://img.shields.io/circleci/build/gh/BenJeau/react-native-draw)](https://app.circleci.com/pipelines/github/BenJeau/react-native-draw)
+  <h1>React Native Draw</h1>
 
-A cross-platform drawing component for React Native with the option of using SVG or Skia.
+  <h3>Cross-platform drawing component for React Native using SVG or Skia.</h3>
+
+  ![Platform badge](https://img.shields.io/badge/platform-android%20%7C%20ios%20%7C%20web-blue)
+  [![CircleCI Status](https://img.shields.io/circleci/build/gh/BenJeau/react-native-draw)](https://app.circleci.com/pipelines/github/BenJeau/react-native-draw)
+</div>
 
 > **Note:** if you are currently using `@benjeau/react-native-draw` as a dependency, please migrate to either [`@benjeau/react-native-draw-svg`](./packages/svg) or [`@benjeau/react-native-draw-skia`](./packages/skia). It should be a drop-in replacement (depending on the version that you are using), please read the [release notes](https://github.com/BenJeau/react-native-draw/releases) for more information.
 
