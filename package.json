@@ -43,6 +43,10 @@
     "react-native-builder-bob": "^0.18.2",
     "typescript": "^4.5.5"
   },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
   "jest": {
     "preset": "react-native",
     "modulePathIgnorePatterns": [
