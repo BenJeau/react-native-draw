@@ -6,7 +6,7 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import type { CanvasProps } from 'packages/core/src';
+import type { CanvasProps } from '@benjeau/react-native-draw-core';
 import type {
   BrushPreviewProps,
   BrushPropertiesProps,
@@ -18,9 +18,12 @@ import {
   CanvasExample,
   Home,
   ExampleSelection,
-  ExtrasExample,
-  MoreComplexExample,
-  SimpleExample,
+  SkiaExtrasExample,
+  SkiaMoreComplexExample,
+  SkiaSimpleExample,
+  SvgExtrasExample,
+  SvgMoreComplexExample,
+  SvgSimpleExample,
   BrushPreviewExample,
   BrushPropertiesExample,
   CanvasControlsExample,
@@ -43,25 +46,28 @@ export type RootStackParamList = {
       | 'colorPicker';
     title: string;
   };
-  SimpleExample: undefined;
-  MoreComplexExample: undefined;
-  ExtrasExample: undefined;
+  SvgSimpleExample: undefined;
+  SvgMoreComplexExample: undefined;
+  SvgExtrasExample: undefined;
+  SkiaSimpleExample: undefined;
+  SkiaMoreComplexExample: undefined;
+  SkiaExtrasExample: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default () => {
-  const colorScheme = useColorScheme();
+  // const colorScheme = useColorScheme();
 
   return (
     <>
       <StatusBar
-        barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
+        // barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
         backgroundColor="#00000000"
         translucent
       />
       <NavigationContainer
-        theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+        // theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
       >
         <Stack.Navigator>
           <Stack.Screen
@@ -70,19 +76,34 @@ export default () => {
             options={{ title: '@benjeau/react-native-draw' }}
           />
           <Stack.Screen
-            name="SimpleExample"
-            component={SimpleExample}
-            options={{ title: 'Simple Example' }}
+            name="SvgSimpleExample"
+            component={SvgSimpleExample}
+            options={{ title: 'SVG - Simple Example' }}
           />
           <Stack.Screen
-            name="MoreComplexExample"
-            component={MoreComplexExample}
-            options={{ title: 'Complex Example' }}
+            name="SvgMoreComplexExample"
+            component={SvgMoreComplexExample}
+            options={{ title: 'SVG - Complex Example' }}
           />
           <Stack.Screen
-            name="ExtrasExample"
-            component={ExtrasExample}
-            options={{ title: 'Extras Example' }}
+            name="SvgExtrasExample"
+            component={SvgExtrasExample}
+            options={{ title: 'SVG - Extras Example' }}
+          />
+          <Stack.Screen
+            name="SkiaSimpleExample"
+            component={SkiaSimpleExample}
+            options={{ title: 'Skia - Simple Example' }}
+          />
+          <Stack.Screen
+            name="SkiaMoreComplexExample"
+            component={SkiaMoreComplexExample}
+            options={{ title: 'Skia - Complex Example' }}
+          />
+          <Stack.Screen
+            name="SkiaExtrasExample"
+            component={SkiaExtrasExample}
+            options={{ title: 'Skia - Extras Example' }}
           />
           <Stack.Screen
             name="CanvasExample"

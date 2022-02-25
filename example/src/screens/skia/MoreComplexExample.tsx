@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Button } from 'react-native';
-import { Canvas, CanvasRef } from 'packages/core/src';
+import { Canvas, CanvasRef } from '@benjeau/react-native-draw-skia';
 
 export default () => {
   const canvasRef = useRef<CanvasRef>(null);

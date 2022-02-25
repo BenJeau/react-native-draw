@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {Svg, Path} from "react-native-svg"
 
 import type { RootStackParamList } from '../App';
 import { Button } from '../components';
@@ -25,21 +26,41 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
         { backgroundColor: theme.colors.background },
       ]}
     >
+      <Svg width="100%" height="100%" viewBox="0 0 100 100">
+        <Path
+          d="M0,0 L0,100 L100,100 L100,0 L0,0"
+          fill="none"
+          stroke="black"
+          strokeWidth="5"
+        />
+      </Svg>
       <Text style={[{ color: theme.colors.text }, styles.description]}>
         Various collection of examples, feel free to explore them
       </Text>
 
       <Text style={[{ color: theme.colors.text }, styles.title]}>
-        Drawing Examples
+        SVG Drawing Examples
       </Text>
-
-      <Button onPress={() => navigation.navigate('SimpleExample')}>
+      <Button onPress={() => navigation.navigate('SvgSimpleExample')}>
         Simple drawing example
       </Button>
-      <Button onPress={() => navigation.navigate('MoreComplexExample')}>
+      <Button onPress={() => navigation.navigate('SvgMoreComplexExample')}>
         Complex drawing example
       </Button>
-      <Button onPress={() => navigation.navigate('ExtrasExample')}>
+      <Button onPress={() => navigation.navigate('SvgExtrasExample')}>
+        Example using the extras package
+      </Button>
+
+      <Text style={[{ color: theme.colors.text }, styles.title]}>
+        Skia Drawing Examples
+      </Text>
+      <Button onPress={() => navigation.navigate('SkiaSimpleExample')}>
+        Simple drawing example
+      </Button>
+      <Button onPress={() => navigation.navigate('SkiaMoreComplexExample')}>
+        Complex drawing example
+      </Button>
+      <Button onPress={() => navigation.navigate('SkiaExtrasExample')}>
         Example using the extras package
       </Button>
 

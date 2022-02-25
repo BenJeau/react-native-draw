@@ -2,12 +2,9 @@ const path = require('path');
 const fs = require('fs');
 const exclusionList = require('metro-config/src/defaults/exclusionList');
 const escape = require('escape-string-regexp');
-const { getDefaultConfig } = require('@expo/metro-config');
 
 const root = path.resolve(__dirname, '..');
 const packages = path.resolve(root, 'packages');
-
-const defaultConfig = getDefaultConfig(__dirname);
 
 // List all packages under `packages/`
 const workspaces = fs
@@ -36,22 +33,14 @@ const modules = []
   .filter(
     (m, i, self) =>
       // Remove duplicates and package names of the packages in the monorepo
-      self.lastIndexOf(m) === i && !m.startsWith('@react-navigation/')
+      self.lastIndexOf(m) === i && !m.startsWith('@benjeau/')
   );
 
 module.exports = {
-  ...defaultConfig,
-
   projectRoot: __dirname,
-
-  // We need to watch the root of the monorepo
-  // This lets Metro find the monorepo packages automatically using haste
-  // This also lets us import modules from monorepo root
   watchFolders: [root],
 
   resolver: {
-    ...defaultConfig.resolver,
-
     // We need to exclude the peerDependencies we've collected in packages' node_modules
     blacklistRE: exclusionList(
       [].concat(
@@ -72,12 +61,12 @@ module.exports = {
     }, {}),
   },
 
-  // transformer: {
-  //   getTransformOptions: async () => ({
-  //     transform: {
-  //       experimentalImportSupport: false,
-  //       inlineRequires: true,
-  //     },
-  //   }),
-  // },
+  transformer: {
+    getTransformOptions: async () => ({
+      transform: {
+        experimentalImportSupport: false,
+        inlineRequires: true,
+      },
+    }),
+  },
 };

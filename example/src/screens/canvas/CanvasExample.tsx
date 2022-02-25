@@ -1,5 +1,5 @@
 import React from 'react';
-import { Canvas } from 'packages/core/src';
+import { Canvas } from '@benjeau/react-native-draw-svg';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import type { RootStackParamList } from '../../App';

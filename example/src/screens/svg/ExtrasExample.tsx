@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { Canvas, CanvasRef, DrawingTool } from 'packages/core/src';
+import { Canvas, CanvasRef, DrawingTool } from '@benjeau/react-native-draw-svg';
 import {
   BrushProperties,
   CanvasControls,
