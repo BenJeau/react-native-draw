@@ -26,14 +26,6 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
         { backgroundColor: theme.colors.background },
       ]}
     >
-      <Svg width="100%" height="100%" viewBox="0 0 100 100">
-        <Path
-          d="M0,0 L0,100 L100,100 L100,0 L0,0"
-          fill="none"
-          stroke="black"
-          strokeWidth="5"
-        />
-      </Svg>
       <Text style={[{ color: theme.colors.text }, styles.description]}>
         Various collection of examples, feel free to explore them
       </Text>

@@ -39,11 +39,11 @@
     "skia"
   ],
   "devDependencies": {
-    "@types/react": "^17.0.1",
-    "@types/react-native": "0.64.3",
+    "@types/react": "^17.0.2",
+    "@types/react-native": "0.66.4",
     "@shopify/react-native-skia": "https://github.com/Shopify/react-native-skia/releases/download/v0.1.103-alpha/shopify-react-native-skia-0.1.103.tgz",
-    "react": "17.0.1",
-    "react-native": "0.64.3",
+    "react": "17.0.2",
+    "react-native": "0.66.4",
     "react-native-builder-bob": "^0.18.2",
     "typescript": "^4.5.5"
   },

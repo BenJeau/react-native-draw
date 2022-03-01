@@ -38,10 +38,10 @@
     "draw"
   ],
   "devDependencies": {
-    "@types/react": "^17.0.1",
-    "@types/react-native": "0.64.3",
-    "react": "17.0.1",
-    "react-native": "0.64.3",
+    "@types/react": "^17.0.2",
+    "@types/react-native": "0.66.4",
+    "react": "17.0.2",
+    "react-native": "0.66.4",
     "react-native-builder-bob": "^0.18.2",
     "typescript": "^4.5.5"
   },
