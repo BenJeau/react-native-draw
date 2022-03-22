@@ -12,12 +12,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-  PanGestureHandlerStateChangeEvent,
-  State,
-} from 'react-native-gesture-handler';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 import {
   DEFAULT_BRUSH_COLOR,
@@ -323,59 +318,57 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
       [paths, onPathsChange]
     );
 
-    const onGestureEvent = ({
-      nativeEvent: { x, y },
-    }: PanGestureHandlerGestureEvent) => {
-      switch (tool) {
-        case DrawingTool.Brush:
+    const panGesture = Gesture.Pan()
+      .onChange(({ x, y }) => {
+        switch (tool) {
+          case DrawingTool.Brush:
+            addPointToPath(x, y);
+            break;
+          case DrawingTool.Eraser:
+            setPaths((prevPaths) =>
+              prevPaths.reduce((acc: PathType[], p) => {
+                const filteredDataPaths = p.data.reduce(
+                  (
+                    acc2: { data: PathDataType[]; path: string[] },
+                    data,
+                    index
+                  ) => {
+                    const closeToPath = data.some(
+                      ([x1, y1]) =>
+                        Math.abs(x1 - x) < p.thickness + eraserSize &&
+                        Math.abs(y1 - y) < p.thickness + eraserSize
+                    );
+
+                    // If point close to path, don't include it
+                    if (closeToPath) {
+                      return acc2;
+                    }
+
+                    return {
+                      data: [...acc2.data, data],
+                      path: [...acc2.path, p.path![index]],
+                    };
+                  },
+                  { data: [], path: [] }
+                );
+
+                if (filteredDataPaths.data.length > 0) {
+                  return [...acc, { ...p, ...filteredDataPaths }];
+                }
+
+                return acc;
+              }, [])
+            );
+            break;
+        }
+      })
+      .onBegin(({ x, y }) => {
+        if (tool === DrawingTool.Brush) {
           addPointToPath(x, y);
-          break;
-        case DrawingTool.Eraser:
-          setPaths((prevPaths) =>
-            prevPaths.reduce((acc: PathType[], p) => {
-              const filteredDataPaths = p.data.reduce(
-                (
-                  acc2: { data: PathDataType[]; path: string[] },
-                  data,
-                  index
-                ) => {
-                  const closeToPath = data.some(
-                    ([x1, y1]) =>
-                      Math.abs(x1 - x) < p.thickness + eraserSize &&
-                      Math.abs(y1 - y) < p.thickness + eraserSize
-                  );
-
-                  // If point close to path, don't include it
-                  if (closeToPath) {
-                    return acc2;
-                  }
-
-                  return {
-                    data: [...acc2.data, data],
-                    path: [...acc2.path, p.path![index]],
-                  };
-                },
-                { data: [], path: [] }
-              );
-
-              if (filteredDataPaths.data.length > 0) {
-                return [...acc, { ...p, ...filteredDataPaths }];
-              }
-
-              return acc;
-            }, [])
-          );
-          break;
-      }
-    };
-
-    const onHandlerStateChange = ({
-      nativeEvent: { state, x, y },
-    }: PanGestureHandlerStateChangeEvent) => {
-      if (tool === DrawingTool.Brush) {
-        if (state === State.BEGAN) {
-          addPointToPath(x, y);
-        } else if (state === State.END || state === State.CANCELLED) {
+        }
+      })
+      .onEnd(() => {
+        if (tool === DrawingTool.Brush) {
           setPaths((prev) => {
             const newSVGPath = generateSVGPath(path, simplifyOptions);
 
@@ -420,25 +413,21 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
           });
           setPath([]);
         }
-      }
-    };
+      })
+      .minPointers(1)
+      .minDistance(0)
+      .averageTouches(false)
+      .hitSlop({
+        height,
+        width,
+        top: 0,
+        left: 0,
+      })
+      .shouldCancelWhenOutside(true);
 
     return (
       <Animated.View style={canvasContainerStyles}>
-        <PanGestureHandler
-          maxPointers={1}
-          minDist={0}
-          avgTouches={false}
-          onHandlerStateChange={onHandlerStateChange}
-          onGestureEvent={onGestureEvent}
-          hitSlop={{
-            height,
-            width,
-            top: 0,
-            left: 0,
-          }}
-          shouldCancelWhenOutside
-        >
+        <GestureDetector gesture={panGesture}>
           <View>
             <RendererHelper
               currentColor={color}
@@ -457,7 +446,7 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
               Renderer={SVGRenderer}
             />
           </View>
-        </PanGestureHandler>
+        </GestureDetector>
       </Animated.View>
     );
   }

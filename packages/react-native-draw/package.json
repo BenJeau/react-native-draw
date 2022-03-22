@@ -47,14 +47,14 @@
     "react": "17.0.1",
     "react-native": "0.64.3",
     "react-native-builder-bob": "^0.18.2",
-    "react-native-gesture-handler": "^1.10.3",
+    "react-native-gesture-handler": "^2.3.2",
     "react-native-svg": "^12.1.1",
     "typescript": "^4.5.5"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-native-gesture-handler": ">=1.10.0",
+    "react-native-gesture-handler": "^2.3.2",
     "react-native-svg": ">=12.0.0"
   },
   "react-native-builder-bob": {
