@@ -81,7 +81,10 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
     const prevPointRef = useRef<PointDataType>();
     const skiaViewRef = useRef<SkiaView>(null);
 
-    const paths = useMemo(() => convertCorePathsToSkiaPaths(initialPaths), []);
+    const paths = useMemo(
+      () => convertCorePathsToSkiaPaths(initialPaths),
+      [initialPaths]
+    );
     let eraserPoint = useMemo(() => ({ x: 0, y: 0, erasing: false }), []);
 
     const canvasPaint = usePaint((p) =>

@@ -55,7 +55,10 @@ export const createSVGPathWithSimplifyOptions = (
  * @param simplifyOptions Simplification options for the SVG drawing simplification
  * @returns An array of SVG path strings
  */
-export const createSVGPaths = (paths: PathType[], simplifyOptions: SimplifyOptions) =>
+export const createSVGPaths = (
+  paths: PathType[],
+  simplifyOptions: SimplifyOptions
+) =>
   paths.map((i) => ({
     ...i,
     path: i.path

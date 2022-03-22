@@ -57,17 +57,17 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default () => {
-  // const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme();
 
   return (
     <>
       <StatusBar
-        // barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
+        barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
         backgroundColor="#00000000"
         translucent
       />
       <NavigationContainer
-        // theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+        theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
       >
         <Stack.Navigator>
           <Stack.Screen

@@ -822,23 +822,6 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@benjeau/react-native-draw-core@file:../packages/core":
-  version "0.0.1"
-
-"@benjeau/react-native-draw-extras@file:../packages/extras":
-  version "0.1.0"
-  dependencies:
-    "@benjeau/react-native-draw-core" "file:../../../Library/Caches/Yarn/v6/npm-@benjeau-react-native-draw-extras-0.1.0-54f812c3-fe6c-47c3-ad67-3cc84564f259-1646177989534/node_modules/@benjeau/core"
-
-"@benjeau/react-native-draw-skia@file:../packages/skia":
-  version "0.0.1"
-
-"@benjeau/react-native-draw-svg@file:../packages/svg":
-  version "0.0.1"
-  dependencies:
-    "@benjeau/react-native-draw-core" "file:../../../Library/Caches/Yarn/v6/npm-@benjeau-react-native-draw-svg-0.0.1-b8d8178f-f928-4fee-847e-5df5bb6f2750-1646177989535/node_modules/@benjeau/core"
-    "@luncheon/simplify-svg-path" "^0.1.4"
-
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
@@ -1117,11 +1100,6 @@
   dependencies:
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
-
-"@luncheon/simplify-svg-path@^0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@luncheon/simplify-svg-path/-/simplify-svg-path-0.1.4.tgz#a456355e8f5bd91f0303a4eafb991e9530b2ca5c"
-  integrity sha512-Vb2qkwUWvS9Y/lu84Sn1gsMMWbcX0umOjjvjYYvdCtlQWAmlEky7XTdiY2ioKc1Gg32AyZW3wMqkp4Dy8I+9yA==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
