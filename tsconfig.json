@@ -2,10 +2,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@benjeau/react-native-draw": ["./packages/react-native-draw/src"],
-      "@benjeau/react-native-draw-extras": [
-        "./packages/react-native-draw-extras/src"
-      ]
+      "@benjeau/react-native-draw-core": ["packages/core/src"],
+      "@benjeau/react-native-draw-extras": ["packages/extras/src"],
+      "@benjeau/react-native-draw-skia": ["packages/skia/src"],
+      "@benjeau/react-native-draw-svg": ["packages/svg/src"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
@@ -26,9 +26,10 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "esnext"
+    "target": "esnext",
+    "noImplicitAny": false
   },
   "exclude": [
-    "packages/*/lib",
+    "packages/*/lib"
   ]
 }

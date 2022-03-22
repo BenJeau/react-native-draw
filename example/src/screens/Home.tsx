@@ -30,16 +30,28 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
       </Text>
 
       <Text style={[{ color: theme.colors.text }, styles.title]}>
-        Drawing Examples
+        SVG Drawing Examples
       </Text>
-
-      <Button onPress={() => navigation.navigate('SimpleExample')}>
+      <Button onPress={() => navigation.navigate('SvgSimpleExample')}>
         Simple drawing example
       </Button>
-      <Button onPress={() => navigation.navigate('MoreComplexExample')}>
+      <Button onPress={() => navigation.navigate('SvgMoreComplexExample')}>
         Complex drawing example
       </Button>
-      <Button onPress={() => navigation.navigate('ExtrasExample')}>
+      <Button onPress={() => navigation.navigate('SvgExtrasExample')}>
+        Example using the extras package
+      </Button>
+
+      <Text style={[{ color: theme.colors.text }, styles.title]}>
+        Skia Drawing Examples
+      </Text>
+      <Button onPress={() => navigation.navigate('SkiaSimpleExample')}>
+        Simple drawing example
+      </Button>
+      <Button onPress={() => navigation.navigate('SkiaMoreComplexExample')}>
+        Complex drawing example
+      </Button>
+      <Button onPress={() => navigation.navigate('SkiaExtrasExample')}>
         Example using the extras package
       </Button>
 

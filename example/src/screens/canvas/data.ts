@@ -1,4 +1,4 @@
-import type { CanvasProps } from '@benjeau/react-native-draw';
+import type { CanvasProps } from '@benjeau/react-native-draw-svg';
 import { ToastAndroid } from 'react-native';
 
 interface Data {
@@ -210,6 +210,8 @@ const data: Data[] = [
               ],
               thickness: 20,
               opacity: 1,
+              cap: 'round',
+              join: 'round',
             },
             {
               color: '#4897FA',
@@ -252,6 +254,8 @@ const data: Data[] = [
               ],
               thickness: 15,
               opacity: 0.6,
+              cap: 'round',
+              join: 'round',
             },
           ],
         },

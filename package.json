@@ -3,8 +3,7 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "packages/*",
-      "example"
+      "packages/*"
     ]
   },
   "scripts": {
@@ -28,20 +27,24 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^16.0.0",
     "@react-native-community/eslint-config": "^2.0.0",
-    "@types/react": "^17.0.1",
-    "@types/react-native": "0.64.3",
+    "@types/react": "^17.0.2",
+    "@types/react-native": "^0.66.4",
     "commitlint": "^16.1.0",
-    "eslint": "^7.2.0",
+    "eslint": "^7.14.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.4",
     "lerna": "^4.0.0",
     "pod-install": "^0.1.31",
     "prettier": "^2.5.1",
-    "react": "17.0.1",
-    "react-native": "0.64.3",
+    "react": "17.0.2",
+    "react-native": "0.66.4",
     "react-native-builder-bob": "^0.18.2",
     "typescript": "^4.5.5"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
   },
   "jest": {
     "preset": "react-native",

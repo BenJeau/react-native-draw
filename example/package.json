@@ -1,40 +1,56 @@
 {
-  "name": "@benjeau/react-native-draw-example",
-  "description": "Example app for @benjeau/react-native-draw",
+  "name": "DrawExample",
+  "description": "Example app for react-native-draw",
   "version": "0.0.1",
   "private": true,
-  "main": "index",
   "scripts": {
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "start": "expo start",
-    "test": "jest"
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@react-native-community/slider": "4.1.7",
-    "@react-navigation/native": "^6.0.6",
-    "@react-navigation/native-stack": "^6.2.5",
-    "expo": "^43.0.0",
-    "expo-splash-screen": "~0.13.5",
-    "react": "17.0.1",
-    "react-dom": "^17.0.2",
-    "react-native": "0.64.3",
-    "react-native-gesture-handler": "~1.10.2",
-    "react-native-safe-area-context": "3.3.2",
-    "react-native-screens": "~3.8.0",
-    "react-native-svg": "12.1.1",
-    "react-native-unimodules": "~0.15.0",
-    "react-native-web": "0.17.1"
+    "@react-native-community/slider": "^4.2.0",
+    "@react-navigation/native": "^6.0.8",
+    "@react-navigation/native-stack": "^6.5.0",
+    "@shopify/react-native-skia": "https://github.com/Shopify/react-native-skia/releases/download/v0.1.103-alpha/shopify-react-native-skia-0.1.103.tgz",
+    "react": "17.0.2",
+    "react-native": "0.66.4",
+    "react-native-gesture-handler": "^2.2.0",
+    "react-native-safe-area-context": "^3.3.2",
+    "react-native-screens": "^3.11.1",
+    "react-native-svg": "^12.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
-    "@babel/runtime": "^7.9.6",
-    "@types/react-native": "0.64.2",
-    "babel-loader": "^8.2.3",
-    "babel-plugin-module-resolver": "^4.0.0",
-    "babel-preset-expo": "8.5.1",
-    "expo-cli": "^4.0.13",
-    "jest": "^27.5.0"
+    "@babel/runtime": "^7.12.5",
+    "@react-native-community/eslint-config": "^2.0.0",
+    "@types/jest": "^26.0.23",
+    "@types/react-native": "^0.66.4",
+    "@types/react-test-renderer": "^17.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.7.0",
+    "@typescript-eslint/parser": "^5.7.0",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.14.0",
+    "glob-to-regexp": "^0.4.1",
+    "jest": "^26.6.3",
+    "metro-react-native-babel-preset": "^0.66.2",
+    "react-test-renderer": "17.0.2",
+    "typescript": "^4.5.5"
+  },
+  "resolutions": {
+    "@types/react": "^17"
+  },
+  "jest": {
+    "preset": "react-native",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }

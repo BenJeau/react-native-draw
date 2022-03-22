@@ -1,8 +1,7 @@
 export { default as Home } from './Home';
 
-export { default as SimpleExample } from './SimpleExample';
-export { default as MoreComplexExample } from './MoreComplexExample';
-export { default as ExtrasExample } from './ExtrasExample';
+export * from './svg';
+export * from './skia';
 
 export { default as CanvasControlsExample } from './canvasControls/CanvasControlsExample';
 export { default as BrushPreviewExample } from './brushPreview/BrushPreviewExample';

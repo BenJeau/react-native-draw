@@ -1,14 +1,16 @@
+
 {
   "extends": "../tsconfig",
   "references": [
     {
-      "path": "../packages/react-native-draw"
+      "path": "../packages/svg"
     },
     {
-      "path": "../packages/react-native-draw-extras"
+      "path": "../packages/skia"
+    },
+    {
+      "path": "../packages/extras"
     },
   ],
-  "compilerOptions": {
-    // Avoid expo-cli auto-generating a tsconfig
-  }
+  "compilerOptions": {}
 }
