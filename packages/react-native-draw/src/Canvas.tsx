@@ -12,7 +12,11 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
 
 import {
   DEFAULT_BRUSH_COLOR,
@@ -426,28 +430,30 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
       .shouldCancelWhenOutside(true);
 
     return (
-      <Animated.View style={canvasContainerStyles}>
-        <GestureDetector gesture={panGesture}>
-          <View>
-            <RendererHelper
-              currentColor={color}
-              currentOpacity={opacity}
-              currentPath={path}
-              currentThickness={thickness}
-              currentPathTolerance={
-                simplifyOptions.simplifyCurrentPath
-                  ? simplifyOptions.amount!
-                  : 0
-              }
-              roundPoints={simplifyOptions.roundPoints!}
-              paths={paths}
-              height={height}
-              width={width}
-              Renderer={SVGRenderer}
-            />
-          </View>
-        </GestureDetector>
-      </Animated.View>
+      <GestureHandlerRootView>
+        <Animated.View style={canvasContainerStyles}>
+          <GestureDetector gesture={panGesture}>
+            <View>
+              <RendererHelper
+                currentColor={color}
+                currentOpacity={opacity}
+                currentPath={path}
+                currentThickness={thickness}
+                currentPathTolerance={
+                  simplifyOptions.simplifyCurrentPath
+                    ? simplifyOptions.amount!
+                    : 0
+                }
+                roundPoints={simplifyOptions.roundPoints!}
+                paths={paths}
+                height={height}
+                width={width}
+                Renderer={SVGRenderer}
+              />
+            </View>
+          </GestureDetector>
+        </Animated.View>
+      </GestureHandlerRootView>
     );
   }
 );
