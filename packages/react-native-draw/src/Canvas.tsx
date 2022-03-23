@@ -430,8 +430,8 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
       .shouldCancelWhenOutside(true);
 
     return (
-      <GestureHandlerRootView>
-        <Animated.View style={canvasContainerStyles}>
+      <GestureHandlerRootView style={canvasContainerStyles}>
+        <Animated.View>
           <GestureDetector gesture={panGesture}>
             <View>
               <RendererHelper
