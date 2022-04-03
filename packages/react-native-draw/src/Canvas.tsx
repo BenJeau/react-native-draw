@@ -103,6 +103,13 @@ export interface CanvasProps {
    * @default false
    */
   combineWithLatestPath?: boolean;
+
+  /**
+   * Allows for the canvas to be drawn on, put to false if you want to disable/lock
+   * the canvas
+   * @default true
+   */
+  enabled?: boolean;
 }
 
 export interface SimplifyOptions {
@@ -211,6 +218,7 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
       eraserSize = DEFAULT_ERASER_SIZE,
       tool = DEFAULT_TOOL,
       combineWithLatestPath = false,
+      enabled = true,
     },
     ref
   ) => {
@@ -427,7 +435,8 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
         top: 0,
         left: 0,
       })
-      .shouldCancelWhenOutside(true);
+      .shouldCancelWhenOutside(true)
+      .enabled(enabled);
 
     return (
       <GestureHandlerRootView style={canvasContainerStyles}>
