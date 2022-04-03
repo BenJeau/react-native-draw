@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.1](https://github.com/BenJeau/react-native-draw/compare/@benjeau/react-native-draw@0.8.0...@benjeau/react-native-draw@0.8.1) (2022-04-03)
+
+
+### Features
+
+* added enabled prop to Canvas ([#57](https://github.com/BenJeau/react-native-draw/issues/57)) ([340d51f](https://github.com/BenJeau/react-native-draw/commit/340d51f19b9777532d255f59b3fdb347f9fb9218))
+
+
+
+
+
 # [0.8.0](https://github.com/BenJeau/react-native-draw/compare/@benjeau/react-native-draw@0.7.0...@benjeau/react-native-draw@0.8.0) (2022-03-23)
 
 
