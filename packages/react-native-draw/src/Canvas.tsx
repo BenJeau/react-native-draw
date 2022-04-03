@@ -106,7 +106,7 @@ export interface CanvasProps {
 
   /**
    * Allows for the canvas to be drawn on, put to false if you want to disable/lock
-   * the canvas 
+   * the canvas
    * @default true
    */
   enabled?: boolean;
