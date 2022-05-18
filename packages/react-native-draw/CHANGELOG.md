@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.3](https://github.com/BenJeau/react-native-draw/compare/@benjeau/react-native-draw@0.8.1...@benjeau/react-native-draw@0.8.3) (2022-05-18)
+
+
+### Bug Fixes
+
+* potential fix for types in IDE ([ebda3ca](https://github.com/BenJeau/react-native-draw/commit/ebda3cac6b941ecf807444f1c1d6d08fda6c6012))
+* proper fix for types in IDEs ([719f45e](https://github.com/BenJeau/react-native-draw/commit/719f45e998f48a0753e9c596fa10952b48cce635))
+
+
+
+
+
 ## [0.8.2](https://github.com/BenJeau/react-native-draw/compare/@benjeau/react-native-draw@0.8.1...@benjeau/react-native-draw@0.8.2) (2022-05-18)
 
 

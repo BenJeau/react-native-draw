@@ -1,6 +1,6 @@
 {
   "name": "@benjeau/react-native-draw-extras",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Extra components for @benjeau/react-native-draw Canvas component",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
