@@ -110,6 +110,12 @@ export interface CanvasProps {
    * @default true
    */
   enabled?: boolean;
+
+  /**
+   * when true, drawing will cancel the gesture if the touch moves outside of the view
+   * @default false
+   */
+  shouldCancelWhenOutside?: boolean;
 }
 
 export interface SimplifyOptions {
@@ -219,6 +225,7 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
       tool = DEFAULT_TOOL,
       combineWithLatestPath = false,
       enabled = true,
+      shouldCancelWhenOutside = false,
     },
     ref
   ) => {
@@ -435,7 +442,7 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
         top: 0,
         left: 0,
       })
-      .shouldCancelWhenOutside(true)
+      .shouldCancelWhenOutside(shouldCancelWhenOutside)
       .enabled(enabled);
 
     return (
