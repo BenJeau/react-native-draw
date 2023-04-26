@@ -379,7 +379,7 @@ const Canvas = forwardRef<CanvasRef, CanvasProps>(
           addPointToPath(x, y);
         }
       })
-      .onEnd(() => {
+      .onTouchesUp(() => {
         if (tool === DrawingTool.Brush) {
           setPaths((prev) => {
             const newSVGPath = generateSVGPath(path, simplifyOptions);
