@@ -126,7 +126,7 @@ const BrushProperties = forwardRef<BrushPropertiesRef, BrushPropertiesProps>(
           colors={colors}
           onColorChange={onColorChange}
         />
-        {thickness && onThicknessChange && opacity && onOpacityChange && (
+        {!!thickness && !!onThicknessChange && !!onOpacityChange && (
           <View style={styles.sliderContainer}>
             {thickness && onThicknessChange && (
               <Slider
@@ -139,7 +139,7 @@ const BrushProperties = forwardRef<BrushPropertiesRef, BrushPropertiesProps>(
                 minimumTrackTintColor={sliderColor}
               />
             )}
-            {opacity && onOpacityChange && (
+            {onOpacityChange && (
               <Slider
                 minimumValue={0}
                 maximumValue={1}
